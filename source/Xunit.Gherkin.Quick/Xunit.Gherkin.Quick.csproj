@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <PackageId>Xunit.Gherkin.Quick</PackageId>
+    <Title>Xunit.Gherkin.Quick</Title>
+    <Description>Write BDD style tests: 
+- Write scenarios in human readable Gherkin language, using plain text files (e.g. 'xyz.feature').
+- Write assertions using Xunit.
+- Works perfectly with .NET Core and .NET, by targeting .NET Standard 1.5.</Description>
+    <Authors>Tengiz Tutisani</Authors>
+    <Company>Tengiz Tutisani</Company>
+    <Copyright>2018 Tengiz Tutisani</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick</PackageProjectUrl>
+    <PackageTags>BDD, Gherkin, Xunit, Testing, Behavior Driven Development</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
