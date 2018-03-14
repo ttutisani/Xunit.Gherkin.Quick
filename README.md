@@ -108,6 +108,8 @@ If you use Visual Studio to run unit tests, open Test Explorer to see the new un
 
 Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is a combination of feature name "AddTwoNumbers" and scenario name "Add two numbers".
 
+![Screenshot of scenario test run](scenario-test-run-screenshot.png)
+
 ## Add More Scenarios
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
