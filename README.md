@@ -52,7 +52,7 @@ This is a BDD style feature written in [Gherkin language] (https://cucumber.io/d
 
 Now it's time to implement the code to run scenarios of this feature.
 
-## Implement Feature Scenarios
+## Implement Feature Scenario
 
 Implementing a scenario simply means writing methods in the `Feature`-derived class. Goal is to ensure that each scenario step above will match a method by using regex syntax. If we miss a step and it does not match a method, we will receive an error when we try to run the scenario test.
 
