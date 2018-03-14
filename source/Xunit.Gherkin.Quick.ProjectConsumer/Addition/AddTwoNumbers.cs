@@ -5,14 +5,14 @@
     {
         private readonly Calculator _calculator = new Calculator();
 
-        [Given(@"I have entered (\d+) into the calculator")]
-        public void I_have_entered_x_into_the_calculator(int firstNumber)
+        [Given(@"I chose (\d+) as first number")]
+        public void I_chose_first_number(int firstNumber)
         {
             _calculator.SetFirstNumber(firstNumber);
         }
 
-        [And(@"I have entered (\d+) into the calculator")]
-        public void I_have_entered_y_into_the_calculator(int secondNumber)
+        [And(@"I chose (\d+) as second number")]
+        public void I_chose_second_number(int secondNumber)
         {
             _calculator.SetSecondNumber(secondNumber);
         }

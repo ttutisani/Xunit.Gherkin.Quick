@@ -1,11 +1,10 @@
 ﻿Feature: AddTwoNumbers
-	In order to avoid silly mistakes
-	As a math idiot
-	I want to be told the sum of two numbers
+	In order to learn Math
+	As a regular human
+	I want to add two numbers using Calculator
 
-@mytag
 Scenario: Add two numbers
-	Given I have entered 50 into the calculator
-	And I have entered 70 into the calculator
+	Given I chose 12 as first number
+	And I chose 15 as second number
 	When I press add
-	Then the result should be 120 on the screen
+	Then the result should be 27 on the screen
