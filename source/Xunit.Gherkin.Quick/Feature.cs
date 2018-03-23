@@ -12,6 +12,19 @@ namespace Xunit.Gherkin.Quick
 {
     public abstract class Feature
     {
+        /// <summary>Allows you to log extra data to the result of the test.</summary>
+        protected ITestOutputHelper Output { get; set; }
+
+        [Obsolete("To recieve step-level output from your tests, use the constructor passing an ITestOutputHelper")]
+        protected Feature() {}
+
+        /// <summary>Create a new Feature.</summary>
+        /// <param name="output">
+        /// Allows you to log extra data to the result of the test. Xunit will provide you with an implementation
+        /// in your constructor which you can pass straight through e.g. public MyFeatureClass(ITestOutputHelper output) : base(output)
+        /// </param>
+        protected Feature(ITestOutputHelper output) => Output = output;
+
         [Scenario]
         internal void Scenario(string scenarioName)
         {
@@ -49,7 +62,16 @@ namespace Xunit.Gherkin.Quick
                         .ToArray();
                 }
 
-                matchingStepMethod.method.Invoke(this, methodParamValues);
+                try
+                {
+                    matchingStepMethod.method.Invoke(this, methodParamValues);
+                    Output?.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: PASSED");
+                }
+                catch
+                {
+                    Output?.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: FAILED");
+                    throw;
+                }
             }
         }
     }
@@ -117,7 +139,6 @@ namespace Xunit.Gherkin.Quick
 
             var parser = new Parser();
             var gherkinDocument = parser.Parse(fileName);
-
             return gherkinDocument;
         }
     }
