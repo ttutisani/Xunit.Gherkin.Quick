@@ -1,9 +1,15 @@
-﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
+﻿using System;
+using Xunit.Abstractions;
+
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     [FeatureFile("./Addition/AddTwoNumbers.feature")]
     public sealed class AddTwoNumbers : Feature
     {
         private readonly Calculator _calculator = new Calculator();
+
+        public AddTwoNumbers(ITestOutputHelper output) : base(output)
+        {}
 
         [Given(@"I chose (\d+) as first number")]
         public void I_chose_first_number(int firstNumber)
