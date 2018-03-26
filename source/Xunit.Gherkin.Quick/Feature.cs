@@ -13,14 +13,14 @@ namespace Xunit.Gherkin.Quick
     public abstract class Feature
     {
         /// <summary>Allows you to log extra data to the result of the test.</summary>
-        protected ITestOutputHelper Output { get; set; }
+        protected ITestOutputHelper Output { get; }
 
-        [Obsolete("To recieve step-level output from your tests, use the constructor passing an ITestOutputHelper")]
+        /// <summary>Create a new Feature.</summary>
         protected Feature() {}
 
         /// <summary>Create a new Feature.</summary>
         /// <param name="output">
-        /// Allows you to log extra data to the result of the test. Xunit will provide you with an implementation
+        /// Allows you to log extra data to the result of the test. Xunit will provide you with an instance
         /// in your constructor which you can pass straight through e.g. public MyFeatureClass(ITestOutputHelper output) : base(output)
         /// </param>
         protected Feature(ITestOutputHelper output) => Output = output;
