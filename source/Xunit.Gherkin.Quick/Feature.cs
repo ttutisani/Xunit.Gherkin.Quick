@@ -32,39 +32,52 @@ namespace Xunit.Gherkin.Quick
 
             var parsedScenario = gherkinDocument.Feature.Children.FirstOrDefault(scenario => scenario.Name == scenarioName);
             if (parsedScenario == null)
-                throw new Exception($"Cannot find scenario `{scenarioName}`.");
+                throw new GherkinException($"Cannot find scenario `{scenarioName}`.");
 
             var stepMethods = GetType().GetTypeInfo().GetMethods()
-                .Where(m => m.IsDefined(typeof(KeyWordAttributeBase)))
-                .Select(m => new { method = m, keywordAttribute = m.GetCustomAttribute<KeyWordAttributeBase>() });
+                .Where(m => m.IsDefined(typeof(StepDefinitionAttributeBase)))
+                .Select(m => new { method = m, keywordAttribute = m.GetCustomAttribute<StepDefinitionAttributeBase>() });
 
             foreach (var parsedStep in parsedScenario.Steps)
             {
                 var matchingStepMethod = stepMethods.FirstOrDefault(stepMethod => 
                     stepMethod.keywordAttribute.MatchesStep(parsedStep.Keyword, parsedStep.Text));
                 if (matchingStepMethod == null)
-                    throw new Exception($"Cannot find scenario step `{parsedStep.Keyword}{parsedStep.Text}` for scenario `{scenarioName}`.");
-
+                    throw new GherkinException($"Cannot find scenario step `{parsedStep.Keyword}{parsedStep.Text}` for scenario `{scenarioName}`.");
+                
                 var stepRegexMatch = matchingStepMethod.keywordAttribute.MatchRegex(parsedStep.Text);
                 if (!string.Equals(stepRegexMatch.Value, parsedStep.Text.Trim(), StringComparison.OrdinalIgnoreCase))
-                    throw new Exception($"Step method partially matched but not selected. Step `{parsedStep.Text.Trim()}`, Method pattern `{matchingStepMethod.keywordAttribute.Pattern}`.");
+                    throw new GherkinException($"Step method partially matched but not selected. Step `{parsedStep.Text.Trim()}`, Method pattern `{matchingStepMethod.keywordAttribute.Pattern}`.");
 
                 var methodParams = matchingStepMethod.method.GetParameters();
-                object[] methodParamValues = null;
-                if (methodParams.Length > 0)
+
+                var methodParamsCount = (methodParams.LastOrDefault()?.ParameterType == typeof(DataTable))
+                    ? methodParams.Length - 1 // Skip the final param, which is to be filled with table data
+                    : methodParams.Length;    //No table data requested
+
+                var methodParamValues = new List<object>();
+                if (methodParamsCount > 0)
                 {
                     var methodParamStringValues = stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList();
 
-                    if (methodParamStringValues.Count < methodParams.Length)
-                        throw new Exception($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting {methodParams.Length} params, but only {methodParamStringValues.Count} param values were supplied.");
+                    if (methodParamStringValues.Count < methodParamsCount)
+                        throw new GherkinException($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting {methodParams.Length} params, but only {methodParamStringValues.Count} param values were supplied.");
 
                     methodParamValues = methodParams.Select((p, i) => Convert.ChangeType(methodParamStringValues[i], p.ParameterType))
-                        .ToArray();
+                        .ToList();
+                }
+
+                if (methodParams.LastOrDefault()?.ParameterType == typeof(DataTable))
+                {
+                    if (!(parsedStep.Argument is DataTable))
+                        throw new GherkinException($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting a table parameter, but none was supplied.");
+
+                    methodParamValues.Add(parsedStep.Argument as DataTable);
                 }
 
                 try
                 {
-                    matchingStepMethod.method.Invoke(this, methodParamValues);
+                    matchingStepMethod.method.Invoke(this, methodParamValues.Any() ? methodParamValues.ToArray() : null);
                     Output?.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: PASSED");
                 }
                 catch
@@ -131,7 +144,7 @@ namespace Xunit.Gherkin.Quick
 
                 if (path == null || !System.IO.File.Exists(path))
                 {
-                    throw new Exception($"Cannot find feature file `{fileName}` in the output root directory. If it's somewhere else, use {nameof(FeatureFileAttribute)} to specify file path.");
+                    throw new GherkinException($"Cannot find feature file `{fileName}` in the output root directory. If it's somewhere else, use {nameof(FeatureFileAttribute)} to specify file path.");
                 }
 
                 fileName = path;
