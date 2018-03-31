@@ -17,7 +17,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
         public SearchUsers(ITestOutputHelper output) : base(output)
         { }
 
-        [Given(@"there are users:")]
+        [GivenAttribute(@"there are users:")]
         public void There_are_users(DataTable users)
         {
             foreach(var row in users.Rows.Skip(1)) // Skip the header row
@@ -27,7 +27,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
             }
         }
 
-        [When(@"I search for '([a-zA-Z0-9]+)'")]
+        [WhenAttribute(@"I search for '([a-zA-Z0-9]+)'")]
         public void I_search_for(string username)
         {
             _userResult = _users.FirstOrDefault(u => u.Username == username);

@@ -11,19 +11,19 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
         public AddTwoNumbers(ITestOutputHelper output) : base(output)
         {}
 
-        [Given(@"I chose (\d+) as first number")]
+        [GivenAttribute(@"I chose (\d+) as first number")]
         public void I_chose_first_number(int firstNumber)
         {
             _calculator.SetFirstNumber(firstNumber);
         }
 
-        [And(@"I chose (\d+) as second number")]
+        [AndAttribute(@"I chose (\d+) as second number")]
         public void I_chose_second_number(int secondNumber)
         {
             _calculator.SetSecondNumber(secondNumber);
         }
 
-        [When(@"I press add")]
+        [WhenAttribute(@"I press add")]
         public void I_press_add()
         {
             _calculator.AddNumbers();

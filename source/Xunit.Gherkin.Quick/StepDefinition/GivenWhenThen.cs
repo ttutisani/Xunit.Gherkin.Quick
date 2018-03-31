@@ -1,9 +1,9 @@
 ﻿namespace Xunit.Gherkin.Quick
 {
 
-    public sealed class GivenWhenThen : StepDefinitionAttributeBase
+    public sealed class GivenWhenThenAttribute : StepDefinitionAttributeBase
     {
-        public GivenWhenThen(string pattern)
+        public GivenWhenThenAttribute (string pattern)
             : base("But", pattern)
         {
         }
