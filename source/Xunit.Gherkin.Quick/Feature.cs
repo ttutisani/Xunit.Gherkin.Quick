@@ -35,8 +35,8 @@ namespace Xunit.Gherkin.Quick
                 throw new Exception($"Cannot find scenario `{scenarioName}`.");
 
             var stepMethods = GetType().GetTypeInfo().GetMethods()
-                .Where(m => m.IsDefined(typeof(KeyWordAttributeBase)))
-                .Select(m => new { method = m, keywordAttribute = m.GetCustomAttribute<KeyWordAttributeBase>() });
+                .Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))
+                .Select(m => new { method = m, keywordAttribute = m.GetCustomAttribute<BaseStepDefinitionAttribute>() });
 
             foreach (var parsedStep in parsedScenario.Steps)
             {
