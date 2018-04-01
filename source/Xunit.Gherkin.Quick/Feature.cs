@@ -49,35 +49,14 @@ namespace Xunit.Gherkin.Quick
                 if (!string.Equals(stepRegexMatch.Value, parsedStep.Text.Trim(), StringComparison.OrdinalIgnoreCase))
                     throw new Exception($"Step method partially matched but not selected. Step `{parsedStep.Text.Trim()}`, Method pattern `{matchingStepMethod.keywordAttribute.Pattern}`.");
 
-                var methodParams = matchingStepMethod.method.GetParameters();
-
-                var methodParamsCount = (methodParams.LastOrDefault()?.ParameterType == typeof(DataTable))
-                    ? methodParams.Length - 1 // Skip the final param, which is to be filled with table data
-                    : methodParams.Length;    //No table data requested
-
-                var methodParamValues = new List<object>();
-                if (methodParamsCount > 0)
-                {
-                    var methodParamStringValues = stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList();
-
-                    if (methodParamStringValues.Count < methodParamsCount)
-                        throw new Exception($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting {methodParams.Length} params, but only {methodParamStringValues.Count} param values were supplied.");
-
-                    methodParamValues = methodParams.Select((p, i) => Convert.ChangeType(methodParamStringValues[i], p.ParameterType))
-                        .ToList();
-                }
-
-                if (methodParams.LastOrDefault()?.ParameterType == typeof(DataTable))
-                {
-                    if (!(parsedStep.Argument is DataTable))
-                        throw new Exception($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting a table parameter, but none was supplied.");
-
-                    methodParamValues.Add(parsedStep.Argument as DataTable);
-                }
+                var methodParamValues = ParameterHelper.GetParamValues
+                    (matchingStepMethod.method,
+                    parsedStep,
+                    stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList());
 
                 try
                 {
-                    matchingStepMethod.method.Invoke(this, methodParamValues.Any() ? methodParamValues.ToArray() : null);
+                    matchingStepMethod.method.Invoke(this, methodParamValues.ToArray());
                     Output?.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: PASSED");
                 }
                 catch

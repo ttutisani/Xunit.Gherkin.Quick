@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
+namespace Xunit.Gherkin.Quick.ProjectConsumer.SearchUsers
 {
-    [FeatureFile("./Addition/SearchUsers.feature")]
+    [FeatureFile("./SearchUsers/SearchUsers.feature")]
     public class SearchUsers : Feature
     {
-        private readonly Calculator _calculator = new Calculator();
         private readonly List<UserModel> _users = new List<UserModel>();
         private UserModel _userResult;
 

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Addition\SearchUsers.feature">
+    <None Update="SearchUsers\SearchUsers.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Addition\AddTwoNumbers.feature">
