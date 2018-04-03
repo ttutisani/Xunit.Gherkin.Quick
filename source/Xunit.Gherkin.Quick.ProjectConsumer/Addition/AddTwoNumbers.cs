@@ -7,9 +7,6 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
     {
         private readonly Calculator _calculator = new Calculator();
 
-        public AddTwoNumbers(ITestOutputHelper output) : base(output)
-        {}
-
         [Given(@"I chose (\d+) as first number")]
         public void I_chose_first_number(int firstNumber)
         {

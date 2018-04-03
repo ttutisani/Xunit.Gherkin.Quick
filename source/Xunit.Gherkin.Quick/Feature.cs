@@ -10,17 +10,7 @@ namespace Xunit.Gherkin.Quick
     public abstract class Feature
     {
         /// <summary>Allows you to log extra data to the result of the test.</summary>
-        protected ITestOutputHelper Output { get; }
-
-        /// <summary>Create a new Feature.</summary>
-        protected Feature() {}
-
-        /// <summary>Create a new Feature.</summary>
-        /// <param name="output">
-        /// Allows you to log extra data to the result of the test. Xunit will provide you with an instance
-        /// in your constructor which you can pass straight through e.g. public MyFeatureClass(ITestOutputHelper output) : base(output)
-        /// </param>
-        protected Feature(ITestOutputHelper output) => Output = output;
+        protected internal ITestOutputHelper Output { get; internal set; }
 
         [Scenario]
         internal void Scenario(string scenarioName)
@@ -62,11 +52,11 @@ namespace Xunit.Gherkin.Quick
                 try
                 {
                     matchingStepMethod.method.Invoke(this, methodParamValues);
-                    Output?.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: PASSED");
+                    Output.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: PASSED");
                 }
                 catch
                 {
-                    Output?.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: FAILED");
+                    Output.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: FAILED");
                     throw;
                 }
             }
