@@ -11,7 +11,7 @@ namespace Xunit.Gherkin.Quick
         public static List<object> GetParamValues(MethodInfo method, Step step, List<string> specificationParameters)
         {
             var methodParams = method.GetParameters();
-            var dataTable = (step.Argument is DataTable) ? (DataTable)step.Argument : null;
+            var dataTable = step.Argument as DataTable;
 
             var expectedParamCount = (methodParams.Count(p => p.ParameterType != typeof(DataTable)));
 
