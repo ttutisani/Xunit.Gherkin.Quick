@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    [XunitTestCaseDiscoverer("Xunit.Gherkin.Quick.IgnoreMethodDiscoverer", "Xunit.Gherkin.Quick")]
     public abstract class BaseStepDefinitionAttribute : Attribute
     {
         public string Keyword { get; }
