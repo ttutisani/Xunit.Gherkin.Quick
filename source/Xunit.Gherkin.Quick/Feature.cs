@@ -1,5 +1,6 @@
 ﻿using Gherkin.Ast;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -25,8 +26,12 @@ namespace Xunit.Gherkin.Quick
                 .Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))
                 .Select(m => new { method = m, keywordAttribute = m.GetCustomAttribute<BaseStepDefinitionAttribute>() });
 
-            foreach (var parsedStep in parsedScenario.Steps)
+            var parsedStepsQueue = new Queue<Step>(parsedScenario.Steps);
+
+            while (parsedStepsQueue.Count > 0)
             {
+                var parsedStep = parsedStepsQueue.Dequeue();
+
                 var matchingStepMethod = stepMethods.FirstOrDefault(stepMethod => 
                     stepMethod.keywordAttribute.MatchesStep(parsedStep.Keyword, parsedStep.Text));
                 if (matchingStepMethod == null)
@@ -57,6 +62,14 @@ namespace Xunit.Gherkin.Quick
                 catch
                 {
                     Output.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: FAILED");
+
+                    while (parsedStepsQueue.Count > 0)
+                    {
+                        parsedStep = parsedStepsQueue.Dequeue();
+
+                        Output.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: SKIPPED");
+                    }
+
                     throw;
                 }
             }

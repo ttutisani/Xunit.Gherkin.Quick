@@ -1,6 +1,4 @@
-﻿using Xunit.Abstractions;
-
-namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
+﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     [FeatureFile("./Addition/AddTwoNumbers.feature")]
     public sealed class AddTwoNumbers : Feature
