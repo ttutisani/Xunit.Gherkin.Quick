@@ -6,8 +6,7 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-
-    public sealed class ScenarioXUnitTestCase : XunitTestCase
+    internal sealed class ScenarioXUnitTestCase : XunitTestCase
     {
         [Obsolete]
         public ScenarioXUnitTestCase()

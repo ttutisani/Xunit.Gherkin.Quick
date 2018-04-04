@@ -9,8 +9,7 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-
-    public sealed class ScenarioDiscoverer : IXunitTestCaseDiscoverer
+    internal sealed class ScenarioDiscoverer : IXunitTestCaseDiscoverer
     {
         private readonly IMessageSink _messageSink;
 

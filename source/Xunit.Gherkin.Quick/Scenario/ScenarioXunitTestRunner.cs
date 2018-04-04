@@ -9,7 +9,7 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    public sealed class ScenarioXunitTestRunner : XunitTestRunner
+    internal sealed class ScenarioXunitTestRunner : XunitTestRunner
     {
         public ScenarioXunitTestRunner(
             ITest test, 

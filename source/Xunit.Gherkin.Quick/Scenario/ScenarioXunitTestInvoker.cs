@@ -8,7 +8,7 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    public sealed class ScenarioXunitTestInvoker : XunitTestInvoker
+    internal sealed class ScenarioXunitTestInvoker : XunitTestInvoker
     {
         private readonly TestOutputHelper _testOutputHelper;
 
