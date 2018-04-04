@@ -1,4 +1,4 @@
-﻿namespace Xunit.Gherkin.Quick.ProjectConsumer
+﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     public sealed class Calculator
     {

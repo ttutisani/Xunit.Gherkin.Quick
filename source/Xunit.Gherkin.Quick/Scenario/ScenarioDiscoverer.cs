@@ -9,8 +9,7 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-
-    public sealed class ScenarioDiscoverer : IXunitTestCaseDiscoverer
+    internal sealed class ScenarioDiscoverer : IXunitTestCaseDiscoverer
     {
         private readonly IMessageSink _messageSink;
 
@@ -19,7 +18,10 @@ namespace Xunit.Gherkin.Quick
             _messageSink = messageSink;
         }
 
-        public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)
+        public IEnumerable<IXunitTestCase> Discover(
+            ITestFrameworkDiscoveryOptions discoveryOptions, 
+            ITestMethod testMethod, 
+            IAttributeInfo factAttribute)
         {
             var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
 
