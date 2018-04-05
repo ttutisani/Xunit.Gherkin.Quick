@@ -116,4 +116,5 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 ## Further Topics
 - [Viewing steps executed for a Scenario](Test-Steps.md)
+- [Using table data in tests](Table-Data.md)
 
