@@ -41,10 +41,18 @@ namespace Xunit.Gherkin.Quick
                 if (!string.Equals(stepRegexMatch.Value, parsedStep.Text.Trim(), StringComparison.OrdinalIgnoreCase))
                     throw new InvalidOperationException($"Step method partially matched but not selected. Step `{parsedStep.Text.Trim()}`, Method pattern `{matchingStepMethod.keywordAttribute.Pattern}`.");
 
-                var methodParamValues = ParameterHelper.GetParamValues
-                    (matchingStepMethod.method,
-                    parsedStep,
-                    stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList());
+                var methodParams = matchingStepMethod.method.GetParameters();
+                object[] methodParamValues = null;
+                if (methodParams.Length > 0)
+                {
+                    var methodParamStringValues = stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList();
+
+                    if (methodParamStringValues.Count < methodParams.Length)
+                        throw new InvalidOperationException($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting {methodParams.Length} params, but only {methodParamStringValues.Count} param values were supplied.");
+
+                    methodParamValues = methodParams.Select((p, i) => Convert.ChangeType(methodParamStringValues[i], p.ParameterType))
+                        .ToArray();
+                }
 
                 try
                 {

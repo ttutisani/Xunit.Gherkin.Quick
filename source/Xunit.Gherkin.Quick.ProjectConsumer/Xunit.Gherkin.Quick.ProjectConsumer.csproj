@@ -22,9 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SearchUsers\SearchUsers.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Addition\AddTwoNumbers.feature">
       <Generator></Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
