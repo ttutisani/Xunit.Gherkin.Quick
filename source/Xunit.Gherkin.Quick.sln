@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xunit.Gherkin.Quick", "Xunit.Gherkin.Quick\Xunit.Gherkin.Quick.csproj", "{4E0C5876-713E-4E47-A7FF-0D2E4AEE2699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xunit.Gherkin.Quick.ProjectConsumer", "Xunit.Gherkin.Quick.ProjectConsumer\Xunit.Gherkin.Quick.ProjectConsumer.csproj", "{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xunit.Gherkin.Quick.ProjectConsumer", "Xunit.Gherkin.Quick.ProjectConsumer\Xunit.Gherkin.Quick.ProjectConsumer.csproj", "{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xunit.Gherkin.Quick.Tests", "Xunit.Gherkin.Quick.Tests\Xunit.Gherkin.Quick.Tests.csproj", "{06649E31-7F3D-4579-9FB6-673C8C36BCD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06649E31-7F3D-4579-9FB6-673C8C36BCD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06649E31-7F3D-4579-9FB6-673C8C36BCD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06649E31-7F3D-4579-9FB6-673C8C36BCD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06649E31-7F3D-4579-9FB6-673C8C36BCD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

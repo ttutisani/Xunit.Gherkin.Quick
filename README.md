@@ -113,3 +113,8 @@ Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is
 ## Add More Scenarios
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
+
+## Further Topics
+- [Viewing steps executed for a Scenario](Test-Steps.md)
+- [Using table data in tests](Table-Data.md)
+
