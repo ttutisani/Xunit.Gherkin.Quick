@@ -2,6 +2,7 @@ using FluentAssertions;
 using Gherkin.Ast;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -35,7 +36,10 @@ namespace Xunit.Gherkin.Quick.Tests
         {
             var method = typeof(SimpleTestClass).GetMethod("TableDataAtStart1");
 
-            var step = new Step(null, "Given", "some data", new DataTable(new[] { new TableRow(null, new[] { new TableCell(null, "A value") }) }));
+            var step = new Step(null,
+                "Given",
+                "some data",
+                new DataTable(new[] { new TableRow(null, new[] { new TableCell(null, "A value 1") }) }));
 
             var specParams = new List<string>
             {
@@ -48,6 +52,7 @@ namespace Xunit.Gherkin.Quick.Tests
             values.Should().NotBeNull()
                 .And.HaveCount(3);
             values[0].Should().BeOfType<DataTable>();
+            values[0].As<DataTable>().Rows.First().Cells.First().Value.Should().Be("A value 1");
             values[1].Should().Be("String Value 2");
             values[2].Should().Be(251);
         }
@@ -57,7 +62,7 @@ namespace Xunit.Gherkin.Quick.Tests
         {
             var method = typeof(SimpleTestClass).GetMethod("TableDataAtEnd1");
 
-            var step = new Step(null, "Given", "some data", new DataTable(new[] { new TableRow(null, new[] { new TableCell(null, "A value") }) }));
+            var step = new Step(null, "Given", "some data", new DataTable(new[] { new TableRow(null, new[] { new TableCell(null, "A value 2") }) }));
 
             var specParams = new List<string>
             {
@@ -72,6 +77,7 @@ namespace Xunit.Gherkin.Quick.Tests
             values[0].Should().Be("String Value 3");
             values[1].Should().Be(252);
             values[2].Should().BeOfType<DataTable>();
+            values[2].As<DataTable>().Rows.First().Cells.First().Value.Should().Be("A value 2");
         }
 
         [Fact]
