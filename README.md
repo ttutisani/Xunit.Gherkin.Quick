@@ -3,14 +3,14 @@
 # Xunit.Gherkin.Quick
 Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets .NET Standard, can be used from both .NET and .NET Core test projects). It parses Gherkin language and executes Xunit tests corresponding to scenarios.
 
-# Getting Started
+## Getting Started
 We'll quickly setup our project, write our first BDD test, and then run it.
 
-## Xunit test project
+### Xunit test project
 
 Create a new or open existing Xunit test test project. `Xunit.Gherkin.Quick` needs to be used with Xunit.
 
-## Install nuget package
+### Install nuget package
 
 Package name to search for through GUI: `Xunit.Gherkin.Quick`
 
@@ -26,7 +26,7 @@ dotnet add package Xunit.Gherkin.Quick
 
 That should be it, but if you need more info about installation or the nuget package, click here: https://www.nuget.org/packages/Xunit.Gherkin.Quick/
 
-## Create Gherkin feature file
+### Create Gherkin feature file
 
 Create a new text file. Name it as 'AddTwoNumbers.feature'.
 
@@ -52,7 +52,7 @@ This is a BDD style feature written in [Gherkin language] (https://cucumber.io/d
 
 Now it's time to implement the code to run scenarios of this feature.
 
-## Implement Feature Scenario
+### Implement Feature Scenario
 
 Implementing a scenario simply means writing methods in the `Feature`-derived class. Goal is to ensure that each scenario step above will match a method by using regex syntax. If we miss a step and it does not match a method, we will receive an error when we try to run the scenario test.
 
@@ -98,7 +98,7 @@ Notice couple of things:
 
 - `Given`, `When` and `Then` attributes for the methods specify scenario steps that they are supposed to handle. They can be either a plain text or they can also extract values out of the scenario step, which will be passed as a method argument value. You can also use `And` and `But` attributes, in exactly the same way.
 
-## Run Scenario
+### Run Scenario
 
 Build BDD tests project.
 
@@ -110,6 +110,11 @@ Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is
 
 ![Screenshot of scenario test run](scenario-test-run-screenshot.png)
 
-## Add More Scenarios
+### Add More Scenarios
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
+
+
+## See Also
+
+- [Versions](/versions)
