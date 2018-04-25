@@ -45,13 +45,27 @@ namespace Xunit.Gherkin.Quick
                 object[] methodParamValues = null;
                 if (methodParams.Length > 0)
                 {
-                    var methodParamStringValues = stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList();
+                    var methodParamStringValues = stepRegexMatch.Groups.Cast<Group>().Skip(1).Select(g => g.Value).ToList<object>();
 
-                    if (methodParamStringValues.Count < methodParams.Length)
+                    if (methodParamStringValues.Count < methodParams.Length && parsedStep.Argument == null)
+                    {
                         throw new InvalidOperationException($"Method `{matchingStepMethod.method.Name}` for step `{parsedStep.Keyword}{parsedStep.Text}` is expecting {methodParams.Length} params, but only {methodParamStringValues.Count} param values were supplied.");
+                    }
 
-                    methodParamValues = methodParams.Select((p, i) => Convert.ChangeType(methodParamStringValues[i], p.ParameterType))
-                        .ToArray();
+                    // A step argument (Table/Multiline String, etc.) is always last is the list of arguments
+                    if (parsedStep.Argument != null)
+                        methodParamStringValues.Add(parsedStep.Argument);
+
+                    methodParamValues = methodParams
+                        .Select((p, i) => {
+                            if (methodParamStringValues[i].GetType() == typeof(DataTable)) // DataTable support
+                                return new Table(((DataTable)methodParamStringValues[i]).Rows.ToArray());
+                            if (methodParamStringValues[i].GetType() == typeof(DocString)) // Multiline string
+                                return (((DocString)methodParamStringValues[i]).Content); 
+                            else
+                                return Convert.ChangeType(methodParamStringValues[i], p.ParameterType);
+                        })
+                        .ToArray();                    
                 }
 
                 try
