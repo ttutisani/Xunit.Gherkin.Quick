@@ -2,7 +2,7 @@
 
 namespace Xunit.Gherkin.Quick.UnitTests
 {
-    [FeatureFile("./SimpleParameterTypes.feature")]
+    [FeatureFile("./GivenWhenThenTests/SimpleParameterTypes.feature")]
     public sealed class SimpleParameterTypes : Feature
     {
         [Given(@"Value (\d) should be 1")]

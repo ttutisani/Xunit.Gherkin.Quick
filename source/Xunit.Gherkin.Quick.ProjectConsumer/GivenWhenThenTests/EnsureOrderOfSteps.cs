@@ -1,6 +1,6 @@
 namespace Xunit.Gherkin.Quick.UnitTests
 {
-    [FeatureFile("./EnsureOrderOfSteps.feature")]
+    [FeatureFile("./GivenWhenThenTests/EnsureOrderOfSteps.feature")]
     public sealed class EnsureOrderOfSteps : Feature
     {
         private int _order = 0;
