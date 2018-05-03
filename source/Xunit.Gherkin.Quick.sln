@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xunit.Gherkin.Quick", "Xunit.Gherkin.Quick\Xunit.Gherkin.Quick.csproj", "{4E0C5876-713E-4E47-A7FF-0D2E4AEE2699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xunit.Gherkin.Quick.ProjectConsumer", "Xunit.Gherkin.Quick.ProjectConsumer\Xunit.Gherkin.Quick.ProjectConsumer.csproj", "{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xunit.Gherkin.Quick.ProjectConsumer", "Xunit.Gherkin.Quick.ProjectConsumer\Xunit.Gherkin.Quick.ProjectConsumer.csproj", "{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
