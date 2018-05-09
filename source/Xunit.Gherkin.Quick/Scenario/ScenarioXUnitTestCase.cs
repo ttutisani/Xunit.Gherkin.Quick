@@ -19,7 +19,7 @@ namespace Xunit.Gherkin.Quick
         {
             DisplayName = $"{featureName} :: {scenarioName}";
 
-            // These traits allow support for the excelent picklesdoc results visualizer
+            // These traits allow support for the picklesdoc results visualizer (http://www.picklesdoc.com/)
             Traits = new Dictionary<string, List<string>>
             {
                 {  "FeatureTitle", new List<string> { featureName } },
