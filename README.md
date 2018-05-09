@@ -114,6 +114,15 @@ Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
 
+## Integrating Test Results With PicklesDoc
+
+Test results may be integrated with the excellent [PicklesDoc project](http://www.picklesdoc.com/). Run your tests with
+
+```
+dotnet xunit -xml MyResultsFile.xml
+```
+
+This file is an xunit2 formatted file, which you can integrate with picklesdoc in a variety of ways - see the pickles documentation.
 
 ## See Also
 

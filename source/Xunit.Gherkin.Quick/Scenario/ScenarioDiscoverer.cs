@@ -27,7 +27,7 @@ namespace Xunit.Gherkin.Quick
 
             foreach (var scenario in gherkinDocument.Feature.Children)
             {
-                yield return new ScenarioXUnitTestCase(_messageSink, testMethod, $"{gherkinDocument.Feature.Name} :: {scenario.Name}", new object[] { scenario.Name });
+                yield return new ScenarioXUnitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, new object[] { scenario.Name });
             }
         }
 

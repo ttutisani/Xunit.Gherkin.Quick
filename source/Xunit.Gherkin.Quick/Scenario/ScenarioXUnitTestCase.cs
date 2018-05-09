@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
@@ -13,10 +14,17 @@ namespace Xunit.Gherkin.Quick
         {
         }
 
-        public ScenarioXUnitTestCase(IMessageSink messageSink, ITestMethod testMethod, string scenarioName, object[] testMethodArguments = null)
+        public ScenarioXUnitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null)
             : base(messageSink, TestMethodDisplay.Method, testMethod, testMethodArguments)
         {
-            DisplayName = scenarioName;
+            DisplayName = $"{featureName} :: {scenarioName}";
+
+            // These traits allow support for the picklesdoc results visualizer (http://www.picklesdoc.com/)
+            Traits = new Dictionary<string, List<string>>
+            {
+                {  "FeatureTitle", new List<string> { featureName } },
+                {  "Description", new List<string> { scenarioName } }
+            };
         }
 
         public override async Task<RunSummary> RunAsync(
