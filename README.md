@@ -94,7 +94,7 @@ public sealed class AddTwoNumbers : Feature
 
 Notice couple of things:
 
-- `FeatureFile` attribute for the class refers to the feature file location. You don't need to apply this attribute if you keep your feature files in the root directory of your project, because that's where it will be located by default. Buf if you keep it under a sub-folder (which I do), then make sure to specify the file location (either relative or absolute) using this attribute.
+- `FeatureFile` attribute for the class refers to the feature file location (**relative to the output folder, not relative to the class file**). You don't need to apply this attribute if you keep your feature files in the root directory of your project, because that's where it will be located by default. Buf if you keep it under a sub-folder (which I do), then make sure to specify the file location (either relative or absolute) using this attribute.
 
 - `Given`, `When` and `Then` attributes for the methods specify scenario steps that they are supposed to handle. They can be either a plain text or they can also extract values out of the scenario step, which will be passed as a method argument value. You can also use `And` and `But` attributes, in exactly the same way.
 
