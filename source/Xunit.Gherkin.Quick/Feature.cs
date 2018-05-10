@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick
@@ -14,7 +15,7 @@ namespace Xunit.Gherkin.Quick
         protected internal ITestOutputHelper Output { get; internal set; }
 
         [Scenario]
-        internal void Scenario(string scenarioName)
+        internal async Task Scenario(string scenarioName)
         {
             var gherkinDocument = ScenarioDiscoverer.GetGherkinDocumentByType(GetType());
 
@@ -56,7 +57,10 @@ namespace Xunit.Gherkin.Quick
 
                 try
                 {
-                    matchingStepMethod.method.Invoke(this, methodParamValues);
+                    var result = matchingStepMethod.method.Invoke(this, methodParamValues);
+                    if (result is Task resultAsTask)
+                        await resultAsTask;
+
                     Output.WriteLine($"{parsedStep.Keyword} {parsedStep.Text}: PASSED");
                 }
                 catch

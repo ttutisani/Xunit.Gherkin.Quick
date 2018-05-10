@@ -2,6 +2,7 @@
 using Gherkin.Ast;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Xunit.Abstractions;
@@ -36,13 +37,13 @@ namespace Xunit.Gherkin.Quick
             var fileName = classType.FullName;
             fileName = fileName.Substring(fileName.LastIndexOf('.') + 1) + ".feature";
 
-            if (!System.IO.File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
                 var path = (classType.GetTypeInfo().GetCustomAttributes(typeof(FeatureFileAttribute))
                     .FirstOrDefault() as FeatureFileAttribute)
                     ?.Path;
 
-                if (path == null || !System.IO.File.Exists(path))
+                if (path == null || !File.Exists(path))
                 {
                     throw new TypeLoadException($"Cannot find feature file `{fileName}` in the output root directory. If it's somewhere else, use {nameof(FeatureFileAttribute)} to specify file path.");
                 }
@@ -51,8 +52,14 @@ namespace Xunit.Gherkin.Quick
             }
 
             var parser = new Parser();
-            var gherkinDocument = parser.Parse(fileName);
-            return gherkinDocument;
+            using (var gherkinFile = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (var gherkinReader = new StreamReader(gherkinFile))
+                {
+                    var gherkinDocument = parser.Parse(gherkinReader);
+                    return gherkinDocument;
+                }
+            }
         }
     }
 }
