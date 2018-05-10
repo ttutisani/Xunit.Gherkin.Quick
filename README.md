@@ -98,6 +98,8 @@ Notice couple of things:
 
 - `Given`, `When` and `Then` attributes for the methods specify scenario steps that they are supposed to handle. They can be either a plain text or they can also extract values out of the scenario step, which will be passed as a method argument value. You can also use `And` and `But` attributes, in exactly the same way.
 
+- Scenario step method can be `async`, or can be a regular method, just as shown in the example above.
+
 ### Run Scenario
 
 Build BDD tests project.
