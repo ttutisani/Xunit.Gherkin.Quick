@@ -23,7 +23,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition.Async
         {
             await Task.Run(() =>
             {
-                Thread.Sleep(1000); //intentional delay - to imitate truly async operation.
+                Thread.Sleep(100); //intentional delay - to imitate truly async operation.
                 Result = _firstNumber + _secondNumber;
             });
         }
