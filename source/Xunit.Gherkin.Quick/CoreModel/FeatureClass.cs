@@ -27,6 +27,8 @@ namespace Xunit.Gherkin.Quick
                 .GetCustomAttribute<FeatureFileAttribute>();
             var featureFilePath = featureFileAttribute?.Path ?? $"{featureType.Name}.feature";
 
+            //TODO: also generate step methods on the feature class?
+
             return new FeatureClass(featureFilePath);
         }
     }
