@@ -38,8 +38,11 @@ namespace Xunit.Gherkin.Quick
 
             var stepMethods = featureType.GetTypeInfo().GetMethods()
                 .Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))
-                .Select(m => m.GetCustomAttribute<BaseStepDefinitionAttribute>())
-                .Select(m => new StepMethod(StepMethodKindExtensions.ToStepMethodKind(m), m.Pattern))
+                .Select(m => new { parameters = m.GetParameters(), stepDefinitionAttribute = m.GetCustomAttribute<BaseStepDefinitionAttribute>() })
+                .Select(m => new StepMethod(
+                    StepMethodKindExtensions.ToStepMethodKind(m.stepDefinitionAttribute), 
+                    m.stepDefinitionAttribute.Pattern, 
+                    StepMethodArgument.ListFromParameters(m.parameters)))
                 .ToList();
 
             return new FeatureClass(featureFilePath, stepMethods);

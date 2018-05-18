@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Xunit;
 using Xunit.Gherkin.Quick;
 
 namespace UnitTests
@@ -17,11 +18,13 @@ namespace UnitTests
             var text = "stpe method text 123";
 
             //act.
-            var sut = new StepMethod(kind, text);
+            var sut = new StepMethod(kind, text, new List<StepMethodArgument>());
 
             //assert.
             Assert.Equal(kind, sut.Kind);
             Assert.Equal(text, sut.Text);
+            Assert.NotNull(sut.Arguments);
+            Assert.Empty(sut.Arguments);
         }
     }
 }

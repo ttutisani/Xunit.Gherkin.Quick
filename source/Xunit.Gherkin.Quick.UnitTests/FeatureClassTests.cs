@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -13,7 +15,7 @@ namespace UnitTests
             var featureFilePath = "some path 123";
             var stepMethods = new List<StepMethod>
             {
-                new StepMethod(StepMethodKind.Given, "some text 123")
+                new StepMethod(StepMethodKind.Given, "some text 123", new List<StepMethodArgument>())
             };
 
             //act.
@@ -80,11 +82,30 @@ namespace UnitTests
             Assert.NotNull(sut.StepMethods);
             Assert.Equal(5, sut.StepMethods.Count);
 
-            Assert.Contains(sut.StepMethods, sm => sm.Kind == StepMethodKind.Given && sm.Text == FeatureWithStepMethods.GivenStepText);
-            Assert.Contains(sut.StepMethods, sm => sm.Kind == StepMethodKind.When && sm.Text == FeatureWithStepMethods.WhenStepText);
-            Assert.Contains(sut.StepMethods, sm => sm.Kind == StepMethodKind.Then && sm.Text == FeatureWithStepMethods.ThenStepText);
-            Assert.Contains(sut.StepMethods, sm => sm.Kind == StepMethodKind.And && sm.Text == FeatureWithStepMethods.AndStepText);
-            Assert.Contains(sut.StepMethods, sm => sm.Kind == StepMethodKind.But && sm.Text == FeatureWithStepMethods.ButStepText);
+            var given = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Given && sm.Text == FeatureWithStepMethods.GivenStepText);
+            Assert.NotNull(given);
+            Assert.NotNull(given.Arguments);
+            Assert.Empty(given.Arguments);
+
+            var when = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.When && sm.Text == FeatureWithStepMethods.WhenStepText);
+            Assert.NotNull(when);
+            Assert.NotNull(when.Arguments);
+            Assert.Empty(when.Arguments);
+
+            var then = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Then && sm.Text == FeatureWithStepMethods.ThenStepText);
+            Assert.NotNull(then);
+            Assert.NotNull(when.Arguments);
+            Assert.Empty(then.Arguments);
+
+            var and = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.And && sm.Text == FeatureWithStepMethods.AndStepText);
+            Assert.NotNull(and);
+            Assert.NotNull(and.Arguments);
+            Assert.Empty(and.Arguments);
+
+            var but = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.But && sm.Text == FeatureWithStepMethods.ButStepText);
+            Assert.NotNull(but);
+            Assert.NotNull(but.Arguments);
+            Assert.Empty(but.Arguments);
         }
 
         private sealed class FeatureWithStepMethods : Feature
@@ -125,6 +146,44 @@ namespace UnitTests
 
             [But(ButStepText)]
             public void ButStepMethod333()
+            {
+
+            }
+        }
+
+        [Fact]
+        public void FromFeatureInstance_Extracts_StepMethodArguments()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithStepMethodArguments();
+
+            //act.
+            var sut = FeatureClass.FromFeatureInstance(featureInstance);
+
+            //assert.
+            Assert.NotNull(sut);
+            Assert.Single(sut.StepMethods);
+
+            var step = sut.StepMethods[0];
+            Assert.NotNull(step);
+            Assert.NotNull(step.Arguments);
+            Assert.Equal(3, step.Arguments.Count);
+
+            VerifyArgIsPrimitive(step.Arguments[0]);
+            VerifyArgIsPrimitive(step.Arguments[1]);
+            VerifyArgIsPrimitive(step.Arguments[2]);
+
+            void VerifyArgIsPrimitive(StepMethodArgument arg)
+            {
+                Assert.NotNull(arg);
+                Assert.IsType<PrimitiveTypeArgument>(arg);
+            }
+        }
+
+        private sealed class FeatureWithStepMethodArguments : Feature
+        {
+            [When("when")]
+            public void StepMethodToBeFound(int arg1, string arg2, DateTime arg3)
             {
 
             }

@@ -1,18 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethod
     {
-        public StepMethod(StepMethodKind kind, string text)
+        public StepMethod(
+            StepMethodKind kind, 
+            string text,
+            IEnumerable<StepMethodArgument> arguments)
         {
             Kind = kind;
-            Text = text ?? throw new System.ArgumentNullException(nameof(text));
+            Text = text ?? throw new ArgumentNullException(nameof(text));
+            Arguments = arguments != null
+                ? arguments.ToList().AsReadOnly()
+                : throw new ArgumentNullException(nameof(arguments));
         }
 
         public StepMethodKind Kind { get; }
 
         public string Text { get; }
+
+        public ReadOnlyCollection<StepMethodArgument> Arguments { get; }
     }
 
     internal enum StepMethodKind
