@@ -126,7 +126,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 ### Integrating Test Results With PicklesDoc
 
-Test results may be integrated with the excellent [PicklesDoc project](http://www.picklesdoc.com/). Run your tests with
+Test results may be integrated with the [PicklesDoc project](http://www.picklesdoc.com/). Run your tests with
 
 ```Batchfile
 dotnet xunit -xml MyResultsFile.xml
