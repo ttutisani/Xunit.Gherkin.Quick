@@ -8,7 +8,7 @@ We'll quickly setup our project, write our first BDD test, and then run it.
 
 ### Xunit test project
 
-Create a new or open existing Xunit test test project. `Xunit.Gherkin.Quick` needs to be used with Xunit.
+Create a new or open existing Xunit test project. `Xunit.Gherkin.Quick` needs to be used with Xunit.
 
 ### Install nuget package
 
