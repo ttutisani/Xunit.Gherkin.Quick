@@ -46,7 +46,7 @@ Scenario: Add two numbers
 	Then the result should be 27 on the screen
 ```
 
-This is a BDD style feature written in [Gherkin language] (https://cucumber.io/docs/reference).
+This is a BDD style feature written in [Gherkin language](https://cucumber.io/docs/reference).
 
 **Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to `Copy Always` or `Copy if Newer`.
 
