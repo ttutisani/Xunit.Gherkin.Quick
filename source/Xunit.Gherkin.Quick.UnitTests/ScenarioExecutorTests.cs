@@ -51,7 +51,8 @@ namespace UnitTests
                     "When " + FeatureWithScenarioSteps.ScenarioStep2Text,
                     "And " + FeatureWithScenarioSteps.ScenarioStep3Text,
                     "Then " + FeatureWithScenarioSteps.ScenarioStep4Text
-                    )));
+                    )))
+                .Verifiable();
 
             var featureInstance = new FeatureWithScenarioSteps();
 
@@ -59,6 +60,8 @@ namespace UnitTests
             _sut.ExecuteScenario(featureInstance, "scenario 12345");
 
             //assert.
+            _featureFileRepository.Verify();
+
             Assert.Equal(4, featureInstance.CallStack.Count);
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep1), featureInstance.CallStack[0]);
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep2), featureInstance.CallStack[1]);
@@ -97,12 +100,24 @@ Scenario: Add two numbers
                 CallStack.Add(nameof(ScenarioStep1));
             }
 
+            [Given("Non matching given")]
+            public void NonMatchingStep1()
+            {
+                CallStack.Add(nameof(NonMatchingStep1));
+            }
+
             public const string ScenarioStep2Text = "I chose 15 as second number";
 
             [And(ScenarioStep2Text)]
             public void ScenarioStep2()
             {
                 CallStack.Add(nameof(ScenarioStep2));
+            }
+
+            [And("Non matching and")]
+            public void NonMatchingStep2()
+            {
+                CallStack.Add(nameof(NonMatchingStep2));
             }
 
             public const string ScenarioStep3Text = "I press add";
@@ -113,12 +128,24 @@ Scenario: Add two numbers
                 CallStack.Add(nameof(ScenarioStep3));
             }
 
+            [When("Non matching when")]
+            public void NonMatchingStep3()
+            {
+                CallStack.Add(nameof(NonMatchingStep3));
+            }
+
             public const string ScenarioStep4Text = "the result should be 27 on the screen";
 
             [Then(ScenarioStep4Text)]
             public void ScenarioStep4()
             {
                 CallStack.Add(nameof(ScenarioStep4));
+            }
+
+            [Then("Non matching then")]
+            public void NonMatchingStep4()
+            {
+                CallStack.Add(nameof(NonMatchingStep4));
             }
         }
     }
