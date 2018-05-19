@@ -18,7 +18,10 @@
                 throw new System.ArgumentNullException(nameof(scenarioName));
 
             var featureClass = FeatureClass.FromFeatureInstance(featureInstance);
-            _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
+            var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
+
+            var scenario = featureClass.ExtractScenario(scenarioName, featureFile);
+            scenario.Execute();
         }
     }
 }

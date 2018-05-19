@@ -47,5 +47,10 @@ namespace Xunit.Gherkin.Quick
 
             return new FeatureClass(featureFilePath, stepMethods);
         }
+
+        public Scenario ExtractScenario(string scenarioName, FeatureFile featureFile)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
