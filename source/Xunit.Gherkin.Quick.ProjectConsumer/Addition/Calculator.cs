@@ -1,15 +1,13 @@
-﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     public sealed class Calculator
     {
-        public int FirstNumber { get; private set; }
-        public int SecondNumber { get; private set; }
-        public int Result { get; private set; }
-
-        public void SetFirstNumber(int number) => FirstNumber = number;
-
-        public void SetSecondNumber(int number) => SecondNumber = number;
-
-        public void AddNumbers() => Result = FirstNumber + SecondNumber;
+        public List<int> Numbers { get; set; } = new List<int>();
+        public int Result { get; private set; }       
+        public void AddNumbers() => Result = Numbers.Sum();
     }
 }
