@@ -45,8 +45,9 @@ namespace UnitTests
         public void ExecuteScenario_Executes_Scenario_Steps()
         {
             //arrange.
+            var scenarioName = "scenario 12345";
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
-                .Returns(new FeatureFile(CreateGherkinDocument(
+                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     "Given " + FeatureWithScenarioSteps.ScenarioStep1Text,
                     "When " + FeatureWithScenarioSteps.ScenarioStep2Text,
                     "And " + FeatureWithScenarioSteps.ScenarioStep3Text,
@@ -57,7 +58,7 @@ namespace UnitTests
             var featureInstance = new FeatureWithScenarioSteps();
 
             //act.
-            _sut.ExecuteScenario(featureInstance, "scenario 12345");
+            _sut.ExecuteScenario(featureInstance, scenarioName);
 
             //assert.
             _featureFileRepository.Verify();
@@ -69,7 +70,7 @@ namespace UnitTests
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep4), featureInstance.CallStack[3]);
         }
 
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(params string[] steps)
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
         {
             var gherkinText =
 @"Feature: Some Sample Feature
@@ -77,7 +78,7 @@ namespace UnitTests
     As a regular human
     I want to add two numbers using Calculator
 
-Scenario: Add two numbers
+Scenario: " + scenario + @"
 "+ string.Join(Environment.NewLine, steps)
 ;
             using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))

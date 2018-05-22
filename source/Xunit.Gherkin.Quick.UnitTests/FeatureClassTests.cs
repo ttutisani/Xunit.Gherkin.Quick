@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -186,6 +188,120 @@ namespace UnitTests
             public void StepMethodToBeFound(int arg1, string arg2, DateTime arg3)
             {
 
+            }
+        }
+
+        [Fact]
+        public void ExtractScenario_Extracts_ScenarioSteps()
+        {
+            //arrange.
+            var scenarioName = "some scenario name 123";
+            var featureInstance = new FeatureWithMatchingScenarioStepsToExtract();
+            var sut = FeatureClass.FromFeatureInstance(featureInstance);
+
+            //act.
+            var scenario = sut.ExtractScenario(scenarioName, new FeatureFile(CreateGherkinDocument(scenarioName, 
+                "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text,
+                "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text,
+                "When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
+                "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text
+                )));
+
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.NotNull(scenario.Steps);
+            Assert.Equal(4, scenario.Steps.Count);
+
+            AssertScenarioStepCorrectness(scenario.Steps[0], StepMethodKind.Given, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text, sut);
+            AssertScenarioStepCorrectness(scenario.Steps[1], StepMethodKind.And, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text, sut);
+            AssertScenarioStepCorrectness(scenario.Steps[2], StepMethodKind.When, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text, sut);
+            AssertScenarioStepCorrectness(scenario.Steps[3], StepMethodKind.Then, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text, sut);
+            
+            void AssertScenarioStepCorrectness(StepMethod step, StepMethodKind kind, string text, FeatureClass sourceFeature)
+            {
+                var sourceStep = sourceFeature.StepMethods.Single(s => s.Kind == kind && s.Text == text);
+                Assert.NotNull(step);
+                Assert.Same(step, sourceStep);
+            }
+        }
+
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenarioName, params string[] steps)
+        {
+            var gherkinText =
+@"Feature: Some Sample Feature
+    In order to learn Math
+    As a regular human
+    I want to add two numbers using Calculator
+
+Scenario: " + scenarioName + @"
+" + string.Join(Environment.NewLine, steps)
+;
+            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
+            using (var gherkinReader = new StreamReader(gherkinStream))
+            {
+                var parser = new Gherkin.Parser();
+                return parser.Parse(gherkinReader);
+            }
+        }
+
+        private sealed class FeatureWithMatchingScenarioStepsToExtract : Feature
+        {
+            public List<string> CallStack { get; } = new List<string>();
+
+            public const string ScenarioStep1Text = "I chose 12 as first number";
+
+            [Given(ScenarioStep1Text)]
+            public void ScenarioStep1()
+            {
+                CallStack.Add(nameof(ScenarioStep1));
+            }
+
+            [Given("Non matching given")]
+            public void NonMatchingStep1()
+            {
+                CallStack.Add(nameof(NonMatchingStep1));
+            }
+
+            public const string ScenarioStep2Text = "I chose 15 as second number";
+
+            [And(ScenarioStep2Text)]
+            public void ScenarioStep2()
+            {
+                CallStack.Add(nameof(ScenarioStep2));
+            }
+
+            [And("Non matching and")]
+            public void NonMatchingStep2()
+            {
+                CallStack.Add(nameof(NonMatchingStep2));
+            }
+
+            public const string ScenarioStep3Text = "I press add";
+
+            [When(ScenarioStep3Text)]
+            public void ScenarioStep3()
+            {
+                CallStack.Add(nameof(ScenarioStep3));
+            }
+
+            [When("Non matching when")]
+            public void NonMatchingStep3()
+            {
+                CallStack.Add(nameof(NonMatchingStep3));
+            }
+
+            public const string ScenarioStep4Text = "the result should be 27 on the screen";
+
+            [Then(ScenarioStep4Text)]
+            public void ScenarioStep4()
+            {
+                CallStack.Add(nameof(ScenarioStep4));
+            }
+
+            [Then("Non matching then")]
+            public void NonMatchingStep4()
+            {
+                CallStack.Add(nameof(NonMatchingStep4));
             }
         }
     }

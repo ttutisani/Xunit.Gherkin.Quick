@@ -50,7 +50,28 @@ namespace Xunit.Gherkin.Quick
 
         public Scenario ExtractScenario(string scenarioName, FeatureFile featureFile)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(scenarioName))
+                throw new ArgumentNullException(nameof(scenarioName));
+
+            if (featureFile == null)
+                throw new ArgumentNullException(nameof(featureFile));
+
+            var gherkinScenario = featureFile.GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName);
+            if (gherkinScenario == null)
+                throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
+
+            var matchingStepMethods = gherkinScenario.Steps
+                .Select(s =>
+                {
+                    var matchingStepMethod = StepMethods.FirstOrDefault(sm => sm.Kind.ToString().Equals(s.Keyword.Trim(), StringComparison.OrdinalIgnoreCase));
+                    if (matchingStepMethod == null)
+                        throw new InvalidOperationException($"Cannot find scenario step `{s.Keyword}{s.Text}` for scenario `{scenarioName}`.");
+
+                    return matchingStepMethod;
+                })
+                .ToList();
+
+            return new Scenario(matchingStepMethods);
         }
     }
 }
