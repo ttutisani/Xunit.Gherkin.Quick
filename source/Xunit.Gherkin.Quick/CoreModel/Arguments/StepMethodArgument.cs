@@ -16,5 +16,7 @@ namespace Xunit.Gherkin.Quick
         {
             return new PrimitiveTypeArgument();
         }
+
+        public object Value { get; }
     }
 }

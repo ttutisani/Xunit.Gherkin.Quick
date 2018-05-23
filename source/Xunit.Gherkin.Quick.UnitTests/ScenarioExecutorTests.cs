@@ -49,8 +49,8 @@ namespace UnitTests
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     "Given " + FeatureWithScenarioSteps.ScenarioStep1Text,
-                    "When " + FeatureWithScenarioSteps.ScenarioStep2Text,
-                    "And " + FeatureWithScenarioSteps.ScenarioStep3Text,
+                    "And " + FeatureWithScenarioSteps.ScenarioStep2Text,
+                    "When " + FeatureWithScenarioSteps.ScenarioStep3Text,
                     "Then " + FeatureWithScenarioSteps.ScenarioStep4Text
                     )))
                 .Verifiable();

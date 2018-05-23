@@ -18,7 +18,10 @@ namespace Xunit.Gherkin.Quick
 
         public void Execute()
         {
-            throw new NotImplementedException();
+            foreach(var step in Steps)
+            {
+                step.Execute();
+            }
         }
     }
 }

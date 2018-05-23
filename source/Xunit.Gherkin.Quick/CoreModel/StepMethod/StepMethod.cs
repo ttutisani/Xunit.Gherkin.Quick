@@ -2,24 +2,46 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 
 namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethod
     {
-        public StepMethod(
+        private StepMethod(
             StepMethodKind kind, 
             string text,
-            IEnumerable<StepMethodArgument> arguments)
+            IEnumerable<StepMethodArgument> arguments,
+            MethodInfoWrapper methodInfoWrapper)
         {
             Kind = kind;
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Arguments = arguments != null
                 ? arguments.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(arguments));
+
+            _methodInfoWrapper = methodInfoWrapper;
+        }
+
+        public static StepMethod FromMethodInfo(MethodInfo methodInfo, Feature featureInstance)
+        {
+            var stepDefinitionAttribute = methodInfo.GetCustomAttribute<BaseStepDefinitionAttribute>();
+
+            return new StepMethod(
+                StepMethodKindExtensions.ToStepMethodKind(stepDefinitionAttribute),
+                stepDefinitionAttribute.Pattern,
+                StepMethodArgument.ListFromParameters(methodInfo.GetParameters()),
+                new MethodInfoWrapper(methodInfo, featureInstance));
         }
 
         public StepMethodKind Kind { get; }
+
+        private readonly MethodInfoWrapper _methodInfoWrapper;
+
+        public void Execute()
+        {
+            _methodInfoWrapper.InvokeMethod(Arguments.Select(arg => arg.Value).ToArray());
+        }
 
         public string Text { get; }
 

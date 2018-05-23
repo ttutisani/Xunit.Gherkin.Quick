@@ -15,9 +15,12 @@ namespace UnitTests
         {
             //arrange.
             var featureFilePath = "some path 123";
+            var featureInstance = new FeatureForCtorTest();
             var stepMethods = new List<StepMethod>
             {
-                new StepMethod(StepMethodKind.Given, "some text 123", new List<StepMethodArgument>())
+                StepMethod.FromMethodInfo(
+                    featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), 
+                    featureInstance)
             };
 
             //act.
@@ -28,6 +31,15 @@ namespace UnitTests
             Assert.NotNull(sut.StepMethods);
             Assert.Single(sut.StepMethods);
             Assert.Same(stepMethods[0], sut.StepMethods[0]);
+        }
+
+        private sealed class FeatureForCtorTest : Feature
+        {
+            [When("something")]
+            public void When_Something()
+            {
+
+            }
         }
 
         [Fact]

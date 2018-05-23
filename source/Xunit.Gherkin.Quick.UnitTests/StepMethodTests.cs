@@ -1,30 +1,60 @@
-﻿using System.Collections.Generic;
-using Xunit;
+﻿using Xunit;
 using Xunit.Gherkin.Quick;
 
 namespace UnitTests
 {
     public sealed class StepMethodTests
     {
-        [Theory]
-        [InlineData(StepMethodKind.Given)]
-        [InlineData(StepMethodKind.When)]
-        [InlineData(StepMethodKind.Then)]
-        [InlineData(StepMethodKind.And)]
-        [InlineData(StepMethodKind.But)]
-        internal void Ctor_Initializes_Properties(StepMethodKind kind)
+        [Fact]
+        internal void Ctor_Initializes_Properties()
         {
             //arrange.
-            var text = "stpe method text 123";
+            var featureInstance = new FeatureForCtorTest();
 
             //act.
-            var sut = new StepMethod(kind, text, new List<StepMethodArgument>());
+            var sut = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance);
 
             //assert.
-            Assert.Equal(kind, sut.Kind);
-            Assert.Equal(text, sut.Text);
+            Assert.Equal(StepMethodKind.When, sut.Kind);
+            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.Text);
             Assert.NotNull(sut.Arguments);
             Assert.Empty(sut.Arguments);
+        }
+
+        private sealed class FeatureForCtorTest : Feature
+        {
+            public const string WhenStepText = "some text 123";
+
+            [When(WhenStepText)]
+            public void When_Something()
+            {
+
+            }
+        }
+
+        [Fact]
+        public void Execute_Invokes_StepMethod()
+        {
+            //arrange.
+            var featureInstance = new FeatureForExecuteTest();
+            var sut = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForExecuteTest.Call_This_Method)), featureInstance);
+
+            //act.
+            sut.Execute();
+
+            //assert.
+            Assert.True(featureInstance.Called);
+        }
+
+        private sealed class FeatureForExecuteTest : Feature
+        {
+            public bool Called { get; private set; } = false;
+
+            [And("Call this")]
+            public void Call_This_Method()
+            {
+                Called = true;
+            }
         }
     }
 }
