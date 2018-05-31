@@ -15,7 +15,7 @@ namespace Xunit.Gherkin.Quick
             MethodInfoWrapper methodInfoWrapper)
         {
             Kind = kind;
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            Pattern = text ?? throw new ArgumentNullException(nameof(text));
             Arguments = arguments != null
                 ? arguments.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(arguments));
@@ -43,7 +43,7 @@ namespace Xunit.Gherkin.Quick
             _methodInfoWrapper.InvokeMethod(Arguments.Select(arg => arg.Value).ToArray());
         }
 
-        public string Text { get; }
+        public string Pattern { get; }
 
         public ReadOnlyCollection<StepMethodArgument> Arguments { get; }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -63,17 +64,31 @@ namespace Xunit.Gherkin.Quick
                 throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
 
             var matchingStepMethods = gherkinScenario.Steps
-                .Select(s =>
+                .Select(gherkingScenarioStep =>
                 {
-                    var matchingStepMethod = StepMethods.FirstOrDefault(sm => sm.Kind.ToString().Equals(s.Keyword.Trim(), StringComparison.OrdinalIgnoreCase));
+                    var matchingStepMethod = StepMethods.FirstOrDefault(stepMethod => IsStepMethodAMatch(gherkingScenarioStep, stepMethod));
                     if (matchingStepMethod == null)
-                        throw new InvalidOperationException($"Cannot find scenario step `{s.Keyword}{s.Text}` for scenario `{scenarioName}`.");
+                        throw new InvalidOperationException($"Cannot find scenario step `{gherkingScenarioStep.Keyword}{gherkingScenarioStep.Text}` for scenario `{scenarioName}`.");
 
                     return matchingStepMethod;
                 })
                 .ToList();
 
             return new Scenario(matchingStepMethods);
+
+            bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethod stepMethod)
+            {
+                if (!stepMethod.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+                var gherkinStepText = gherkinScenarioStep.Text.Trim();
+
+                var match = Regex.Match(gherkinStepText, stepMethod.Pattern);
+                if (!match.Success || !match.Value.Equals(gherkinStepText))
+                    return false;
+
+                return true;
+            }
         }
     }
 }

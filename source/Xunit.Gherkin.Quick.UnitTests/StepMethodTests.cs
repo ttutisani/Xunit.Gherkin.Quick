@@ -16,7 +16,7 @@ namespace UnitTests
 
             //assert.
             Assert.Equal(StepMethodKind.When, sut.Kind);
-            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.Text);
+            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.Pattern);
             Assert.NotNull(sut.Arguments);
             Assert.Empty(sut.Arguments);
         }

@@ -96,27 +96,27 @@ namespace UnitTests
             Assert.NotNull(sut.StepMethods);
             Assert.Equal(5, sut.StepMethods.Count);
 
-            var given = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Given && sm.Text == FeatureWithStepMethods.GivenStepText);
+            var given = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Given && sm.Pattern == FeatureWithStepMethods.GivenStepText);
             Assert.NotNull(given);
             Assert.NotNull(given.Arguments);
             Assert.Empty(given.Arguments);
 
-            var when = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.When && sm.Text == FeatureWithStepMethods.WhenStepText);
+            var when = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.When && sm.Pattern == FeatureWithStepMethods.WhenStepText);
             Assert.NotNull(when);
             Assert.NotNull(when.Arguments);
             Assert.Empty(when.Arguments);
 
-            var then = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Then && sm.Text == FeatureWithStepMethods.ThenStepText);
+            var then = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Then && sm.Pattern == FeatureWithStepMethods.ThenStepText);
             Assert.NotNull(then);
             Assert.NotNull(when.Arguments);
             Assert.Empty(then.Arguments);
 
-            var and = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.And && sm.Text == FeatureWithStepMethods.AndStepText);
+            var and = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.And && sm.Pattern == FeatureWithStepMethods.AndStepText);
             Assert.NotNull(and);
             Assert.NotNull(and.Arguments);
             Assert.Empty(and.Arguments);
 
-            var but = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.But && sm.Text == FeatureWithStepMethods.ButStepText);
+            var but = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.But && sm.Pattern == FeatureWithStepMethods.ButStepText);
             Assert.NotNull(but);
             Assert.NotNull(but.Arguments);
             Assert.Empty(but.Arguments);
@@ -213,10 +213,10 @@ namespace UnitTests
 
             //act.
             var scenario = sut.ExtractScenario(scenarioName, new FeatureFile(CreateGherkinDocument(scenarioName, 
-                "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text,
-                "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text,
+                "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
+                "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
                 "When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
-                "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text
+                "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
                 )));
 
             //assert.
@@ -229,11 +229,11 @@ namespace UnitTests
             AssertScenarioStepCorrectness(scenario.Steps[2], StepMethodKind.When, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text, sut);
             AssertScenarioStepCorrectness(scenario.Steps[3], StepMethodKind.Then, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text, sut);
             
-            void AssertScenarioStepCorrectness(StepMethod step, StepMethodKind kind, string text, FeatureClass sourceFeature)
+            void AssertScenarioStepCorrectness(StepMethod step, StepMethodKind kind, string text, FeatureClass featureClass)
             {
-                var sourceStep = sourceFeature.StepMethods.Single(s => s.Kind == kind && s.Text == text);
+                var sourceStep = featureClass.StepMethods.Single(s => s.Kind == kind && s.Pattern == text);
                 Assert.NotNull(step);
-                Assert.Same(step, sourceStep);
+                Assert.Same(sourceStep, step);
             }
         }
 
@@ -258,34 +258,52 @@ Scenario: " + scenarioName + @"
 
         private sealed class FeatureWithMatchingScenarioStepsToExtract : Feature
         {
-            public List<string> CallStack { get; } = new List<string>();
+            public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
 
-            public const string ScenarioStep1Text = "I chose 12 as first number";
+            [Given("Non matching given")]
+            public void NonMatchingStep1_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_before), null));
+            }
+
+            public const string ScenarioStep1Text = @"I chose (\d+) as first number";
 
             [Given(ScenarioStep1Text)]
-            public void ScenarioStep1()
+            public void ScenarioStep1(int firstNumber)
             {
-                CallStack.Add(nameof(ScenarioStep1));
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep1), new object[] { firstNumber }));
             }
 
             [Given("Non matching given")]
-            public void NonMatchingStep1()
+            public void NonMatchingStep1_after()
             {
-                CallStack.Add(nameof(NonMatchingStep1));
-            }
-
-            public const string ScenarioStep2Text = "I chose 15 as second number";
-
-            [And(ScenarioStep2Text)]
-            public void ScenarioStep2()
-            {
-                CallStack.Add(nameof(ScenarioStep2));
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_after), null));
             }
 
             [And("Non matching and")]
-            public void NonMatchingStep2()
+            public void NonMatchingStep2_before()
             {
-                CallStack.Add(nameof(NonMatchingStep2));
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_before), null));
+            }
+
+            public const string ScenarioStep2Text = @"I chose (\d+) as second number";
+
+            [And(ScenarioStep2Text)]
+            public void ScenarioStep2(int secondNumber)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), new object[] { secondNumber }));
+            }
+
+            [And("Non matching and")]
+            public void NonMatchingStep2_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_after), null));
+            }
+
+            [When("Non matching when")]
+            public void NonMatchingStep3_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_before), null));
             }
 
             public const string ScenarioStep3Text = "I press add";
@@ -293,27 +311,33 @@ Scenario: " + scenarioName + @"
             [When(ScenarioStep3Text)]
             public void ScenarioStep3()
             {
-                CallStack.Add(nameof(ScenarioStep3));
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep3), null));
             }
 
             [When("Non matching when")]
-            public void NonMatchingStep3()
+            public void NonMatchingStep3_after()
             {
-                CallStack.Add(nameof(NonMatchingStep3));
-            }
-
-            public const string ScenarioStep4Text = "the result should be 27 on the screen";
-
-            [Then(ScenarioStep4Text)]
-            public void ScenarioStep4()
-            {
-                CallStack.Add(nameof(ScenarioStep4));
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_after), null));
             }
 
             [Then("Non matching then")]
-            public void NonMatchingStep4()
+            public void NonMatchingStep4_before()
             {
-                CallStack.Add(nameof(NonMatchingStep4));
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_before), null));
+            }
+
+            public const string ScenarioStep4Text = @"the result should be (\d+) on the screen";
+
+            [Then(ScenarioStep4Text)]
+            public void ScenarioStep4(int result)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep4), new object[] { result }));
+            }
+
+            [Then("Non matching then")]
+            public void NonMatchingStep4_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
             }
         }
     }
