@@ -24,7 +24,6 @@ namespace Xunit.Gherkin.Quick
 
         public ReadOnlyCollection<StepMethod> StepMethods { get; }
 
-        //TODO: maybe we only need a feature type and not the whole instance?
         public static FeatureClass FromFeatureInstance(Feature featureInstance)
         {
             if (featureInstance == null)
