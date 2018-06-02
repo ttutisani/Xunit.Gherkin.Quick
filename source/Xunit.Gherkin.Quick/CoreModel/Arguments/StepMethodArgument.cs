@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -18,5 +19,16 @@ namespace Xunit.Gherkin.Quick
         }
 
         public object Value { get; }
+
+        public bool IsSameAs(StepMethodArgument other)
+        {
+            if (this == other)
+                return true;
+
+            return other != null
+                && other.Value == Value;
+        }
+
+        public abstract StepMethodArgument Clone();
     }
 }

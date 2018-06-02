@@ -6,7 +6,7 @@ namespace UnitTests
     public sealed class StepMethodTests
     {
         [Fact]
-        internal void Ctor_Initializes_Properties()
+        public void Ctor_Initializes_Properties()
         {
             //arrange.
             var featureInstance = new FeatureForCtorTest();
@@ -30,6 +30,36 @@ namespace UnitTests
             {
 
             }
+        }
+
+        [Fact]
+        public void Clone_Creates_Similar_Instance()
+        {
+            //arrange.
+            var featureInstance = new FeatureForCtorTest();
+            var sut = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance);
+
+            //act.
+            var clone = sut.Clone();
+
+            //assert.
+            Assert.NotNull(clone);
+            Assert.True(clone.IsSameAs(sut));
+        }
+
+        [Fact]
+        public void IsSameAs_Identifies_Similar_Instances()
+        {
+            //arrange.
+            var featureInstance = new FeatureForCtorTest();
+            var sut = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance);
+            var clone = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance);
+
+            //act.
+            var same = sut.IsSameAs(clone) && clone.IsSameAs(sut);
+
+            //assert.
+            Assert.True(same);
         }
 
         [Fact]

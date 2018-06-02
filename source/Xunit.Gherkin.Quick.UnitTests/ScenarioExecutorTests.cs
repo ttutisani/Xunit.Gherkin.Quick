@@ -64,10 +64,24 @@ namespace UnitTests
             _featureFileRepository.Verify();
 
             Assert.Equal(4, featureInstance.CallStack.Count);
+
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep1), featureInstance.CallStack[0].Key);
+            Assert.NotNull(featureInstance.CallStack[0].Value);
+            Assert.Single(featureInstance.CallStack[0].Value);
+            Assert.Equal(12, featureInstance.CallStack[0].Value[0]);
+
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep2), featureInstance.CallStack[1].Key);
+            Assert.NotNull(featureInstance.CallStack[1].Value);
+            Assert.Single(featureInstance.CallStack[1].Value);
+            Assert.Equal(15, featureInstance.CallStack[1].Value[0]);
+
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep3), featureInstance.CallStack[2].Key);
+            Assert.Null(featureInstance.CallStack[2].Value);
+
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep4), featureInstance.CallStack[3].Key);
+            Assert.NotNull(featureInstance.CallStack[3].Value);
+            Assert.Single(featureInstance.CallStack[3].Value);
+            Assert.Equal(27, featureInstance.CallStack[3].Value[0]);
         }
 
         private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)

@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace Xunit.Gherkin.Quick
 {
+    //value object.
     internal sealed class MethodInfoWrapper
     {
         private readonly MethodInfo _methodInfo;
@@ -17,6 +18,16 @@ namespace Xunit.Gherkin.Quick
         public void InvokeMethod(object[] parameters)
         {
             _methodInfo.Invoke(_target, parameters);
+        }
+
+        public bool IsSameAs(MethodInfoWrapper other)
+        {
+            if (this == other)
+                return true;
+
+            return other != null
+                && other._methodInfo.Equals(_methodInfo)
+                && other._target == _target;
         }
     }
 }

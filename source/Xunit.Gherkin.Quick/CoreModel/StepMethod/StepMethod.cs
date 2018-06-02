@@ -10,12 +10,12 @@ namespace Xunit.Gherkin.Quick
     {
         private StepMethod(
             StepMethodKind kind, 
-            string text,
+            string pattern,
             IEnumerable<StepMethodArgument> arguments,
             MethodInfoWrapper methodInfoWrapper)
         {
             Kind = kind;
-            Pattern = text ?? throw new ArgumentNullException(nameof(text));
+            Pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
             Arguments = arguments != null
                 ? arguments.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(arguments));
@@ -38,6 +38,32 @@ namespace Xunit.Gherkin.Quick
 
         private readonly MethodInfoWrapper _methodInfoWrapper;
 
+        public bool IsSameAs(StepMethod other)
+        {
+            if (other == this)
+                return true;
+
+            return other != null
+                && other.Kind == Kind
+                && other.Pattern == Pattern
+                && ArgumentsEqual(other.Arguments, Arguments)
+                && other._methodInfoWrapper.IsSameAs(_methodInfoWrapper);
+        }
+
+        private static bool ArgumentsEqual(IList<StepMethodArgument> first, IList<StepMethodArgument> second)
+        {
+            if (first.Count != second.Count)
+                return false;
+
+            for (int index = 0; index < first.Count; index++)
+            {
+                if (!first[index].IsSameAs(second[index]))
+                    return false;
+            }
+
+            return true;
+        }
+
         public void Execute()
         {
             _methodInfoWrapper.InvokeMethod(Arguments.Select(arg => arg.Value).ToArray());
@@ -46,6 +72,13 @@ namespace Xunit.Gherkin.Quick
         public string Pattern { get; }
 
         public ReadOnlyCollection<StepMethodArgument> Arguments { get; }
+
+        public StepMethod Clone()
+        {
+            var argumentsClone = Arguments.Select(arg => arg.Clone());
+
+            return new StepMethod(Kind, Pattern, argumentsClone, _methodInfoWrapper);
+        }
     }
 
     internal enum StepMethodKind
