@@ -63,7 +63,10 @@ namespace Xunit.Gherkin.Quick
                     if (matchingStepMethod == null)
                         throw new InvalidOperationException($"Cannot find scenario step `{gherkingScenarioStep.Keyword}{gherkingScenarioStep.Text}` for scenario `{scenarioName}`.");
 
-                    return matchingStepMethod.Clone();
+                    var stepMethodClone = matchingStepMethod.Clone();
+                    stepMethodClone.DigestScenarioStepValues(gherkingScenarioStep);
+
+                    return stepMethodClone;
                 })
                 .ToList();
 

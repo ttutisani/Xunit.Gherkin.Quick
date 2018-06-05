@@ -19,6 +19,20 @@ namespace UnitTests
             //assert.
             Assert.True(same);
         }
+
+        [Fact]
+        public void GetMethodName_Returns_Wrapped_Method_Name()
+        {
+            //arrange.
+            var target = new ClassWithMethod();
+            var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
+
+            //act.
+            var name = sut.GetMethodName();
+
+            //assert.
+            Assert.Equal(nameof(ClassWithMethod.MethodToCall), name);
+        }
         
         [Fact]
         public void InvokeMethod_Invokes_Underlying_Method()

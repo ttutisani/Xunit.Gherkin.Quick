@@ -29,5 +29,10 @@ namespace Xunit.Gherkin.Quick
                 && other._methodInfo.Equals(_methodInfo)
                 && other._target == _target;
         }
+
+        public string GetMethodName()
+        {
+            return _methodInfo.Name;
+        }
     }
 }

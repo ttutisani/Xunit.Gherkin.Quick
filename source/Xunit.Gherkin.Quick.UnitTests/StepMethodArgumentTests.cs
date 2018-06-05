@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -39,14 +40,15 @@ namespace UnitTests
             Assert.NotNull(args);
             Assert.Equal(3, args.Count);
 
-            AssertPrimitiveTypeArg(args[0]);
-            AssertPrimitiveTypeArg(args[1]);
-            AssertPrimitiveTypeArg(args[2]);
+            AssertPrimitiveTypeArg(args, 0);
+            AssertPrimitiveTypeArg(args, 1);
+            AssertPrimitiveTypeArg(args, 2);
 
-            void AssertPrimitiveTypeArg(StepMethodArgument arg)
+            void AssertPrimitiveTypeArg(List<StepMethodArgument> arg, int index)
             {
-                Assert.NotNull(arg);
-                Assert.IsType<PrimitiveTypeArgument>(arg);
+                Assert.NotNull(arg[index]);
+                Assert.IsType<PrimitiveTypeArgument>(arg[index]);
+                Assert.Equal(index, (arg[index] as PrimitiveTypeArgument).Index);
             }
         }
 
@@ -54,17 +56,40 @@ namespace UnitTests
         public void IsSameAs_Identifies_Similar_Instances()
         {
             //arrange.
-            var @params = StepMethodArgument.ListFromParameters(new ParameterInfo[]
+            var param0 = StepMethodArgument.ListFromParameters(new ParameterInfo[]
             {
-                GetParameterAt(0),
                 GetParameterAt(0)
-            });
+            })[0];
+            var param1 = StepMethodArgument.ListFromParameters(new ParameterInfo[]
+            {
+                GetParameterAt(0)
+            })[0];
 
             //act.
-            var same = @params[0].IsSameAs(@params[1]) && @params[1].IsSameAs(@params[0]);
+            var same = param0.IsSameAs(param1) && param1.IsSameAs(param0);
 
             //assert.
             Assert.True(same);
+        }
+
+        [Fact]
+        public void IsSameAs_Distinguishes_Different_Instances()
+        {
+            //arrange.
+            var param0 = StepMethodArgument.ListFromParameters(new ParameterInfo[]
+            {
+                GetParameterAt(0)
+            })[0];
+            var param1 = StepMethodArgument.ListFromParameters(new ParameterInfo[]
+            {
+                GetParameterAt(1)
+            })[0];
+
+            //act.
+            var same = param0.IsSameAs(param1) && param1.IsSameAs(param0);
+
+            //assert.
+            Assert.False(same);
         }
 
         [Fact]

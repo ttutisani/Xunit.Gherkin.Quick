@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using Gherkin.Ast;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -78,6 +80,25 @@ namespace Xunit.Gherkin.Quick
             var argumentsClone = Arguments.Select(arg => arg.Clone());
 
             return new StepMethod(Kind, Pattern, argumentsClone, _methodInfoWrapper);
+        }
+
+        public void DigestScenarioStepValues(Step gherkingScenarioStep)
+        {
+            if (Arguments.Count == 0)
+                return;
+
+            var argumentValuesFromStep = Regex.Match(gherkingScenarioStep.Text.Trim(), Pattern).Groups.Cast<Group>()
+                .Skip(1)
+                .Select(g => g.Value)
+                .ToArray();
+
+            if (argumentValuesFromStep.Length != Arguments.Count)
+                throw new InvalidOperationException($"Method `{_methodInfoWrapper.GetMethodName()}` for step `{Kind} {gherkingScenarioStep.Text.Trim()}` is expecting {Arguments.Count} params, but {argumentValuesFromStep.Length} param values were supplied.");
+
+            for (int argIndex = 0; argIndex < Arguments.Count; argIndex++)
+            {
+                Arguments[argIndex].DigestScenarioStepValues(argumentValuesFromStep, gherkingScenarioStep.Argument);
+            }
         }
     }
 

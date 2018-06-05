@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Gherkin.Ast;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -9,26 +9,21 @@ namespace Xunit.Gherkin.Quick
     {
         public static List<StepMethodArgument> ListFromParameters(ParameterInfo[] parameters)
         {
-            return parameters.Select(p => FromParameter(p))
+            return parameters.Select((p, i) => FromParameter(p, i))
                 .ToList();
         }
 
-        private static StepMethodArgument FromParameter(ParameterInfo parameter)
+        private static StepMethodArgument FromParameter(ParameterInfo parameter, int parameterIndex)
         {
-            return new PrimitiveTypeArgument();
+            return new PrimitiveTypeArgument(parameterIndex);
         }
 
-        public object Value { get; }
+        public object Value { get; protected set; }
 
-        public bool IsSameAs(StepMethodArgument other)
-        {
-            if (this == other)
-                return true;
-
-            return other != null
-                && other.Value == Value;
-        }
+        public abstract bool IsSameAs(StepMethodArgument other);
 
         public abstract StepMethodArgument Clone();
+
+        public abstract void DigestScenarioStepValues(string[] argumentValues, StepArgument gherkinStepArgument);
     }
 }
