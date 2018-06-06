@@ -1,4 +1,6 @@
-﻿namespace Xunit.Gherkin.Quick
+﻿using System.Threading.Tasks;
+
+namespace Xunit.Gherkin.Quick
 {
     internal sealed class ScenarioExecutor
     {
@@ -9,7 +11,7 @@
             _featureFileRepository = featureFileRepository ?? throw new System.ArgumentNullException(nameof(featureFileRepository));
         }
 
-        public void ExecuteScenario(Feature featureInstance, string scenarioName)
+        public async Task ExecuteScenarioAsync(Feature featureInstance, string scenarioName)
         {
             if (featureInstance == null)
                 throw new System.ArgumentNullException(nameof(featureInstance));
@@ -21,7 +23,7 @@
             var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
 
             var scenario = featureClass.ExtractScenario(scenarioName, featureFile);
-            scenario.Execute();
+            scenario.ExecuteAsync();
         }
     }
 }

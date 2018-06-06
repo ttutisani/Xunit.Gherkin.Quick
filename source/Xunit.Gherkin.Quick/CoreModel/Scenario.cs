@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -16,11 +17,11 @@ namespace Xunit.Gherkin.Quick
                 : throw new ArgumentNullException(nameof(stepMethods));
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             foreach(var step in Steps)
             {
-                step.Execute();
+                await step.ExecuteAsync();
             }
         }
     }

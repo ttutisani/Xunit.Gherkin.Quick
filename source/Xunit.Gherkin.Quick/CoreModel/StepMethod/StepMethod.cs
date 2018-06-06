@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Gherkin.Ast;
 
 namespace Xunit.Gherkin.Quick
@@ -66,9 +67,9 @@ namespace Xunit.Gherkin.Quick
             return true;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
-            _methodInfoWrapper.InvokeMethod(Arguments.Select(arg => arg.Value).ToArray());
+            await _methodInfoWrapper.InvokeMethodAsync(Arguments.Select(arg => arg.Value).ToArray());
         }
 
         public string Pattern { get; }

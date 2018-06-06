@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -48,7 +49,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Execute_Invokes_All_StepMethods()
+        public async Task Execute_Invokes_All_StepMethods()
         {
             //arrange.
             var featureInstance = new FeatureWithStepMethodsToInvoke();
@@ -62,7 +63,7 @@ namespace UnitTests
             });
 
             //act.
-            sut.Execute();
+            await sut.ExecuteAsync();
 
             //assert.
             Assert.NotNull(featureInstance.CallStack);

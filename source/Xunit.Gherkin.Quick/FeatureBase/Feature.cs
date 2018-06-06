@@ -18,7 +18,7 @@ namespace Xunit.Gherkin.Quick
         internal async Task Scenario(string scenarioName)
         {
             //var scenarioExecutor = new ScenarioExecutor(new FeatureFileRepository());
-            //scenarioExecutor.ExecuteScenario(this, scenarioName);
+            //await scenarioExecutor.ExecuteScenarioAsync(this, scenarioName);
 
             var gherkinDocument = ScenarioDiscoverer.GetGherkinDocumentByType(GetType());
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Xunit.Gherkin.Quick
 {
-    //value object.
     internal sealed class MethodInfoWrapper
     {
         private readonly MethodInfo _methodInfo;
@@ -15,9 +15,11 @@ namespace Xunit.Gherkin.Quick
             _target = target ?? throw new ArgumentNullException(nameof(target));
         }
 
-        public void InvokeMethod(object[] parameters)
+        public async Task InvokeMethodAsync(object[] parameters)
         {
-            _methodInfo.Invoke(_target, parameters);
+            var result = _methodInfo.Invoke(_target, parameters);
+            if (result is Task resultAsTask)
+                await resultAsTask;
         }
 
         public bool IsSameAs(MethodInfoWrapper other)

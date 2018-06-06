@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -19,10 +20,10 @@ namespace UnitTests
         }
 
         [Fact]
-        public void ExecuteScenario_Requires_FeatureInstance()
+        public async Task ExecuteScenario_Requires_FeatureInstance()
         {
             //act / assert.
-            Assert.Throws<ArgumentNullException>(() => _sut.ExecuteScenario(null, "valid scenario name"));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(null, "valid scenario name"));
         }
 
         [Theory]
@@ -30,19 +31,19 @@ namespace UnitTests
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("                 ")]
-        public void ExecuteScenario_Requires_ScenarioName(string scenarioName)
+        public async Task ExecuteScenario_Requires_ScenarioName(string scenarioName)
         {
             //arrange.
             var featureInstance = new UselessFeature();
 
             //act / assert.
-            Assert.Throws<ArgumentNullException>(() => _sut.ExecuteScenario(featureInstance, scenarioName));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
         }
 
         private sealed class UselessFeature : Feature { }
 
         [Fact]
-        public void ExecuteScenario_Executes_Scenario_Steps()
+        public async Task ExecuteScenario_Executes_Scenario_Steps()
         {
             //arrange.
             var scenarioName = "scenario 12345";
@@ -58,7 +59,7 @@ namespace UnitTests
             var featureInstance = new FeatureWithScenarioSteps();
 
             //act.
-            _sut.ExecuteScenario(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
 
             //assert.
             _featureFileRepository.Verify();

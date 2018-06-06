@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -158,14 +159,14 @@ Scenario: " + scenario + @"
         }
 
         [Fact]
-        public void Execute_Invokes_StepMethod()
+        public async Task Execute_Invokes_StepMethod()
         {
             //arrange.
             var featureInstance = new FeatureForExecuteTest();
             var sut = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForExecuteTest.Call_This_Method)), featureInstance);
 
             //act.
-            sut.Execute();
+            await sut.ExecuteAsync();
 
             //assert.
             Assert.True(featureInstance.Called);
