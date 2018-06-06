@@ -1,4 +1,5 @@
 ﻿using Gherkin.Ast;
+using System;
 using System.Reflection;
 
 namespace Xunit.Gherkin.Quick
@@ -22,7 +23,10 @@ namespace Xunit.Gherkin.Quick
 
         public override void DigestScenarioStepValues(string[] argumentValues, StepArgument gherkinStepArgument)
         {
-            Value = System.Convert.ChangeType(argumentValues[_index], _parameterInfo.ParameterType);
+            if (argumentValues.Length <= _index)
+                throw new InvalidOperationException($"Cannot extract value for parameter at index {_index}; only {argumentValues.Length} parameters were provided.");
+
+            Value = Convert.ChangeType(argumentValues[_index], _parameterInfo.ParameterType);
         }
 
         public override bool IsSameAs(StepMethodArgument other)

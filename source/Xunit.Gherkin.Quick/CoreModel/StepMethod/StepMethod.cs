@@ -91,13 +91,10 @@ namespace Xunit.Gherkin.Quick
                 .Skip(1)
                 .Select(g => g.Value)
                 .ToArray();
-
-            if (argumentValuesFromStep.Length != Arguments.Count)
-                throw new InvalidOperationException($"Method `{_methodInfoWrapper.GetMethodName()}` for step `{Kind} {gherkingScenarioStep.Text.Trim()}` is expecting {Arguments.Count} params, but {argumentValuesFromStep.Length} param values were supplied.");
-
-            for (int argIndex = 0; argIndex < Arguments.Count; argIndex++)
+            
+            foreach (var arg in Arguments)
             {
-                Arguments[argIndex].DigestScenarioStepValues(argumentValuesFromStep, gherkingScenarioStep.Argument);
+                arg.DigestScenarioStepValues(argumentValuesFromStep, gherkingScenarioStep.Argument);
             }
         }
     }

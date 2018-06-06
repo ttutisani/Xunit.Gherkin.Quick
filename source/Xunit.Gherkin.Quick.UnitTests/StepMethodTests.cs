@@ -99,39 +99,6 @@ namespace UnitTests
         }
 
         [Fact]
-        public void DigestScenarioStepValues_Expects_Exact_Number_Of_Groups_Not_More()
-        {
-            //arrange.
-            var featureInstance = new FeatureForApplyArgumentValues_MoreThanNeededGroups();
-            var sut = StepMethod.FromMethodInfo(
-                featureInstance.GetType().GetMethod(nameof(FeatureForApplyArgumentValues_MoreThanNeededGroups.Method_With_Arguments)),
-                featureInstance);
-
-            var number = 123;
-            var text = "Ana";
-            var date = new DateTime(2018, 5, 23);
-            var stepText = FeatureForApplyArgumentValues_MoreThanNeededGroups.StepMethodText
-                .Replace(@"(\d+)", $"{number}")
-                .Replace(@"(\w+)", $"{text}")
-                .Replace(@"([\d/]+)", $"{date.Month}/{date.Day}/{date.Year}");
-
-            var step = CreateGherkinDocument("some scenario", "Then " + stepText)
-                .Feature.Children.First().Steps.First();
-
-            //act / assert.
-            Assert.Throws<InvalidOperationException>(() => sut.DigestScenarioStepValues(step));
-        }
-
-        private sealed class FeatureForApplyArgumentValues_MoreThanNeededGroups : Feature
-        {
-            public const string StepMethodText = @"I should have (\d+) apples from (\w+) by ([\d/]+)";
-
-            [Then(StepMethodText)]
-            public void Method_With_Arguments(int number, string text)
-            { }
-        }
-
-        [Fact]
         public void DigestScenarioStepValues_Sets_Primitive_Values()
         {
             //arrange.
