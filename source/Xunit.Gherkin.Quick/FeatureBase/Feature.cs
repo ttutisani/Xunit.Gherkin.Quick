@@ -17,6 +17,9 @@ namespace Xunit.Gherkin.Quick
         [Scenario]
         internal async Task Scenario(string scenarioName)
         {
+            //var scenarioExecutor = new ScenarioExecutor(new FeatureFileRepository());
+            //scenarioExecutor.ExecuteScenario(this, scenarioName);
+
             var gherkinDocument = ScenarioDiscoverer.GetGherkinDocumentByType(GetType());
 
             var parsedScenario = gherkinDocument.Feature.Children.FirstOrDefault(scenario => scenario.Name == scenarioName);
@@ -33,7 +36,7 @@ namespace Xunit.Gherkin.Quick
             {
                 var parsedStep = parsedStepsQueue.Dequeue();
 
-                var matchingStepMethod = stepMethods.FirstOrDefault(stepMethod => 
+                var matchingStepMethod = stepMethods.FirstOrDefault(stepMethod =>
                     stepMethod.keywordAttribute.MatchesStep(parsedStep.Keyword, parsedStep.Text));
                 if (matchingStepMethod == null)
                     throw new InvalidOperationException($"Cannot find scenario step `{parsedStep.Keyword}{parsedStep.Text}` for scenario `{scenarioName}`.");
