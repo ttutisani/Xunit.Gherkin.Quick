@@ -51,7 +51,6 @@ namespace UnitTests
             {
                 Assert.NotNull(arg[index]);
                 Assert.IsType<PrimitiveTypeArgument>(arg[index]);
-                Assert.Equal(index, (arg[index] as PrimitiveTypeArgument).Index);
             }
         }
 

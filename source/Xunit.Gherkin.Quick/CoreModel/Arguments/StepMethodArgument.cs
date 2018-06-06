@@ -15,7 +15,7 @@ namespace Xunit.Gherkin.Quick
 
         private static StepMethodArgument FromParameter(ParameterInfo parameter, int parameterIndex)
         {
-            return new PrimitiveTypeArgument(parameterIndex);
+            return new PrimitiveTypeArgument(parameter, parameterIndex);
         }
 
         public object Value { get; protected set; }

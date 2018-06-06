@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -9,24 +10,19 @@ namespace UnitTests
 {
     public sealed class PrimitiveTypeArgumentTests
     {
-        [Fact]
-        public void Ctor_Initializes_Properties()
+        private static ParameterInfo GetParamAt(int index)
         {
-            //arrange.
-            var index = 123;
-
-            //act.
-            var sut = new PrimitiveTypeArgument(123);
-
-            //assert.
-            Assert.Equal(index, sut.Index);
+            return typeof(PrimitiveTypeArgumentTests).GetMethod(nameof(MethodWithParameters), BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetParameters()[index];
         }
+
+        private void MethodWithParameters(int numberParam, string literalParam, DateTime dateParam) { }
 
         [Fact]
         public void Clone_Creates_Similar_Instance()
         {
             //arrange.
-            var sut = new PrimitiveTypeArgument(123);
+            var sut = new PrimitiveTypeArgument(GetParamAt(0), 123);
 
             //act.
             var clone = sut.Clone();
@@ -42,7 +38,7 @@ namespace UnitTests
         public void DigestScenarioStepValues_Takes_Value_By_Index(int index)
         {
             //arrange.
-            var sut = new PrimitiveTypeArgument(index);
+            var sut = new PrimitiveTypeArgument(GetParamAt(index), index);
 
             var arguments = new dynamic[] { 123, "Ana", new DateTime(2018, 5, 23) };
             var argumentsAsString = new string[] { $"{arguments[0]}", $"{arguments[1]}", $"{arguments[2].Month}/{arguments[2].Day}/{arguments[2].Year}" };
