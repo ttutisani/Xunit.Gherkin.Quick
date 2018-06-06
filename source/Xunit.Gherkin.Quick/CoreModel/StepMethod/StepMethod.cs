@@ -32,7 +32,7 @@ namespace Xunit.Gherkin.Quick
             return new StepMethod(
                 StepMethodKindExtensions.ToStepMethodKind(stepDefinitionAttribute),
                 stepDefinitionAttribute.Pattern,
-                StepMethodArgument.ListFromParameters(methodInfo.GetParameters()),
+                StepMethodArgument.ListFromMethodInfo(methodInfo),
                 new MethodInfoWrapper(methodInfo, featureInstance));
         }
 

@@ -7,9 +7,9 @@ namespace Xunit.Gherkin.Quick
 {
     internal abstract class StepMethodArgument
     {
-        public static List<StepMethodArgument> ListFromParameters(ParameterInfo[] parameters)
+        public static List<StepMethodArgument> ListFromMethodInfo(MethodInfo methodInfo)
         {
-            return parameters.Select((p, i) => FromParameter(p, i))
+            return methodInfo.GetParameters().Select((p, i) => FromParameter(p, i))
                 .ToList();
         }
 
