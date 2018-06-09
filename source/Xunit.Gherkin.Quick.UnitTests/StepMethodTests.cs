@@ -128,6 +128,9 @@ namespace UnitTests
             Assert.Equal(number, sut.Arguments[0].Value);
             Assert.Equal(text, sut.Arguments[1].Value);
             Assert.Equal(date, sut.Arguments[2].Value);
+
+            var digestedText = sut.GetDigestedStepText();
+            Assert.Equal(stepText, digestedText);
         }
 
         private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
@@ -181,6 +184,23 @@ Scenario: " + scenario + @"
             {
                 Called = true;
             }
+        }
+
+        [Fact]
+        public void GetDigestedStepText_Throws_Error_If_Not_Yet_Digested()
+        {
+            //arrange.
+            var featureInstance = new Feature_For_GetDigestedStepTextTest();
+            var sut = StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(Feature_For_GetDigestedStepTextTest.When_Something_Method)), featureInstance);
+
+            //act / assert.
+            Assert.Throws<InvalidOperationException>(() => sut.GetDigestedStepText());
+        }
+
+        private sealed class Feature_For_GetDigestedStepTextTest : Feature
+        {
+            [When("something")]
+            public void When_Something_Method() { }
         }
     }
 }

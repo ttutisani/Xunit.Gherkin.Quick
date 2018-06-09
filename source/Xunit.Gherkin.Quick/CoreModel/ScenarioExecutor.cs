@@ -23,7 +23,7 @@ namespace Xunit.Gherkin.Quick
             var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
 
             var scenario = featureClass.ExtractScenario(scenarioName, featureFile);
-            await scenario.ExecuteAsync();
+            await scenario.ExecuteAsync(null);
         }
     }
 }

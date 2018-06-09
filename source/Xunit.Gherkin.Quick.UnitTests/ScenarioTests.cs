@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Moq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -62,16 +63,26 @@ namespace UnitTests
                 StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep4)), featureInstance)
             });
 
+            var output = new Mock<IScenarioOutput>();
+
             //act.
-            await sut.ExecuteAsync();
+            await sut.ExecuteAsync(output.Object);
 
             //assert.
             Assert.NotNull(featureInstance.CallStack);
             Assert.Equal(4, featureInstance.CallStack.Count);
+
             Assert.Equal(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep1), featureInstance.CallStack[0]);
+            output.Verify(o => o.StepPassed("Given " + FeatureWithStepMethodsToInvoke.ScenarioStep1Text), Times.Once);
+
             Assert.Equal(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep2), featureInstance.CallStack[1]);
+            output.Verify(o => o.StepPassed("And " + FeatureWithStepMethodsToInvoke.ScenarioStep2Text), Times.Once);
+
             Assert.Equal(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep3), featureInstance.CallStack[2]);
+            output.Verify(o => o.StepPassed("When " + FeatureWithStepMethodsToInvoke.ScenarioStep3Text), Times.Once);
+
             Assert.Equal(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep4), featureInstance.CallStack[3]);
+            output.Verify(o => o.StepPassed("Then " + FeatureWithStepMethodsToInvoke.ScenarioStep4Text), Times.Once);
         }
 
         private sealed class FeatureWithStepMethodsToInvoke : Feature

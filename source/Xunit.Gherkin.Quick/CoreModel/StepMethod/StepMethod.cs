@@ -26,6 +26,14 @@ namespace Xunit.Gherkin.Quick
             _methodInfoWrapper = methodInfoWrapper;
         }
 
+        public string GetDigestedStepText()
+        {
+            if (_lastDigestedStepText == null)
+                throw new InvalidOperationException($"Not yet digested. Call `{nameof(DigestScenarioStepValues)}` first.");
+
+            return _lastDigestedStepText;
+        }
+
         public static StepMethod FromMethodInfo(MethodInfo methodInfo, Feature featureInstance)
         {
             var stepDefinitionAttribute = methodInfo.GetCustomAttribute<BaseStepDefinitionAttribute>();
@@ -83,12 +91,16 @@ namespace Xunit.Gherkin.Quick
             return new StepMethod(Kind, Pattern, argumentsClone, _methodInfoWrapper);
         }
 
+        private string _lastDigestedStepText;
+
         public void DigestScenarioStepValues(Step gherkingScenarioStep)
         {
             if (Arguments.Count == 0)
                 return;
 
-            var argumentValuesFromStep = Regex.Match(gherkingScenarioStep.Text.Trim(), Pattern).Groups.Cast<Group>()
+            var stepText = gherkingScenarioStep.Text.Trim();
+
+            var argumentValuesFromStep = Regex.Match(stepText, Pattern).Groups.Cast<Group>()
                 .Skip(1)
                 .Select(g => g.Value)
                 .ToArray();
@@ -97,6 +109,8 @@ namespace Xunit.Gherkin.Quick
             {
                 arg.DigestScenarioStepValues(argumentValuesFromStep, gherkingScenarioStep.Argument);
             }
+
+            _lastDigestedStepText = stepText;
         }
     }
 
