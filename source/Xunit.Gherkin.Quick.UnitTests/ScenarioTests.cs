@@ -1,4 +1,5 @@
 ﻿using Moq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,9 +16,9 @@ namespace UnitTests
             var featureInstance = new FeatureForCtorTest();
             var stepMethods = new List<StepMethod>
             {
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.Then_Something)), featureInstance),
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance),
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.Given_Something)), featureInstance)
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.Then_Something)), featureInstance), "text1"),
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance), "text2"),
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.Given_Something)), featureInstance), "text3")
             };
 
             //act.
@@ -25,6 +26,7 @@ namespace UnitTests
 
             //assert.
             Assert.NotNull(sut.Steps);
+            Assert.Equal(3, sut.Steps.Count);
             Assert.Equal(stepMethods, sut.Steps);
         }
 
@@ -57,10 +59,10 @@ namespace UnitTests
 
             var sut = new Scenario(new List<StepMethod>
             {
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep1)), featureInstance),
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep2)), featureInstance),
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep3)), featureInstance),
-                StepMethod.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep4)), featureInstance)
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep1)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep1Text),
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep2)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep2Text),
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep3)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep3Text),
+                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep4)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep4Text)
             });
 
             var output = new Mock<IScenarioOutput>();
@@ -144,6 +146,16 @@ namespace UnitTests
             {
                 CallStack.Add(nameof(NonMatchingStep4));
             }
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_Requires_Output()
+        {
+            //arrange.
+            var sut = new Scenario(new List<StepMethod>());
+
+            //act / assert.
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.ExecuteAsync(null));
         }
     }
 }

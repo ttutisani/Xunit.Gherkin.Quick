@@ -9,7 +9,7 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureClass
     {
-        public FeatureClass(string featureFilePath, IEnumerable<StepMethod> stepMethods)
+        public FeatureClass(string featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
         {
             FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath) 
                 ? featureFilePath 
@@ -22,7 +22,7 @@ namespace Xunit.Gherkin.Quick
 
         public string FeatureFilePath { get; }
 
-        public ReadOnlyCollection<StepMethod> StepMethods { get; }
+        public ReadOnlyCollection<StepMethodInfo> StepMethods { get; }
 
         public static FeatureClass FromFeatureInstance(Feature featureInstance)
         {
@@ -38,7 +38,7 @@ namespace Xunit.Gherkin.Quick
 
             var stepMethods = featureType.GetTypeInfo().GetMethods()
                 .Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))
-                .Select(m => StepMethod.FromMethodInfo(m, featureInstance))
+                .Select(m => StepMethodInfo.FromMethodInfo(m, featureInstance))
                 .ToList();
 
             return new FeatureClass(featureFilePath, stepMethods);
@@ -66,13 +66,13 @@ namespace Xunit.Gherkin.Quick
                     var stepMethodClone = matchingStepMethod.Clone();
                     stepMethodClone.DigestScenarioStepValues(gherkingScenarioStep);
 
-                    return stepMethodClone;
+                    return new StepMethod(stepMethodClone, gherkingScenarioStep.Text);
                 })
                 .ToList();
 
             return new Scenario(matchingStepMethods);
 
-            bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethod stepMethod)
+            bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
             {
                 if (!stepMethod.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
                     return false;

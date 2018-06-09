@@ -19,10 +19,13 @@ namespace Xunit.Gherkin.Quick
 
         public async Task ExecuteAsync(IScenarioOutput scenarioOutput)
         {
-            foreach(var step in Steps)
+            if (scenarioOutput == null)
+                throw new ArgumentNullException(nameof(scenarioOutput));
+
+            foreach (var step in Steps)
             {
                 await step.ExecuteAsync();
-                scenarioOutput.StepPassed(step.GetDigestedStepText());
+                scenarioOutput.StepPassed($"{step.StepMethodInfo.Kind} {step.StepText}");
             }
         }
     }

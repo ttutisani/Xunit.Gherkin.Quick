@@ -16,9 +16,9 @@ namespace UnitTests
             //arrange.
             var featureFilePath = "some path 123";
             var featureInstance = new FeatureForCtorTest();
-            var stepMethods = new List<StepMethod>
+            var stepMethods = new List<StepMethodInfo>
             {
-                StepMethod.FromMethodInfo(
+                StepMethodInfo.FromMethodInfo(
                     featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), 
                     featureInstance)
             };
@@ -224,30 +224,31 @@ namespace UnitTests
             Assert.NotNull(scenario.Steps);
             Assert.Equal(4, scenario.Steps.Count);
 
-            AssertScenarioStepCorrectness(scenario.Steps[0], StepMethodKind.Given, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text, sut);
-            Assert.NotNull(scenario.Steps[0].Arguments);
-            Assert.Single(scenario.Steps[0].Arguments);
-            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[0].Arguments[0]);
-            Assert.Equal(12, scenario.Steps[0].Arguments[0].Value);
+            AssertScenarioStepCorrectness(scenario.Steps[0].StepMethodInfo, StepMethodKind.Given, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text, sut);
+            Assert.NotNull(scenario.Steps[0].StepMethodInfo.Arguments);
+            Assert.Single(scenario.Steps[0].StepMethodInfo.Arguments);
+            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[0].StepMethodInfo.Arguments[0]);
+            Assert.Equal(12, scenario.Steps[0].StepMethodInfo.Arguments[0].Value);
 
-            AssertScenarioStepCorrectness(scenario.Steps[1], StepMethodKind.And, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text, sut);
-            Assert.NotNull(scenario.Steps[1].Arguments);
-            Assert.Single(scenario.Steps[1].Arguments);
-            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[1].Arguments[0]);
-            Assert.Equal(15, scenario.Steps[1].Arguments[0].Value);
+            AssertScenarioStepCorrectness(scenario.Steps[1].StepMethodInfo, StepMethodKind.And, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text, sut);
+            Assert.NotNull(scenario.Steps[1].StepMethodInfo.Arguments);
+            Assert.Single(scenario.Steps[1].StepMethodInfo.Arguments);
+            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[1].StepMethodInfo.Arguments[0]);
+            Assert.Equal(15, scenario.Steps[1].StepMethodInfo.Arguments[0].Value);
 
-            AssertScenarioStepCorrectness(scenario.Steps[2], StepMethodKind.When, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text, sut);
-            Assert.NotNull(scenario.Steps[2].Arguments);
-            Assert.Empty(scenario.Steps[2].Arguments);
+            AssertScenarioStepCorrectness(scenario.Steps[2].StepMethodInfo, StepMethodKind.When, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text, sut);
+            Assert.NotNull(scenario.Steps[2].StepMethodInfo.Arguments);
+            Assert.Empty(scenario.Steps[2].StepMethodInfo.Arguments);
 
-            AssertScenarioStepCorrectness(scenario.Steps[3], StepMethodKind.Then, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text, sut);
-            Assert.NotNull(scenario.Steps[3].Arguments);
-            Assert.Single(scenario.Steps[3].Arguments);
-            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[3].Arguments[0]);
-            Assert.Equal(27, scenario.Steps[3].Arguments[0].Value);
+            AssertScenarioStepCorrectness(scenario.Steps[3].StepMethodInfo, StepMethodKind.Then, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text, sut);
+            Assert.NotNull(scenario.Steps[3].StepMethodInfo.Arguments);
+            Assert.Single(scenario.Steps[3].StepMethodInfo.Arguments);
+            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[3].StepMethodInfo.Arguments[0]);
+            Assert.Equal(27, scenario.Steps[3].StepMethodInfo.Arguments[0].Value);
 
-            void AssertScenarioStepCorrectness(StepMethod step, StepMethodKind kind, string text, FeatureClass featureClass)
+            void AssertScenarioStepCorrectness(StepMethodInfo step, StepMethodKind kind, string text, FeatureClass featureClass)
             {
+                Assert.Single(featureClass.StepMethods, sm => sm.Kind == kind && sm.Pattern == text);
                 var sourceStep = featureClass.StepMethods.Single(s => s.Kind == kind && s.Pattern == text);
                 Assert.NotNull(step);
                 Assert.NotEqual(sourceStep, step);

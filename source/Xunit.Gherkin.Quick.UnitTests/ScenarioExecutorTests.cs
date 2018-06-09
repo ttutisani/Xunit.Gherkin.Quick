@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Gherkin.Quick;
 
 namespace UnitTests
@@ -46,17 +47,24 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Scenario_Steps()
         {
             //arrange.
+            var step1Text = "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
+            var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
+            var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
+            var step4Text = "Then " + FeatureWithScenarioSteps.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+
             var scenarioName = "scenario 12345";
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-                    "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
-                    "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
-                    "When " + FeatureWithScenarioSteps.ScenarioStep3Text,
-                    "Then " + FeatureWithScenarioSteps.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
+                    step1Text,
+                    step2Text,
+                    step3Text,
+                    step4Text
                     )))
                 .Verifiable();
 
             var featureInstance = new FeatureWithScenarioSteps();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
 
             //act.
             await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
@@ -70,19 +78,23 @@ namespace UnitTests
             Assert.NotNull(featureInstance.CallStack[0].Value);
             Assert.Single(featureInstance.CallStack[0].Value);
             Assert.Equal(12, featureInstance.CallStack[0].Value[0]);
+            output.Verify(o => o.WriteLine($"{step1Text}: PASSED"), Times.Once);
 
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep2), featureInstance.CallStack[1].Key);
             Assert.NotNull(featureInstance.CallStack[1].Value);
             Assert.Single(featureInstance.CallStack[1].Value);
             Assert.Equal(15, featureInstance.CallStack[1].Value[0]);
+            output.Verify(o => o.WriteLine($"{step2Text}: PASSED"), Times.Once);
 
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep3), featureInstance.CallStack[2].Key);
             Assert.Null(featureInstance.CallStack[2].Value);
+            output.Verify(o => o.WriteLine($"{step3Text}: PASSED"), Times.Once);
 
             Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep4), featureInstance.CallStack[3].Key);
             Assert.NotNull(featureInstance.CallStack[3].Value);
             Assert.Single(featureInstance.CallStack[3].Value);
             Assert.Equal(27, featureInstance.CallStack[3].Value[0]);
+            output.Verify(o => o.WriteLine($"{step4Text}: PASSED"), Times.Once);
         }
 
         private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
