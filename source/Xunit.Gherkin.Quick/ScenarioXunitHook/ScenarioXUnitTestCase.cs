@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Gherkin.Ast;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
@@ -14,7 +16,7 @@ namespace Xunit.Gherkin.Quick
         {
         }
 
-        public ScenarioXUnitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null)
+        public ScenarioXUnitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null, IEnumerable<string> tags = null)
             : base(messageSink, TestMethodDisplay.Method, testMethod, testMethodArguments)
         {
             DisplayName = $"{featureName} :: {scenarioName}";
@@ -25,6 +27,11 @@ namespace Xunit.Gherkin.Quick
                 {  "FeatureTitle", new List<string> { featureName } },
                 {  "Description", new List<string> { scenarioName } }
             };
+
+            if (tags != null && tags.Any())
+            {
+                Traits["Category"] = tags.ToList();
+            }
         }
 
         public override async Task<RunSummary> RunAsync(
@@ -34,7 +41,7 @@ namespace Xunit.Gherkin.Quick
             ExceptionAggregator aggregator, 
             CancellationTokenSource cancellationTokenSource)
         {
-            return await new ScenarioXunitTestCaseRunner(
+            return await new ScenarioXUnitTestCaseRunner(
                 this, 
                 DisplayName, 
                 SkipReason, 

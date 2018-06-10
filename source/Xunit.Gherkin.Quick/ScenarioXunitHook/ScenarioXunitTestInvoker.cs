@@ -8,11 +8,11 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioXunitTestInvoker : XunitTestInvoker
+    internal sealed class ScenarioXUnitTestInvoker : XunitTestInvoker
     {
         private readonly TestOutputHelper _testOutputHelper;
 
-        public ScenarioXunitTestInvoker(
+        public ScenarioXUnitTestInvoker(
             ITest test, 
             IMessageBus messageBus, 
             Type testClass, 
