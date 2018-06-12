@@ -77,7 +77,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void ExtractScenario_Extracts_ScenarioSteps()
+        public void ExtractScenario_Extracts_Scenario()
         {
             //arrange.
             var scenarioName = "some scenario name 123";
@@ -94,35 +94,6 @@ namespace UnitTests
 
             //assert.
             Assert.NotNull(scenario);
-            Assert.NotNull(scenario.Steps);
-            Assert.Equal(4, scenario.Steps.Count);
-
-            AssertScenarioStepCorrectness(scenario.Steps[0].StepMethodInfo, StepMethodKind.Given, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text, sut);
-            Assert.NotNull(scenario.Steps[0].StepMethodInfo.Arguments);
-            Assert.Single(scenario.Steps[0].StepMethodInfo.Arguments);
-            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[0].StepMethodInfo.Arguments[0]);
-            Assert.Equal(12, scenario.Steps[0].StepMethodInfo.Arguments[0].Value);
-
-            AssertScenarioStepCorrectness(scenario.Steps[1].StepMethodInfo, StepMethodKind.And, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text, sut);
-            Assert.NotNull(scenario.Steps[1].StepMethodInfo.Arguments);
-            Assert.Single(scenario.Steps[1].StepMethodInfo.Arguments);
-            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[1].StepMethodInfo.Arguments[0]);
-            Assert.Equal(15, scenario.Steps[1].StepMethodInfo.Arguments[0].Value);
-
-            AssertScenarioStepCorrectness(scenario.Steps[2].StepMethodInfo, StepMethodKind.When, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text, sut);
-            Assert.NotNull(scenario.Steps[2].StepMethodInfo.Arguments);
-            Assert.Empty(scenario.Steps[2].StepMethodInfo.Arguments);
-
-            AssertScenarioStepCorrectness(scenario.Steps[3].StepMethodInfo, StepMethodKind.Then, FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text, sut);
-            Assert.NotNull(scenario.Steps[3].StepMethodInfo.Arguments);
-            Assert.Single(scenario.Steps[3].StepMethodInfo.Arguments);
-            Assert.IsType<PrimitiveTypeArgument>(scenario.Steps[3].StepMethodInfo.Arguments[0]);
-            Assert.Equal(27, scenario.Steps[3].StepMethodInfo.Arguments[0].Value);
-
-            void AssertScenarioStepCorrectness(StepMethodInfo step, StepMethodKind kind, string text, FeatureClass featureClass)
-            {
-                Assert.NotNull(step);
-            }
         }
 
         private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenarioName, params string[] steps)

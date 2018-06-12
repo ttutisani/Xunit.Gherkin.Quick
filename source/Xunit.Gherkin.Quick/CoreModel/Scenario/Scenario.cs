@@ -8,11 +8,11 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class Scenario
     {
-        public ReadOnlyCollection<StepMethod> Steps { get; }
+        private readonly ReadOnlyCollection<StepMethod> _steps;
 
         public Scenario(IEnumerable<StepMethod> stepMethods)
         {
-            Steps = stepMethods != null
+            _steps = stepMethods != null
                 ? new ReadOnlyCollection<StepMethod>(stepMethods.ToList())
                 : throw new ArgumentNullException(nameof(stepMethods));
         }
@@ -22,7 +22,7 @@ namespace Xunit.Gherkin.Quick
             if (scenarioOutput == null)
                 throw new ArgumentNullException(nameof(scenarioOutput));
 
-            var step = Steps.GetEnumerator();
+            var step = _steps.GetEnumerator();
             while(step.MoveNext())
             {
                 try

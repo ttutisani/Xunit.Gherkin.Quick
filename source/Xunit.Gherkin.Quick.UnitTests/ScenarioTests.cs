@@ -10,27 +10,6 @@ namespace UnitTests
 {
     public sealed class ScenarioTests
     {
-        [Fact]
-        public void Ctor_Initializes_Properties()
-        {
-            //arrange.
-            var featureInstance = new FeatureForCtorTest();
-            var stepMethods = new List<StepMethod>
-            {
-                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.Then_Something)), featureInstance), "text1"),
-                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance), "text2"),
-                new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.Given_Something)), featureInstance), "text3")
-            };
-
-            //act.
-            var sut = new Scenario(stepMethods);
-
-            //assert.
-            Assert.NotNull(sut.Steps);
-            Assert.Equal(3, sut.Steps.Count);
-            Assert.Equal(stepMethods, sut.Steps);
-        }
-
         private sealed class FeatureForCtorTest : Feature
         {
             [Then("something")]
