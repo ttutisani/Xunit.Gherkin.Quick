@@ -11,6 +11,16 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethodInfo
     {
+        public string Pattern { get; }
+
+        private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
+
+        public StepMethodKind Kind { get; }
+
+        private readonly MethodInfoWrapper _methodInfoWrapper;
+
+        private string _lastDigestedStepText;
+
         private StepMethodInfo(
             StepMethodKind kind, 
             string pattern,
@@ -19,7 +29,7 @@ namespace Xunit.Gherkin.Quick
         {
             Kind = kind;
             Pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
-            Arguments = arguments != null
+            _arguments = arguments != null
                 ? arguments.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(arguments));
 
@@ -45,9 +55,7 @@ namespace Xunit.Gherkin.Quick
                 new MethodInfoWrapper(methodInfo, featureInstance));
         }
 
-        public StepMethodKind Kind { get; }
-
-        private readonly MethodInfoWrapper _methodInfoWrapper;
+        
 
         public bool IsSameAs(StepMethodInfo other)
         {
@@ -57,7 +65,7 @@ namespace Xunit.Gherkin.Quick
             return other != null
                 && other.Kind == Kind
                 && other.Pattern == Pattern
-                && ArgumentsEqual(other.Arguments, Arguments)
+                && ArgumentsEqual(other._arguments, _arguments)
                 && other._methodInfoWrapper.IsSameAs(_methodInfoWrapper);
         }
 
@@ -77,25 +85,22 @@ namespace Xunit.Gherkin.Quick
 
         public async Task ExecuteAsync()
         {
-            await _methodInfoWrapper.InvokeMethodAsync(Arguments.Select(arg => arg.Value).ToArray());
+            await _methodInfoWrapper.InvokeMethodAsync(_arguments.Select(arg => arg.Value).ToArray());
         }
 
-        public string Pattern { get; }
-
-        public ReadOnlyCollection<StepMethodArgument> Arguments { get; }
+        
 
         public StepMethodInfo Clone()
         {
-            var argumentsClone = Arguments.Select(arg => arg.Clone());
+            var argumentsClone = _arguments.Select(arg => arg.Clone());
 
             return new StepMethodInfo(Kind, Pattern, argumentsClone, _methodInfoWrapper);
         }
 
-        private string _lastDigestedStepText;
 
         public void DigestScenarioStepValues(Step gherkingScenarioStep)
         {
-            if (Arguments.Count == 0)
+            if (_arguments.Count == 0)
                 return;
 
             var stepText = gherkingScenarioStep.Text.Trim();
@@ -105,7 +110,7 @@ namespace Xunit.Gherkin.Quick
                 .Select(g => g.Value)
                 .ToArray();
             
-            foreach (var arg in Arguments)
+            foreach (var arg in _arguments)
             {
                 arg.DigestScenarioStepValues(argumentValuesFromStep, gherkingScenarioStep.Argument);
             }

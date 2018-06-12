@@ -22,8 +22,6 @@ namespace UnitTests
             //assert.
             Assert.Equal(StepMethodKind.When, sut.Kind);
             Assert.Equal(FeatureForCtorTest.WhenStepText, sut.Pattern);
-            Assert.NotNull(sut.Arguments);
-            Assert.Empty(sut.Arguments);
         }
 
         private sealed class FeatureForCtorTest : Feature
@@ -123,12 +121,6 @@ namespace UnitTests
             sut.DigestScenarioStepValues(step);
 
             //assert.
-            Assert.NotNull(sut.Arguments);
-            Assert.Equal(3, sut.Arguments.Count);
-            Assert.Equal(number, sut.Arguments[0].Value);
-            Assert.Equal(text, sut.Arguments[1].Value);
-            Assert.Equal(date, sut.Arguments[2].Value);
-
             var digestedText = sut.GetDigestedStepText();
             Assert.Equal(stepText, digestedText);
         }
