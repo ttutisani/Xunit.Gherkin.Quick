@@ -4,7 +4,7 @@ This document explains how contributors should approach the codebase when modify
 
 ## Design Intention
 
-Model should reveal the meaning, rather than clear technical development forces. e.g. prefer putting things together due to conceptual cohesion, instead of deparating them just because you want to inject one part into another.
+Model should reveal the meaning, rather than pure technical development forces. e.g. prefer putting things together due to conceptual cohesion, instead of separating them just because you want to inject one part into another.
 
 Model should closely correspond to how the framework works. Concepts should be expressed using nouns and verbs just as we describe them in regular conversations. Associations (relations) between them should be just as we think of it or explain to others.
 
