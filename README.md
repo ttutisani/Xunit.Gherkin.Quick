@@ -8,7 +8,7 @@ We'll quickly setup our project, write our first BDD test, and then run it.
 
 ### Xunit test project
 
-Create a new or open existing Xunit test test project. `Xunit.Gherkin.Quick` needs to be used with Xunit.
+Create a new or open existing Xunit test project. `Xunit.Gherkin.Quick` needs to be used with Xunit.
 
 ### Install nuget package
 
@@ -46,7 +46,7 @@ Scenario: Add two numbers
 	Then the result should be 27 on the screen
 ```
 
-This is a BDD style feature written in [Gherkin language] (https://cucumber.io/docs/reference).
+This is a BDD style feature written in [Gherkin language](https://cucumber.io/docs/reference).
 
 **Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to `Copy Always` or `Copy if Newer`.
 
@@ -126,7 +126,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 ### Integrating Test Results With PicklesDoc
 
-Test results may be integrated with the excellent [PicklesDoc project](http://www.picklesdoc.com/). Run your tests with
+Test results may be integrated with the [PicklesDoc project](http://www.picklesdoc.com/). Run your tests with
 
 ```Batchfile
 dotnet xunit -xml MyResultsFile.xml
