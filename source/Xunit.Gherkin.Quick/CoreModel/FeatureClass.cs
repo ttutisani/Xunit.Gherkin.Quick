@@ -15,14 +15,14 @@ namespace Xunit.Gherkin.Quick
                 ? featureFilePath 
                 : throw new ArgumentNullException(nameof(featureFilePath));
 
-            StepMethods = stepMethods != null
+            _stepMethods = stepMethods != null
                 ? stepMethods.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(stepMethods));
         }
 
         public string FeatureFilePath { get; }
 
-        public ReadOnlyCollection<StepMethodInfo> StepMethods { get; }
+        private readonly ReadOnlyCollection<StepMethodInfo> _stepMethods;
 
         public static FeatureClass FromFeatureInstance(Feature featureInstance)
         {
@@ -59,7 +59,7 @@ namespace Xunit.Gherkin.Quick
             var matchingStepMethods = gherkinScenario.Steps
                 .Select(gherkingScenarioStep =>
                 {
-                    var matchingStepMethod = StepMethods.FirstOrDefault(stepMethod => IsStepMethodAMatch(gherkingScenarioStep, stepMethod));
+                    var matchingStepMethod = _stepMethods.FirstOrDefault(stepMethod => IsStepMethodAMatch(gherkingScenarioStep, stepMethod));
                     if (matchingStepMethod == null)
                         throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword}{gherkingScenarioStep.Text}`. Scenario `{scenarioName}`.");
 

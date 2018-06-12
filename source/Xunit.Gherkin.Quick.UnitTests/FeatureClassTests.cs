@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -28,9 +27,6 @@ namespace UnitTests
 
             //assert.
             Assert.Equal(featureFilePath, sut.FeatureFilePath);
-            Assert.NotNull(sut.StepMethods);
-            Assert.Single(sut.StepMethods);
-            Assert.Same(stepMethods[0], sut.StepMethods[0]);
         }
 
         private sealed class FeatureForCtorTest : Feature
@@ -54,7 +50,6 @@ namespace UnitTests
             //assert.
             Assert.NotNull(sut);
             Assert.Equal($"{nameof(FeatureWithoutFilePath)}.feature", sut.FeatureFilePath);
-            Assert.Empty(sut.StepMethods);
         }
 
         private sealed class FeatureWithoutFilePath : Feature
@@ -73,134 +68,12 @@ namespace UnitTests
             //assert.
             Assert.NotNull(sut);
             Assert.Equal(FeatureWithFilePath.PathFor_FeatureWithFilePath, sut.FeatureFilePath);
-            Assert.Empty(sut.StepMethods);
         }
 
         [FeatureFile(PathFor_FeatureWithFilePath)]
         private sealed class FeatureWithFilePath : Feature
         {
             public const string PathFor_FeatureWithFilePath = "some file path const 123";
-        }
-
-        [Fact]
-        public void FromFeatureInstance_Creates_FeatureClass_With_StepMethods()
-        {
-            //arrange.
-            var featureInstance = new FeatureWithStepMethods();
-
-            //act.
-            var sut = FeatureClass.FromFeatureInstance(featureInstance);
-
-            //assert.
-            Assert.NotNull(sut);
-            Assert.NotNull(sut.StepMethods);
-            Assert.Equal(5, sut.StepMethods.Count);
-
-            var given = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Given && sm.Pattern == FeatureWithStepMethods.GivenStepText);
-            Assert.NotNull(given);
-            Assert.NotNull(given.Arguments);
-            Assert.Empty(given.Arguments);
-
-            var when = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.When && sm.Pattern == FeatureWithStepMethods.WhenStepText);
-            Assert.NotNull(when);
-            Assert.NotNull(when.Arguments);
-            Assert.Empty(when.Arguments);
-
-            var then = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.Then && sm.Pattern == FeatureWithStepMethods.ThenStepText);
-            Assert.NotNull(then);
-            Assert.NotNull(when.Arguments);
-            Assert.Empty(then.Arguments);
-
-            var and = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.And && sm.Pattern == FeatureWithStepMethods.AndStepText);
-            Assert.NotNull(and);
-            Assert.NotNull(and.Arguments);
-            Assert.Empty(and.Arguments);
-
-            var but = sut.StepMethods.FirstOrDefault(sm => sm.Kind == StepMethodKind.But && sm.Pattern == FeatureWithStepMethods.ButStepText);
-            Assert.NotNull(but);
-            Assert.NotNull(but.Arguments);
-            Assert.Empty(but.Arguments);
-        }
-
-        private sealed class FeatureWithStepMethods : Feature
-        {
-            public const string GivenStepText = "step1";
-
-            [Given(GivenStepText)]
-            public void GivenStepMethod111()
-            {
-
-            }
-
-            public const string WhenStepText = "step2 when";
-
-            [When(WhenStepText)]
-            public void WhenStepMethod123()
-            {
-
-            }
-
-            public const string ThenStepText = "then step3";
-
-            [Then(ThenStepText)]
-            public void ThenStepMethod432()
-            {
-
-            }
-
-            public const string AndStepText = "and and 123";
-
-            [And(AndStepText)]
-            public void AndStepMethod512()
-            {
-
-            }
-
-            public const string ButStepText = "but 123 but";
-
-            [But(ButStepText)]
-            public void ButStepMethod333()
-            {
-
-            }
-        }
-
-        [Fact]
-        public void FromFeatureInstance_Extracts_StepMethodArguments()
-        {
-            //arrange.
-            var featureInstance = new FeatureWithStepMethodArguments();
-
-            //act.
-            var sut = FeatureClass.FromFeatureInstance(featureInstance);
-
-            //assert.
-            Assert.NotNull(sut);
-            Assert.Single(sut.StepMethods);
-
-            var step = sut.StepMethods[0];
-            Assert.NotNull(step);
-            Assert.NotNull(step.Arguments);
-            Assert.Equal(3, step.Arguments.Count);
-
-            VerifyArgIsPrimitive(step.Arguments[0]);
-            VerifyArgIsPrimitive(step.Arguments[1]);
-            VerifyArgIsPrimitive(step.Arguments[2]);
-
-            void VerifyArgIsPrimitive(StepMethodArgument arg)
-            {
-                Assert.NotNull(arg);
-                Assert.IsType<PrimitiveTypeArgument>(arg);
-            }
-        }
-
-        private sealed class FeatureWithStepMethodArguments : Feature
-        {
-            [When("when")]
-            public void StepMethodToBeFound(int arg1, string arg2, DateTime arg3)
-            {
-
-            }
         }
 
         [Fact]
@@ -248,10 +121,7 @@ namespace UnitTests
 
             void AssertScenarioStepCorrectness(StepMethodInfo step, StepMethodKind kind, string text, FeatureClass featureClass)
             {
-                Assert.Single(featureClass.StepMethods, sm => sm.Kind == kind && sm.Pattern == text);
-                var sourceStep = featureClass.StepMethods.Single(s => s.Kind == kind && s.Pattern == text);
                 Assert.NotNull(step);
-                Assert.NotEqual(sourceStep, step);
             }
         }
 
