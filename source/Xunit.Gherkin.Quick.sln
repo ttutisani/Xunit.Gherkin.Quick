@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xunit.Gherkin.Quick", "Xuni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xunit.Gherkin.Quick.ProjectConsumer", "Xunit.Gherkin.Quick.ProjectConsumer\Xunit.Gherkin.Quick.ProjectConsumer.csproj", "{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xunit.Gherkin.Quick.UnitTests", "Xunit.Gherkin.Quick.UnitTests\Xunit.Gherkin.Quick.UnitTests.csproj", "{8AAE3F3A-CB26-41BB-9A2A-56DB5CAE8BCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F9B9C8B-1859-4399-B6C1-A9ADBA9F4966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AAE3F3A-CB26-41BB-9A2A-56DB5CAE8BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AAE3F3A-CB26-41BB-9A2A-56DB5CAE8BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AAE3F3A-CB26-41BB-9A2A-56DB5CAE8BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AAE3F3A-CB26-41BB-9A2A-56DB5CAE8BCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
