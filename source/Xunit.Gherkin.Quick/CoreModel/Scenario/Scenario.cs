@@ -28,15 +28,15 @@ namespace Xunit.Gherkin.Quick
                 try
                 {
                     await step.Current.ExecuteAsync();
-                    scenarioOutput.StepPassed($"{step.Current.StepMethodInfo.Kind} {step.Current.StepText}");
+                    scenarioOutput.StepPassed($"{step.Current.Kind} {step.Current.StepText}");
                 }
                 catch
                 {
-                    scenarioOutput.StepFailed($"{step.Current.StepMethodInfo.Kind} {step.Current.StepText}");
+                    scenarioOutput.StepFailed($"{step.Current.Kind} {step.Current.StepText}");
 
                     while(step.MoveNext())
                     {
-                        scenarioOutput.StepSkipped($"{step.Current.StepMethodInfo.Kind} {step.Current.StepText}");
+                        scenarioOutput.StepSkipped($"{step.Current.Kind} {step.Current.StepText}");
                     }
 
                     throw;

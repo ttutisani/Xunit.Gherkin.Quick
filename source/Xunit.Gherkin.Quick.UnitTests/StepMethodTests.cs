@@ -16,8 +16,8 @@ namespace UnitTests
             var sut = new StepMethod(stepMethodInfo, stepText);
 
             //act.
-            Assert.Same(stepMethodInfo, sut.StepMethodInfo);
             Assert.Same(stepText, sut.StepText);
+            Assert.Equal(stepMethodInfo.Kind, sut.Kind);
         }
 
         private sealed class Feature_For_Ctor_Test : Feature
