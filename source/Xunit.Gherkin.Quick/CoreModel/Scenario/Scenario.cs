@@ -22,10 +22,25 @@ namespace Xunit.Gherkin.Quick
             if (scenarioOutput == null)
                 throw new ArgumentNullException(nameof(scenarioOutput));
 
-            foreach (var step in Steps)
+            var step = Steps.GetEnumerator();
+            while(step.MoveNext())
             {
-                await step.ExecuteAsync();
-                scenarioOutput.StepPassed($"{step.StepMethodInfo.Kind} {step.StepText}");
+                try
+                {
+                    await step.Current.ExecuteAsync();
+                    scenarioOutput.StepPassed($"{step.Current.StepMethodInfo.Kind} {step.Current.StepText}");
+                }
+                catch
+                {
+                    scenarioOutput.StepFailed($"{step.Current.StepMethodInfo.Kind} {step.Current.StepText}");
+
+                    while(step.MoveNext())
+                    {
+                        scenarioOutput.StepSkipped($"{step.Current.StepMethodInfo.Kind} {step.Current.StepText}");
+                    }
+
+                    throw;
+                }
             }
         }
     }

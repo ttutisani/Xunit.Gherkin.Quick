@@ -15,5 +15,15 @@ namespace Xunit.Gherkin.Quick
         {
             _testOutputHelper.WriteLine($"{stepText}: PASSED");
         }
+
+        public void StepFailed(string stepText)
+        {
+            _testOutputHelper.WriteLine($"{stepText}: FAILED");
+        }
+
+        public void StepSkipped(string stepText)
+        {
+            _testOutputHelper.WriteLine($"{stepText}: SKIPPED");
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -44,7 +45,7 @@ namespace UnitTests
         private sealed class UselessFeature : Feature { }
 
         [Fact]
-        public async Task ExecuteScenario_Executes_Scenario_Steps()
+        public async Task ExecuteScenario_Executes_All_Scenario_Steps()
         {
             //arrange.
             var step1Text = "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
@@ -152,6 +153,142 @@ Scenario: " + scenario + @"
             public void ScenarioStep2(int secondNumber)
             {
                 CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), new object[] { secondNumber }));
+            }
+
+            [And("Non matching and")]
+            public void NonMatchingStep2_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_after), null));
+            }
+
+            [When("Non matching when")]
+            public void NonMatchingStep3_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_before), null));
+            }
+
+            public const string ScenarioStep3Text = "I press add";
+
+            [When(ScenarioStep3Text)]
+            public void ScenarioStep3()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep3), null));
+            }
+
+            [When("Non matching when")]
+            public void NonMatchingStep3_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_after), null));
+            }
+
+            [Then("Non matching then")]
+            public void NonMatchingStep4_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_before), null));
+            }
+
+            public const string ScenarioStep4Text = @"the result should be (\d+) on the screen";
+
+            [Then(ScenarioStep4Text)]
+            public void ScenarioStep4(int result)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep4), new object[] { result }));
+            }
+
+            [Then("Non matching then")]
+            public void NonMatchingStep4_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
+            }
+        }
+
+        [Fact]
+        public async Task ExecuteScenario_Executes_Successful_Scenario_Steps_And_Skips_The_Rest()
+        {
+            //arrange.
+            var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
+            var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
+            var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
+            var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+
+            var scenarioName = "scenario 12345";
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
+                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
+                    step1Text,
+                    step2Text,
+                    step3Text,
+                    step4Text
+                    )))
+                .Verifiable();
+
+            var featureInstance = new FeatureWithScenarioSteps_And_Throwing();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
+
+            //act.
+            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
+            Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
+
+            //assert.
+            _featureFileRepository.Verify();
+
+            Assert.Equal(2, featureInstance.CallStack.Count);
+
+            Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep1), featureInstance.CallStack[0].Key);
+            Assert.NotNull(featureInstance.CallStack[0].Value);
+            Assert.Single(featureInstance.CallStack[0].Value);
+            Assert.Equal(12, featureInstance.CallStack[0].Value[0]);
+            output.Verify(o => o.WriteLine($"{step1Text}: PASSED"), Times.Once);
+
+            Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep2), featureInstance.CallStack[1].Key);
+            Assert.NotNull(featureInstance.CallStack[1].Value);
+            Assert.Single(featureInstance.CallStack[1].Value);
+            Assert.Equal(15, featureInstance.CallStack[1].Value[0]);
+            output.Verify(o => o.WriteLine($"{step2Text}: FAILED"), Times.Once);
+
+            output.Verify(o => o.WriteLine($"{step3Text}: SKIPPED"), Times.Once);
+
+            output.Verify(o => o.WriteLine($"{step4Text}: SKIPPED"), Times.Once);
+        }
+
+        private sealed class FeatureWithScenarioSteps_And_Throwing : Feature
+        {
+            public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
+
+            [Given("Non matching given")]
+            public void NonMatchingStep1_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_before), null));
+            }
+
+            public const string ScenarioStep1Text = @"I chose (\d+) as first number";
+
+            [Given(ScenarioStep1Text)]
+            public void ScenarioStep1(int firstNumber)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep1), new object[] { firstNumber }));
+            }
+
+            [Given("Non matching given")]
+            public void NonMatchingStep1_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_after), null));
+            }
+
+            [And("Non matching and")]
+            public void NonMatchingStep2_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_before), null));
+            }
+
+            public const string ScenarioStep2Text = @"I chose (\d+) as second number";
+
+            [And(ScenarioStep2Text)]
+            public void ScenarioStep2(int secondNumber)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), new object[] { secondNumber }));
+
+                throw new InvalidOperationException("Some exception to stop execution of next steps.");
             }
 
             [And("Non matching and")]
