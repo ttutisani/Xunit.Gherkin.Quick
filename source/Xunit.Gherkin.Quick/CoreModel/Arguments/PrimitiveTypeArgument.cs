@@ -24,7 +24,7 @@ namespace Xunit.Gherkin.Quick
         public override void DigestScenarioStepValues(string[] argumentValues, StepArgument gherkinStepArgument)
         {
             if (argumentValues.Length <= _index)
-                throw new InvalidOperationException($"Cannot extract value for parameter at index {_index}; only {argumentValues.Length} parameters were provided.");
+                throw new InvalidOperationException($"Cannot extract value for parameter `{_parameterInfo.Name}` at index {_index}; only {argumentValues.Length} parameters were provided. Method `{_parameterInfo.Member.Name}`.");
 
             Value = Convert.ChangeType(argumentValues[_index], _parameterInfo.ParameterType);
         }
