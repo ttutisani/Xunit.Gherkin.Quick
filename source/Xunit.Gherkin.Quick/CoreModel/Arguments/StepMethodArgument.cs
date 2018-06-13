@@ -15,6 +15,9 @@ namespace Xunit.Gherkin.Quick
 
         private static StepMethodArgument FromParameter(ParameterInfo parameter, int parameterIndex)
         {
+            if (parameter.ParameterType.Equals(typeof(DataTable)))
+                return new DataTableArgument();
+
             return new PrimitiveTypeArgument(parameter, parameterIndex);
         }
 

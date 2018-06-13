@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -335,6 +336,69 @@ Scenario: " + scenario + @"
             public void NonMatchingStep4_after()
             {
                 CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
+            }
+        }
+
+        [Fact]
+        public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
+        {
+            //arrange.
+            var scenarioName = "scenario123";
+            var featureInstance = new FeatureWithDataTableScenarioStep();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
+
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
+                    "When " + FeatureWithDataTableScenarioStep.Steptext + Environment.NewLine +
+@"  | First argument | Second argument | Result |
+    | 1              |       2         |       3|
+    | a              |   b             | c      |
+"
+                    )))
+                .Verifiable();
+
+            //act.
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+
+            //assert.
+            _featureFileRepository.Verify();
+
+            Assert.NotNull(featureInstance.ReceivedDataTable);
+            Assert.Equal(3, featureInstance.ReceivedDataTable.Rows.Count());
+
+            AssertDataTableCell(0, 0, "First argument");
+            AssertDataTableCell(0, 1, "Second argument");
+            AssertDataTableCell(0, 2, "Result");
+
+            AssertDataTableCell(1, 0, "1");
+            AssertDataTableCell(1, 1, "2");
+            AssertDataTableCell(1, 2, "3");
+
+            AssertDataTableCell(2, 0, "a");
+            AssertDataTableCell(2, 1, "b");
+            AssertDataTableCell(2, 2, "c");
+
+            void AssertDataTableCell(int rowIndex, int cellIndex, string value)
+            {
+                Assert.True(featureInstance.ReceivedDataTable.Rows.Count() > rowIndex);
+                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex));
+                Assert.True(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.Count() > cellIndex);
+                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.ElementAt(cellIndex));
+                Assert.Equal("First argument", featureInstance.ReceivedDataTable.Rows.ElementAt(0).Cells.ElementAt(0).Value);
+            }
+        }
+
+        private sealed class FeatureWithDataTableScenarioStep : Feature
+        {
+            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
+
+            public const string Steptext = "Some step text";
+
+            [When(Steptext)]
+            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
+            {
+                ReceivedDataTable = dataTable;
             }
         }
     }

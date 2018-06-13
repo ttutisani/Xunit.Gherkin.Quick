@@ -2,7 +2,7 @@
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition.Async
 {
-    [FeatureFile("./Addition/AddTwoNumbers.feature")]
+    [FeatureFile("./Addition/Async/AddTwoNumbersAsync.feature")]
     public sealed class AddTwoNumbersAsync : Feature
     {
         private readonly AsyncCalculator _calculator = new AsyncCalculator();

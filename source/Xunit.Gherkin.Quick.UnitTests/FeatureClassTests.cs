@@ -199,5 +199,41 @@ Scenario: " + scenarioName + @"
                 CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
             }
         }
+
+        [Fact]
+        public void ExtractScnario_Extracts_Scenario_With_DataTable()
+        {
+            //arrange.
+            var scenarioName = "scenario213";
+            var featureInstance = new FeatureWithDataTableScenarioStep();
+            var sut = FeatureClass.FromFeatureInstance(featureInstance);
+
+            var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
+                    "When " + FeatureWithDataTableScenarioStep.Steptext + Environment.NewLine +
+@"  | First argument | Second argument | Result |
+    | 1              |       2         |       3|
+    | a              |   b             | c      |
+"
+                    ));
+
+            //act.
+            var scenario = sut.ExtractScenario(scenarioName, featureFile);
+
+            //assert.
+            Assert.NotNull(scenario);
+        }
+
+        private sealed class FeatureWithDataTableScenarioStep : Feature
+        {
+            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
+
+            public const string Steptext = "Some step text";
+
+            [When(Steptext)]
+            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
+            {
+                ReceivedDataTable = dataTable;
+            }
+        }
     }
 }
