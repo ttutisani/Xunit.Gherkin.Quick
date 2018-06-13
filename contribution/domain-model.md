@@ -20,6 +20,14 @@ To extract a specific `Scenario` out of the `FeatureClass`, we need to find all 
 
 Once the `Scenario` instance is extracted out of the `FeatureClass`, we just need to execute it. That simply means to execute all steps (all instances of `StepMethod`) of the scenario.
 
+## Technical Design Guidelines
+
+Each class should strictly encapsulate its state. Direct modification of the state from outside is prohibited. State modification is only possible by calling a method on the class. This is true for the state modification of the class, as well as the nested members of the class, if they have state which can be modified.
+
+[Law of Demeter](https://en.wikipedia.org/wiki/Law_of_Demeter) is highly regarded. If you want to call a method on the nested member of the class, you can't do that without calling a method on the container class. i.e., encapsulate nested members and access to them.
+
+A class is allowed to expose properties which give some basic **immutable** information about the class. Minimalism is preferred.
+
 ## Class Diagram of the Model
 
 //TODO
