@@ -13,7 +13,7 @@
     <PackageLicenseUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick</PackageProjectUrl>
     <PackageTags>BDD, Gherkin, Xunit, Testing, Behavior Driven Development</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick</RepositoryUrl>
     <Version>2.0.0</Version>
     <PackageReleaseNotes>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/versions/2.0.0.md</PackageReleaseNotes>
