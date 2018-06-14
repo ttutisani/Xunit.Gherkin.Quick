@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moq;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -88,5 +89,46 @@ Scenario: " + scenario + @"
             }
         }
 
+        [Fact]
+        public void IsSameAs_Identifies_Similar_Instances()
+        {
+            //arrange.
+            var sut = new DataTableArgument();
+            var other = new DataTableArgument();
+
+            //act.
+            var same = sut.IsSameAs(other);
+
+            //assert.
+            Assert.True(same);
+        }
+
+        [Fact]
+        public void IsSameAs_Distinguishes_Different_Instances()
+        {
+            //arrange.
+            var sut = new DataTableArgument();
+            var other = new Mock<StepMethodArgument>().Object;
+
+            //act.
+            var same = sut.IsSameAs(other);
+
+            //assert.
+            Assert.False(same);
+        }
+
+        [Fact]
+        public void Clone_Creates_Similar_Instance()
+        {
+            //arrange.
+            var sut = new DataTableArgument();
+
+            //act.
+            var clone = sut.Clone();
+
+            //assert.
+            Assert.True(clone.IsSameAs(sut));
+            Assert.NotSame(clone, sut);
+        }
     }
 }

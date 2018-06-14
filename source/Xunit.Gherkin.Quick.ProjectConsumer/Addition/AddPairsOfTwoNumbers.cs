@@ -5,10 +5,12 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     public sealed partial class AddTwoNumbers
     {
-        [Given("following table of inputs and outputs:")]
-        public void Following_table_of_inputs_and_outputs(DataTable dataTable)
+        [Given(@"following table of (\d+) inputs and outputs:")]
+        public void Following_table_of_inputs_and_outputs(int inputCount, DataTable dataTable)
         {
-            foreach (var row in dataTable.Rows)
+            Assert.Equal(4, dataTable.Rows.Count() - 1);
+
+            foreach (var row in dataTable.Rows.Skip(1))
             {
                 //arrange.
                 var calculator = new Calculator();

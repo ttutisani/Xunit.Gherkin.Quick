@@ -10,7 +10,7 @@ Scenario: Add two numbers
 	Then the result should be 27 on the screen
 
 Scenario: Add various pairs of numbers
-	Given following table of inputs and outputs:
+	Given following table of 4 inputs and outputs:
 		| Number 1 | Number 2 | Result |
 		| 1        | 1        | 2      |
 		| 10       | 20       | 30     |

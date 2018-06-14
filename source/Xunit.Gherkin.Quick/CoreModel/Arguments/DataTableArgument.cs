@@ -7,7 +7,7 @@ namespace Xunit.Gherkin.Quick
     {
         public override StepMethodArgument Clone()
         {
-            throw new NotImplementedException();
+            return new DataTableArgument();
         }
 
         public override void DigestScenarioStepValues(string[] argumentValues, StepArgument gherkinStepArgument)
@@ -20,7 +20,7 @@ namespace Xunit.Gherkin.Quick
 
         public override bool IsSameAs(StepMethodArgument other)
         {
-            throw new NotImplementedException();
+            return other is DataTableArgument;
         }
     }
 }
