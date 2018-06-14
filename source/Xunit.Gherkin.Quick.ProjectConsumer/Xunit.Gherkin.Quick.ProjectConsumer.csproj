@@ -38,8 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Addition\Async\AddTwoNumbersAsync.feature">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Addition\AddTwoNumbers.feature">
-      <Generator></Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

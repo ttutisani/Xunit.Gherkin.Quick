@@ -102,5 +102,47 @@ namespace UnitTests
 
         private void MethodWithPrimitiveParams(int param1, string param2, DateTime param3)
         { }
+
+        [Fact]
+        public void ListFromParameters_Creates_DataTableArgument()
+        {
+            //arrange / act.
+            var args = StepMethodArgument.ListFromMethodInfo(GetPrivateMethod(nameof(MethodWithDataTableArgumentOnly)));
+
+            //assert.
+            Assert.NotNull(args);
+            Assert.Single(args);
+            Assert.NotNull(args[0]);
+            Assert.IsType<DataTableArgument>(args[0]);
+        }
+
+        private void MethodWithDataTableArgumentOnly(Gherkin.Ast.DataTable dataTable)
+        { }
+
+        [Fact]
+        public void ListFromParameters_Creates_DataTableArgument_And_Others()
+        {
+            //arrange / act.
+            var args = StepMethodArgument.ListFromMethodInfo(GetPrivateMethod(nameof(MethodWithDataTableAndOtherArguments)));
+
+            //assert.
+            Assert.NotNull(args);
+            Assert.Equal(4, args.Count);
+
+            AssertPrimitiveTypeArg(args, 0);
+            AssertPrimitiveTypeArg(args, 1);
+            AssertPrimitiveTypeArg(args, 2);
+            Assert.IsType<DataTableArgument>(args[3]);
+
+            void AssertPrimitiveTypeArg(List<StepMethodArgument> arg, int index)
+            {
+                Assert.NotNull(arg[index]);
+                Assert.IsType<PrimitiveTypeArgument>(arg[index]);
+            }
+
+        }
+
+        private void MethodWithDataTableAndOtherArguments(int param1, string param2, DateTime param3, Gherkin.Ast.DataTable dataTable)
+        { }
     }
 }

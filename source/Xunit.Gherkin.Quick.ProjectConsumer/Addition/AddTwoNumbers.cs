@@ -1,7 +1,7 @@
 ﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     [FeatureFile("./Addition/AddTwoNumbers.feature")]
-    public sealed class AddTwoNumbers : Feature
+    public sealed partial class AddTwoNumbers : Feature
     {
         private readonly Calculator _calculator = new Calculator();
 

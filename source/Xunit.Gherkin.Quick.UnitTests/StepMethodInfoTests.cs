@@ -194,5 +194,44 @@ Scenario: " + scenario + @"
             [When("something")]
             public void When_Something_Method() { }
         }
+
+        [Fact]
+        public void DigestScenarioStepValues_Sets_DataTable_Value()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDataTableScenarioStep();
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureWithDataTableScenarioStep.When_DataTable_Is_Expected)),
+                featureInstance
+                );
+
+            var step = CreateGherkinDocument("some scenario 1212",
+                    "When " + FeatureWithDataTableScenarioStep.Steptext + Environment.NewLine +
+@"  | First argument | Second argument | Result |
+    | 1              |       2         |       3|
+    | a              |   b             | c      |
+"
+                    ).Feature.Children.First().Steps.First();
+
+            //act.
+            sut.DigestScenarioStepValues(step);
+
+            //assert.
+            var digestedText = sut.GetDigestedStepText();
+            Assert.Equal(FeatureWithDataTableScenarioStep.Steptext, digestedText);
+        }
+
+        private sealed class FeatureWithDataTableScenarioStep : Feature
+        {
+            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
+
+            public const string Steptext = "Some step text";
+
+            [When(Steptext)]
+            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
+            {
+                ReceivedDataTable = dataTable;
+            }
+        }
     }
 }
