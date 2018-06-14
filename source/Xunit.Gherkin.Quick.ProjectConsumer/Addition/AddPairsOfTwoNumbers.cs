@@ -8,7 +8,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
         [Given(@"following table of (\d+) inputs and outputs:")]
         public void Following_table_of_inputs_and_outputs(int inputCount, DataTable dataTable)
         {
-            Assert.Equal(4, dataTable.Rows.Count() - 1);
+            Assert.Equal(inputCount, dataTable.Rows.Count() - 1);
 
             foreach (var row in dataTable.Rows.Skip(1))
             {
