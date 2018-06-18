@@ -16,7 +16,7 @@ namespace Xunit.Gherkin.Quick
         {
         }
 
-        public ScenarioXunitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null, IEnumerable<string> tags = null)
+        public ScenarioXunitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, IEnumerable<string> tags, object[] testMethodArguments = null)
             : base(messageSink, TestMethodDisplay.Method, testMethod, testMethodArguments)
         {
             DisplayName = $"{featureName} :: {scenarioName}";
