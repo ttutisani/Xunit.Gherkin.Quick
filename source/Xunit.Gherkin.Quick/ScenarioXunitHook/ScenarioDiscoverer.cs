@@ -32,7 +32,7 @@ namespace Xunit.Gherkin.Quick
                 var scenarioWithTags = scenario as Scenario;
                 var tags = featureTags.ToList().Union(scenarioWithTags?.Tags ?? new List<Tag>()).Select(t => t.Name).Distinct();
                 
-                yield return new ScenarioXUnitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, new object[] { scenario.Name }, tags);
+                yield return new ScenarioXunitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, new object[] { scenario.Name }, tags);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿@math
-Feature: AddTwoNumbers
+﻿Feature: AddTwoNumbers
 	In order to learn Math
 	As a regular human
 	I want to add two numbers using Calculator

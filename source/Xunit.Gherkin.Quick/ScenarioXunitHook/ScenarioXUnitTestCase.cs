@@ -9,14 +9,14 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioXUnitTestCase : XunitTestCase
+    internal sealed class ScenarioXunitTestCase : XunitTestCase
     {
         [Obsolete]
-        public ScenarioXUnitTestCase()
+        public ScenarioXunitTestCase()
         {
         }
 
-        public ScenarioXUnitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null, IEnumerable<string> tags = null)
+        public ScenarioXunitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null, IEnumerable<string> tags = null)
             : base(messageSink, TestMethodDisplay.Method, testMethod, testMethodArguments)
         {
             DisplayName = $"{featureName} :: {scenarioName}";
@@ -41,7 +41,7 @@ namespace Xunit.Gherkin.Quick
             ExceptionAggregator aggregator, 
             CancellationTokenSource cancellationTokenSource)
         {
-            return await new ScenarioXUnitTestCaseRunner(
+            return await new ScenarioXunitTestCaseRunner(
                 this, 
                 DisplayName, 
                 SkipReason, 

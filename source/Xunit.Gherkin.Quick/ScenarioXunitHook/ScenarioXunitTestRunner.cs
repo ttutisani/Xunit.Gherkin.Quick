@@ -9,9 +9,9 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioXUnitTestRunner : XunitTestRunner
+    internal sealed class ScenarioXunitTestRunner : XunitTestRunner
     {
-        public ScenarioXUnitTestRunner(
+        public ScenarioXunitTestRunner(
             ITest test, 
             IMessageBus messageBus, 
             Type testClass, 
@@ -52,7 +52,7 @@ namespace Xunit.Gherkin.Quick
 
         protected override async Task<decimal> InvokeTestMethodAsync(ExceptionAggregator aggregator)
         {
-            return await new ScenarioXUnitTestInvoker(
+            return await new ScenarioXunitTestInvoker(
                 Test,
                 MessageBus,
                 TestClass,
