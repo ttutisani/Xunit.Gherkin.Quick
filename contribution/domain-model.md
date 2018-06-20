@@ -30,4 +30,4 @@ A class is allowed to expose properties which give some basic **immutable** info
 
 ## Class Diagram of the Model
 
-//TODO
+![Domain Model class diagram](XGQFrameworkDomainModel.jpg)
