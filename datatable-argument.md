@@ -51,6 +51,6 @@ public sealed class AddTwoNumbers : Feature
 
 Notes:
 - `DataTable` is a simple class which has rows and cells. Each cell has a value of type `String`. You will need to convert the values into your desired destination types.
-- First row of the received `DataTable` instance is a header row. Unless you are interested in the column names, you will be skipping this row most of the time (`dataTable.Rows.Skip(1)`).
+- First row of the received `DataTable` instance is a header row (at least in this example). Unless you are interested in the column names (or unless you don't put column names into the first row), you will be skipping this row most of the time (`dataTable.Rows.Skip(1)`).
 - `DataTable` argument needs to be placed after those arguments which receive values from regex groups (matching parentherses) in the method attribute. That's why `DataTable` is placed after `int inputCount` argument in the above example - `inputCount` has a matching regex group expression in the `Given` attribute - "(\d+)".
 
