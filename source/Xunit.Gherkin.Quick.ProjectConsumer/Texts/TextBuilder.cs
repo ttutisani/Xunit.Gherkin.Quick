@@ -14,7 +14,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Texts
             _textBuilder = new StringBuilder(text.Content);
         }
 
-        [When(@"I_replace_'(\w+)' with '(\w+)'")]
+        [When(@"I replace '(\w+)' with '(\w+)'")]
         public void I_replace_x_with_y(string oldValue, string newValue)
         {
             _textBuilder.Replace(oldValue, newValue);
