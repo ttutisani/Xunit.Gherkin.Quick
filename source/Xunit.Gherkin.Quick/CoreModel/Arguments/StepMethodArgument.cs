@@ -18,6 +18,9 @@ namespace Xunit.Gherkin.Quick
             if (parameter.ParameterType.Equals(typeof(DataTable)))
                 return new DataTableArgument();
 
+            if (parameter.ParameterType.Equals(typeof(DocString)))
+                return new DocStringArgument();
+
             return new PrimitiveTypeArgument(parameter, parameterIndex);
         }
 

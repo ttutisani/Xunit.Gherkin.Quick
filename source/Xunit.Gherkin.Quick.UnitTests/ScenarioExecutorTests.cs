@@ -401,5 +401,49 @@ Scenario: " + scenario + @"
                 ReceivedDataTable = dataTable;
             }
         }
+
+        [Fact]
+        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDocStringScenarioStep();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
+            var docStringContent = "some content" + Environment.NewLine +
+"+++" + Environment.NewLine +
+"with multi lines" + Environment.NewLine +
+"---" + Environment.NewLine +
+"in it";
+            var scenarioName = "scenario 1231121";
+
+            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
+                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
+                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
+" + @"""""""
+" + docStringContent + @"
+"""""""))).Verifiable();
+
+            //act.
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+
+            //assert.
+            _featureFileRepository.Verify();
+
+            Assert.NotNull(featureInstance.ReceivedDocString);
+            Assert.Equal(docStringContent, featureInstance.ReceivedDocString.Content);
+        }
+
+        private sealed class FeatureWithDocStringScenarioStep : Feature
+        {
+            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+
+            public const string StepWithDocStringText = "Step with docstirng";
+
+            [Given(StepWithDocStringText)]
+            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
+            {
+                ReceivedDocString = docString;
+            }
+        }
     }
 }

@@ -10,35 +10,6 @@ namespace UnitTests
     public sealed class FeatureClassTests
     {
         [Fact]
-        public void Ctor_Initializes_Properties()
-        {
-            //arrange.
-            var featureFilePath = "some path 123";
-            var featureInstance = new FeatureForCtorTest();
-            var stepMethods = new List<StepMethodInfo>
-            {
-                StepMethodInfo.FromMethodInfo(
-                    featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), 
-                    featureInstance)
-            };
-
-            //act.
-            var sut = new FeatureClass(featureFilePath, stepMethods.AsReadOnly());
-
-            //assert.
-            Assert.Equal(featureFilePath, sut.FeatureFilePath);
-        }
-
-        private sealed class FeatureForCtorTest : Feature
-        {
-            [When("something")]
-            public void When_Something()
-            {
-
-            }
-        }
-
-        [Fact]
         public void FromFeatureInstance_Creates_FeatureClass_With_Default_FilePath_If_No_Attribute()
         {
             //arrange.
@@ -233,6 +204,44 @@ Scenario: " + scenarioName + @"
             public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
             {
                 ReceivedDataTable = dataTable;
+            }
+        }
+
+        [Fact]
+        public void ExtractScenario_Extracts_Scenario_With_DocString()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDocStringScenarioStep();
+            var sut = FeatureClass.FromFeatureInstance(featureInstance);
+            var scenarioName = "scenario-121kh2";
+            var docStringContent = @"some content
++++
+with multi lines
+---
+in it";
+            var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
+                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
+" + @"""""""
+" + docStringContent + @"
+"""""""));
+
+            //act.
+            var scenario = sut.ExtractScenario(scenarioName, featureFile);
+
+            //assert.
+            Assert.NotNull(scenario);
+        }
+
+        private sealed class FeatureWithDocStringScenarioStep : Feature
+        {
+            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+
+            public const string StepWithDocStringText = "Step with docstirng";
+
+            [Given(StepWithDocStringText)]
+            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
+            {
+                ReceivedDocString = docString;
             }
         }
     }

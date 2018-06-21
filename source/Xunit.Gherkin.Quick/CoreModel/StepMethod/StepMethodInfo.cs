@@ -46,6 +46,9 @@ namespace Xunit.Gherkin.Quick
 
         public static StepMethodInfo FromMethodInfo(MethodInfo methodInfo, Feature featureInstance)
         {
+            if (methodInfo == null)
+                throw new ArgumentNullException(nameof(methodInfo));
+
             var stepDefinitionAttribute = methodInfo.GetCustomAttribute<BaseStepDefinitionAttribute>();
 
             return new StepMethodInfo(
@@ -54,8 +57,6 @@ namespace Xunit.Gherkin.Quick
                 StepMethodArgument.ListFromMethodInfo(methodInfo),
                 new MethodInfoWrapper(methodInfo, featureInstance));
         }
-
-        
 
         public bool IsSameAs(StepMethodInfo other)
         {

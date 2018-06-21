@@ -196,6 +196,22 @@ Scenario: " + scenario + @"
         }
 
         [Fact]
+        public void FromMethodInfo_Creates_StepMethodInfo_With_DataTable()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDataTableScenarioStep();
+
+            //act.
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureWithDataTableScenarioStep.When_DataTable_Is_Expected)),
+                featureInstance
+                );
+
+            //assert.
+            Assert.NotNull(sut);
+        }
+
+        [Fact]
         public void DigestScenarioStepValues_Sets_DataTable_Value()
         {
             //arrange.
@@ -232,6 +248,66 @@ Scenario: " + scenario + @"
             {
                 ReceivedDataTable = dataTable;
             }
+        }
+
+        [Fact]
+        public void FromMethodInfo_Creates_StepMethodInfo_With_DocString()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDocStringScenarioStep();
+
+            //act.
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureWithDocStringScenarioStep.Step_With_DocString_Argument)),
+                featureInstance
+                );
+
+            //assert.
+            Assert.NotNull(sut);
+        }
+
+        private sealed class FeatureWithDocStringScenarioStep : Feature
+        {
+            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+
+            public const string StepWithDocStringText = "Step with docstirng";
+
+            [Given(StepWithDocStringText)]
+            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
+            {
+                ReceivedDocString = docString;
+            }
+        }
+
+        [Fact]
+        public void DigestScenarioStepValues_Sets_DocString_Value()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDocStringScenarioStep();
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureWithDocStringScenarioStep.Step_With_DocString_Argument)),
+                featureInstance
+                );
+
+            var scenarioName = "scenario ajshas a";
+            var docStringContent = @"some content
++++
+with multi lines
+---
+in it";
+
+            var step = CreateGherkinDocument(scenarioName,
+                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
+" + @"""""""
+" + docStringContent + @"
+""""""").Feature.Children.First().Steps.First();
+
+            //act.
+            sut.DigestScenarioStepValues(step);
+
+            //assert.
+            var digestedText = sut.GetDigestedStepText();
+            Assert.Equal(FeatureWithDocStringScenarioStep.StepWithDocStringText, digestedText);
         }
     }
 }
