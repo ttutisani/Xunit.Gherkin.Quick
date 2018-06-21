@@ -29,7 +29,7 @@ namespace Xunit.Gherkin.Quick
             var featureTags = gherkinDocument.Feature.Tags?.ToList();
             foreach (var scenario in gherkinDocument.Feature.Children)
             {
-                var scenarioWithTags = scenario as Scenario;
+                var scenarioWithTags = scenario as global::Gherkin.Ast.Scenario;
                 var tags = featureTags.ToList().Union(scenarioWithTags?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
                 
                 yield return new ScenarioXunitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, tags, new object[] { scenario.Name });
