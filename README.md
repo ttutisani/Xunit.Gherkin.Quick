@@ -119,6 +119,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 ## See Also
 
 - [DataTable Argument usage instructions](/datatable-argument.md)
+- [DocString (multi-line text) Argument usage instructions](/docstring-argument.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
 
