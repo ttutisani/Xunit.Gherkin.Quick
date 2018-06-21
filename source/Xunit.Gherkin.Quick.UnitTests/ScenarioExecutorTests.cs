@@ -409,11 +409,11 @@ Scenario: " + scenario + @"
             var featureInstance = new FeatureWithDocStringScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.Output = output.Object;
-            var docStringContent = @"some content
-+++
-with multi lines
----
-in it";
+            var docStringContent = "some content" + Environment.NewLine +
+"+++" + Environment.NewLine +
+"with multi lines" + Environment.NewLine +
+"---" + Environment.NewLine +
+"in it";
             var scenarioName = "scenario 1231121";
 
             _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
