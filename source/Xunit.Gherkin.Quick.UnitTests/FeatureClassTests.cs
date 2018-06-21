@@ -10,35 +10,6 @@ namespace UnitTests
     public sealed class FeatureClassTests
     {
         [Fact]
-        public void Ctor_Initializes_Properties()
-        {
-            //arrange.
-            var featureFilePath = "some path 123";
-            var featureInstance = new FeatureForCtorTest();
-            var stepMethods = new List<StepMethodInfo>
-            {
-                StepMethodInfo.FromMethodInfo(
-                    featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), 
-                    featureInstance)
-            };
-
-            //act.
-            var sut = new FeatureClass(featureFilePath, stepMethods.AsReadOnly());
-
-            //assert.
-            Assert.Equal(featureFilePath, sut.FeatureFilePath);
-        }
-
-        private sealed class FeatureForCtorTest : Feature
-        {
-            [When("something")]
-            public void When_Something()
-            {
-
-            }
-        }
-
-        [Fact]
         public void FromFeatureInstance_Creates_FeatureClass_With_Default_FilePath_If_No_Attribute()
         {
             //arrange.

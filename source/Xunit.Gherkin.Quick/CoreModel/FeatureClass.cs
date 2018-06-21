@@ -13,7 +13,7 @@ namespace Xunit.Gherkin.Quick
 
         private readonly ReadOnlyCollection<StepMethodInfo> _stepMethods;
 
-        public FeatureClass(string featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
+        private FeatureClass(string featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
         {
             FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath) 
                 ? featureFilePath 
