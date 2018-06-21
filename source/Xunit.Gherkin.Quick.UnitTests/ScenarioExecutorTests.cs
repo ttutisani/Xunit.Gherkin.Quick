@@ -407,6 +407,8 @@ Scenario: " + scenario + @"
         {
             //arrange.
             var featureInstance = new FeatureWithDocStringScenarioStep();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
             var docStringContent = @"some content
 +++
 with multi lines
