@@ -196,6 +196,22 @@ Scenario: " + scenario + @"
         }
 
         [Fact]
+        public void FromMethodInfo_Creates_StepMethodInfo_With_DataTable()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDataTableScenarioStep();
+
+            //act.
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureWithDataTableScenarioStep.When_DataTable_Is_Expected)),
+                featureInstance
+                );
+
+            //assert.
+            Assert.NotNull(sut);
+        }
+
+        [Fact]
         public void DigestScenarioStepValues_Sets_DataTable_Value()
         {
             //arrange.

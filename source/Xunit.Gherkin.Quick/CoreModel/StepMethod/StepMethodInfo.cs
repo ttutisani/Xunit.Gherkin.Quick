@@ -55,8 +55,6 @@ namespace Xunit.Gherkin.Quick
                 new MethodInfoWrapper(methodInfo, featureInstance));
         }
 
-        
-
         public bool IsSameAs(StepMethodInfo other)
         {
             if (other == this)
