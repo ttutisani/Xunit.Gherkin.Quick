@@ -1,4 +1,5 @@
 ﻿using Gherkin.Ast;
+using System;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -6,17 +7,20 @@ namespace Xunit.Gherkin.Quick
     {
         public override StepMethodArgument Clone()
         {
-            throw new System.NotImplementedException();
+            return new DocStringArgument();
         }
 
         public override void DigestScenarioStepValues(string[] argumentValues, StepArgument gherkinStepArgument)
         {
-            throw new System.NotImplementedException();
+            if (!(gherkinStepArgument is DocString docString))
+                throw new InvalidOperationException("DocString cannot be extracted from Gherkin.");
+
+            Value = docString;
         }
 
         public override bool IsSameAs(StepMethodArgument other)
         {
-            throw new System.NotImplementedException();
+            return other is DocStringArgument;
         }
     }
 }
