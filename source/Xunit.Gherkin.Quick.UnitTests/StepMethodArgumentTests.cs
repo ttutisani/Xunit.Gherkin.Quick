@@ -144,5 +144,47 @@ namespace UnitTests
 
         private void MethodWithDataTableAndOtherArguments(int param1, string param2, DateTime param3, Gherkin.Ast.DataTable dataTable)
         { }
+
+        [Fact]
+        public void ListFromParameters_Creates_DocStringArgument()
+        {
+            //arrange / act.
+            var args = StepMethodArgument.ListFromMethodInfo(GetPrivateMethod(nameof(MethodWithDocStringArgumentOnly)));
+
+            //assert.
+            Assert.NotNull(args);
+            Assert.Single(args);
+            Assert.NotNull(args[0]);
+            Assert.IsType<DocStringArgument>(args[0]);
+        }
+
+        private void MethodWithDocStringArgumentOnly(Gherkin.Ast.DocString docString)
+        { }
+
+        [Fact]
+        public void ListFromParameters_Creates_DocStringArgument_And_Others()
+        {
+            //arrange / act.
+            var args = StepMethodArgument.ListFromMethodInfo(GetPrivateMethod(nameof(MethodWithDocStringAndOtherArguments)));
+
+            //assert.
+            Assert.NotNull(args);
+            Assert.Equal(4, args.Count);
+
+            AssertPrimitiveTypeArg(args, 0);
+            AssertPrimitiveTypeArg(args, 1);
+            AssertPrimitiveTypeArg(args, 2);
+            Assert.IsType<DocStringArgument>(args[3]);
+
+            void AssertPrimitiveTypeArg(List<StepMethodArgument> arg, int index)
+            {
+                Assert.NotNull(arg[index]);
+                Assert.IsType<PrimitiveTypeArgument>(arg[index]);
+            }
+
+        }
+
+        private void MethodWithDocStringAndOtherArguments(int param1, string param2, DateTime param3, Gherkin.Ast.DocString docString)
+        { }
     }
 }
