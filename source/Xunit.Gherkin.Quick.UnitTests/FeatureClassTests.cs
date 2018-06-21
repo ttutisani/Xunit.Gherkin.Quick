@@ -235,5 +235,43 @@ Scenario: " + scenarioName + @"
                 ReceivedDataTable = dataTable;
             }
         }
+
+        [Fact]
+        public void ExtractScenario_Extracts_Scenario_With_DocString()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithDocStringScenarioStep();
+            var sut = FeatureClass.FromFeatureInstance(featureInstance);
+            var scenarioName = "scenario-121kh2";
+            var docStringContent = @"some content
++++
+with multi lines
+---
+in it";
+            var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
+                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
+" + @"""""""
+" + docStringContent + @"
+"""""""));
+
+            //act.
+            var scenario = sut.ExtractScenario(scenarioName, featureFile);
+
+            //assert.
+            Assert.NotNull(scenario);
+        }
+
+        private sealed class FeatureWithDocStringScenarioStep : Feature
+        {
+            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+
+            public const string StepWithDocStringText = "Step with docstirng";
+
+            [Given(StepWithDocStringText)]
+            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
+            {
+                ReceivedDocString = docString;
+            }
+        }
     }
 }
