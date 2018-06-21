@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Gherkin.Ast;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
@@ -7,14 +9,14 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioXUnitTestCase : XunitTestCase
+    internal sealed class ScenarioXunitTestCase : XunitTestCase
     {
         [Obsolete]
-        public ScenarioXUnitTestCase()
+        public ScenarioXunitTestCase()
         {
         }
 
-        public ScenarioXUnitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, object[] testMethodArguments = null)
+        public ScenarioXunitTestCase(IMessageSink messageSink, ITestMethod testMethod, string featureName, string scenarioName, IEnumerable<string> tags, object[] testMethodArguments = null)
             : base(messageSink, TestMethodDisplay.Method, testMethod, testMethodArguments)
         {
             DisplayName = $"{featureName} :: {scenarioName}";
@@ -25,6 +27,11 @@ namespace Xunit.Gherkin.Quick
                 {  "FeatureTitle", new List<string> { featureName } },
                 {  "Description", new List<string> { scenarioName } }
             };
+
+            if (tags != null && tags.Any())
+            {
+                Traits["Category"] = tags.ToList();
+            }
         }
 
         public override async Task<RunSummary> RunAsync(
