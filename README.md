@@ -120,6 +120,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 - [DataTable Argument usage instructions](/datatable-argument.md)
 - [DocString (multi-line text) Argument usage instructions](/docstring-argument.md)
+- [Gherking Tags usage instructions](/tags.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
 
