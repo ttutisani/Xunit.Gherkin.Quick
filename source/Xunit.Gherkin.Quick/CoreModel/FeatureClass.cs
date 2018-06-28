@@ -13,6 +13,8 @@ namespace Xunit.Gherkin.Quick
 
         private readonly ReadOnlyCollection<StepMethodInfo> _stepMethods;
 
+        private Feature _instance;
+
         private FeatureClass(string featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
         {
             FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath) 
@@ -41,7 +43,9 @@ namespace Xunit.Gherkin.Quick
                 .Select(m => StepMethodInfo.FromMethodInfo(m, featureInstance))
                 .ToList();
 
-            return new FeatureClass(featureFilePath, stepMethods);
+            return new FeatureClass(featureFilePath, stepMethods) {
+                _instance = featureInstance,
+            };
         }
 
         public Scenario ExtractScenario(string scenarioName, FeatureFile featureFile)
@@ -70,7 +74,7 @@ namespace Xunit.Gherkin.Quick
                 })
                 .ToList();
 
-            return new Scenario(matchingStepMethods);
+            return new Scenario(matchingStepMethods, _instance);
 
             bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
             {
