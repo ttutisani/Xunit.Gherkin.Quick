@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick
@@ -15,6 +16,15 @@ namespace Xunit.Gherkin.Quick
         {
             var scenarioExecutor = new ScenarioExecutor(new FeatureFileRepository());
             await scenarioExecutor.ExecuteScenarioAsync(this, scenarioName);
+        }
+
+        [ScenarioOutline]
+        internal async Task ScenarioOutline(
+            string scenarioOutlineName, 
+            string exampleName, 
+            int exampleIndex)
+        {
+            throw new NotImplementedException();
         }
     }
 }
