@@ -40,7 +40,7 @@ namespace Xunit.Gherkin.Quick
                             _messageSink, 
                             testMethod, 
                             gherkinDocument.Feature.Name, 
-                            scenario.Name, 
+                            $"{scenario.Name} :: {example.Name} :: #{rowIndex + 1}", 
                             tags, 
                             new object[] { scenario.Name, example.Name, rowIndex });
 
