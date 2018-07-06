@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -56,34 +55,44 @@ namespace UnitTests
             var sut = FeatureClass.FromFeatureInstance(featureInstance);
 
             //act.
-            var scenario = sut.ExtractScenario(scenarioName, new FeatureFile(CreateGherkinDocument(scenarioName, 
-                "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
-                "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
-                "When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
-                "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
-                )));
+            var scenario = sut.ExtractScenario(scenarioName, new FeatureFile(CreateGherkinDocument(scenarioName,
+                new string[] 
+                {
+                    "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
+                    "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
+                    "When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
+                    "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
+                })));
 
             //assert.
             Assert.NotNull(scenario);
         }
-
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenarioName, params string[] steps)
+        
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
+            string scenario,
+            string[] steps,
+            Gherkin.Ast.StepArgument stepArgument = null)
         {
-            var gherkinText =
-@"Feature: Some Sample Feature
-    In order to learn Math
-    As a regular human
-    I want to add two numbers using Calculator
-
-Scenario: " + scenarioName + @"
-" + string.Join(Environment.NewLine, steps)
-;
-            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
-            using (var gherkinReader = new StreamReader(gherkinStream))
-            {
-                var parser = new Gherkin.Parser();
-                return parser.Parse(gherkinReader);
-            }
+            return new Gherkin.Ast.GherkinDocument(
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.Scenario(
+                        new Gherkin.Ast.Tag[0],
+                        null,
+                        null,
+                        scenario,
+                        null,
+                        steps.Select(s =>
+                        {
+                            var spaceIndex = s.IndexOf(' ');
+                            return new Gherkin.Ast.Step(
+                                null,
+                                s.Substring(0, spaceIndex).Trim(),
+                                s.Substring(spaceIndex).Trim(),
+                                stepArgument);
+                        }).ToArray())
+                }),
+                new Gherkin.Ast.Comment[0]);
         }
 
         private sealed class FeatureWithMatchingScenarioStepsToExtract : Feature
@@ -180,12 +189,31 @@ Scenario: " + scenarioName + @"
             var sut = FeatureClass.FromFeatureInstance(featureInstance);
 
             var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
-                    "When " + FeatureWithDataTableScenarioStep.Steptext + Environment.NewLine +
-@"  | First argument | Second argument | Result |
-    | 1              |       2         |       3|
-    | a              |   b             | c      |
-"
-                    ));
+                    new string[]
+                    {
+                        "When " + FeatureWithDataTableScenarioStep.Steptext
+                    },
+                    new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+                    {
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "First argument"),
+                            new Gherkin.Ast.TableCell(null, "Second argument"),
+                            new Gherkin.Ast.TableCell(null, "Result"),
+                        }),
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "1"),
+                            new Gherkin.Ast.TableCell(null, "2"),
+                            new Gherkin.Ast.TableCell(null, "3"),
+                        }),
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "a"),
+                            new Gherkin.Ast.TableCell(null, "b"),
+                            new Gherkin.Ast.TableCell(null, "c"),
+                        })
+                    })));
 
             //act.
             var scenario = sut.ExtractScenario(scenarioName, featureFile);
@@ -220,10 +248,8 @@ with multi lines
 ---
 in it";
             var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
-                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
-" + @"""""""
-" + docStringContent + @"
-"""""""));
+                    new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
+                    new Gherkin.Ast.DocString(null, null, docStringContent)));
 
             //act.
             var scenario = sut.ExtractScenario(scenarioName, featureFile);

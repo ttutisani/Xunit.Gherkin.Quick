@@ -1,10 +1,8 @@
 ﻿using Moq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -57,11 +55,13 @@ namespace UnitTests
             var scenarioName = "scenario 12345";
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-                    step1Text,
-                    step2Text,
-                    step3Text,
-                    step4Text
-                    )))
+                    new string[] 
+                    {
+                        step1Text,
+                        step2Text,
+                        step3Text,
+                        step4Text
+                    })))
                 .Verifiable();
 
             var featureInstance = new FeatureWithScenarioSteps();
@@ -99,23 +99,31 @@ namespace UnitTests
             output.Verify(o => o.WriteLine($"{step4Text}: PASSED"), Times.Once);
         }
 
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
+            string scenario, 
+            string[] steps,
+            Gherkin.Ast.StepArgument stepArgument = null)
         {
-            var gherkinText =
-@"Feature: Some Sample Feature
-    In order to learn Math
-    As a regular human
-    I want to add two numbers using Calculator
-
-Scenario: " + scenario + @"
-"+ string.Join(Environment.NewLine, steps)
-;
-            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
-            using (var gherkinReader = new StreamReader(gherkinStream))
-            {
-                var parser = new Gherkin.Parser();
-                return parser.Parse(gherkinReader);
-            }
+            return new Gherkin.Ast.GherkinDocument(
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[] 
+                {
+                    new Gherkin.Ast.Scenario(
+                        new Gherkin.Ast.Tag[0], 
+                        null, 
+                        null, 
+                        scenario, 
+                        null, 
+                        steps.Select(s => 
+                        {
+                            var spaceIndex = s.IndexOf(' ');
+                            return new Gherkin.Ast.Step(
+                                null, 
+                                s.Substring(0, spaceIndex).Trim(), 
+                                s.Substring(spaceIndex).Trim(), 
+                                stepArgument);
+                        }).ToArray())
+                }),
+                new Gherkin.Ast.Comment[0]);
         }
 
         private sealed class FeatureWithScenarioSteps : Feature
@@ -215,11 +223,13 @@ Scenario: " + scenario + @"
             var scenarioName = "scenario 12345";
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-                    step1Text,
-                    step2Text,
-                    step3Text,
-                    step4Text
-                    )))
+                    new string[] 
+                    {
+                        step1Text,
+                        step2Text,
+                        step3Text,
+                        step4Text
+                    })))
                 .Verifiable();
 
             var featureInstance = new FeatureWithScenarioSteps_And_Throwing();
@@ -350,14 +360,33 @@ Scenario: " + scenario + @"
 
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-                    "When " + FeatureWithDataTableScenarioStep.Steptext + Environment.NewLine +
-@"  | First argument | Second argument | Result |
-    | 1              |       2         |       3|
-    | a              |   b             | c      |
-"
-                    )))
+                    new string[] 
+                    {
+                        "When " + FeatureWithDataTableScenarioStep.Steptext
+                    },
+                    new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+                    {
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "First argument"),
+                            new Gherkin.Ast.TableCell(null, "Second argument"),
+                            new Gherkin.Ast.TableCell(null, "Result"),
+                        }),
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "1"),
+                            new Gherkin.Ast.TableCell(null, "2"),
+                            new Gherkin.Ast.TableCell(null, "3"),
+                        }),
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "a"),
+                            new Gherkin.Ast.TableCell(null, "b"),
+                            new Gherkin.Ast.TableCell(null, "c"),
+                        })
+                    }))))
                 .Verifiable();
-
+            
             //act.
             await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
 
@@ -418,10 +447,9 @@ Scenario: " + scenario + @"
 
             _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
-" + @"""""""
-" + docStringContent + @"
-"""""""))).Verifiable();
+                    new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
+                    new Gherkin.Ast.DocString(null, null, docStringContent))))
+                .Verifiable();
 
             //act.
             await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);

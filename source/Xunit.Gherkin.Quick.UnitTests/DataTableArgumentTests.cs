@@ -1,8 +1,5 @@
 ﻿using Moq;
 using System;
-using System.IO;
-using System.Linq;
-using System.Text;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -35,13 +32,27 @@ namespace UnitTests
         {
             //arrange.
             var sut = new DataTableArgument();
-            var dataTable = CreateGherkinDocument("scenario123",
-                    "When some step text" + Environment.NewLine +
-@"  | First argument | Second argument | Result |
-    | 1              |       2         |       3|
-    | a              |   b             | c      |
-"
-                    ).Feature.Children.ElementAt(0).Steps.ElementAt(0).Argument as Gherkin.Ast.DataTable;
+            var dataTable = new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+                {
+                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                    {
+                        new Gherkin.Ast.TableCell(null, "First argument"),
+                        new Gherkin.Ast.TableCell(null, "Second argument"),
+                        new Gherkin.Ast.TableCell(null, "Result"),
+                    }),
+                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                    {
+                        new Gherkin.Ast.TableCell(null, "1"),
+                        new Gherkin.Ast.TableCell(null, "2"),
+                        new Gherkin.Ast.TableCell(null, "3"),
+                    }),
+                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                    {
+                        new Gherkin.Ast.TableCell(null, "a"),
+                        new Gherkin.Ast.TableCell(null, "b"),
+                        new Gherkin.Ast.TableCell(null, "c"),
+                    })
+                });
 
             //act.
             sut.DigestScenarioStepValues(new string[0], dataTable);
@@ -55,13 +66,27 @@ namespace UnitTests
         {
             //arrange.
             var sut = new DataTableArgument();
-            var dataTable = CreateGherkinDocument("scenario123",
-                    "When some step text" + Environment.NewLine +
-@"  | First argument | Second argument | Result |
-    | 1              |       2         |       3|
-    | a              |   b             | c      |
-"
-                    ).Feature.Children.ElementAt(0).Steps.ElementAt(0).Argument as Gherkin.Ast.DataTable;
+            var dataTable = new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+                {
+                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                    {
+                        new Gherkin.Ast.TableCell(null, "First argument"),
+                        new Gherkin.Ast.TableCell(null, "Second argument"),
+                        new Gherkin.Ast.TableCell(null, "Result"),
+                    }),
+                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                    {
+                        new Gherkin.Ast.TableCell(null, "1"),
+                        new Gherkin.Ast.TableCell(null, "2"),
+                        new Gherkin.Ast.TableCell(null, "3"),
+                    }),
+                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                    {
+                        new Gherkin.Ast.TableCell(null, "a"),
+                        new Gherkin.Ast.TableCell(null, "b"),
+                        new Gherkin.Ast.TableCell(null, "c"),
+                    })
+                });
 
             //act.
             sut.DigestScenarioStepValues(new string[] { "1", "2", "3" }, dataTable);
@@ -69,26 +94,7 @@ namespace UnitTests
             //assert.
             Assert.Same(dataTable, sut.Value);
         }
-
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
-        {
-            var gherkinText =
-@"Feature: Some Sample Feature
-    In order to learn Math
-    As a regular human
-    I want to add two numbers using Calculator
-
-Scenario: " + scenario + @"
-" + string.Join(Environment.NewLine, steps)
-;
-            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
-            using (var gherkinReader = new StreamReader(gherkinStream))
-            {
-                var parser = new Gherkin.Parser();
-                return parser.Parse(gherkinReader);
-            }
-        }
-
+        
         [Fact]
         public void IsSameAs_Identifies_Similar_Instances()
         {

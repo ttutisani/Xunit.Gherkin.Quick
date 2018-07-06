@@ -1,8 +1,5 @@
 ﻿using Moq;
 using System;
-using System.IO;
-using System.Linq;
-using System.Text;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -41,11 +38,7 @@ namespace UnitTests
 with multi lines
 ---
 in it";
-            var docString = CreateGherkinDocument(scenarioName,
-                @"Given some step text
-" + @"""""""
-" + docStringContent + @"
-""""""").Feature.Children.ElementAt(0).Steps.ElementAt(0).Argument as Gherkin.Ast.DocString;
+            var docString = new Gherkin.Ast.DocString(null, null, docStringContent);
 
             //act.
             sut.DigestScenarioStepValues(new string[0], docString);
@@ -65,11 +58,7 @@ in it";
 with multi lines
 ---
 in it";
-            var docString = CreateGherkinDocument(scenarioName,
-                @"Given some step text
-" + @"""""""
-" + docStringContent + @"
-""""""").Feature.Children.ElementAt(0).Steps.ElementAt(0).Argument as Gherkin.Ast.DocString;
+            var docString = new Gherkin.Ast.DocString(null, null, docStringContent);
 
             //act.
             sut.DigestScenarioStepValues(new string[] { "1", "2", "3" }, docString);
@@ -77,26 +66,7 @@ in it";
             //assert.
             Assert.Same(docString, sut.Value);
         }
-
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
-        {
-            var gherkinText =
-@"Feature: Some Sample Feature
-    In order to learn Math
-    As a regular human
-    I want to add two numbers using Calculator
-
-Scenario: " + scenario + @"
-" + string.Join(Environment.NewLine, steps)
-;
-            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
-            using (var gherkinReader = new StreamReader(gherkinStream))
-            {
-                var parser = new Gherkin.Parser();
-                return parser.Parse(gherkinReader);
-            }
-        }
-
+        
         [Fact]
         public void IsSameAs_Identifies_Similar_Instances()
         {
