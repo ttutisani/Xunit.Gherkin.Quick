@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -42,33 +39,17 @@ namespace UnitTests
 
             var arguments = new dynamic[] { 123, "Ana", new DateTime(2018, 5, 23) };
             var argumentsAsString = new string[] { $"{arguments[0]}", $"{arguments[1]}", $"{arguments[2].Month}/{arguments[2].Day}/{arguments[2].Year}" };
-            var step = CreateGherkinDocument("some scenario", $@"Then I should have {argumentsAsString[0]} apples from {argumentsAsString[1]} by {argumentsAsString[2]}")
-                .Feature.Children.First().Steps.First();
+            var step = new Gherkin.Ast.Step(
+                null,
+                "Then",
+                $@"I should have {argumentsAsString[0]} apples from {argumentsAsString[1]} by {argumentsAsString[2]}",
+                null);
 
             //act.
             sut.DigestScenarioStepValues(argumentsAsString, step.Argument);
 
             //assert.
             Assert.Equal(arguments[index], sut.Value);
-        }
-
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
-        {
-            var gherkinText =
-@"Feature: Some Sample Feature
-    In order to learn Math
-    As a regular human
-    I want to add two numbers using Calculator
-
-Scenario: " + scenario + @"
-" + string.Join(Environment.NewLine, steps)
-;
-            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
-            using (var gherkinReader = new StreamReader(gherkinStream))
-            {
-                var parser = new Gherkin.Parser();
-                return parser.Parse(gherkinReader);
-            }
         }
     }
 }

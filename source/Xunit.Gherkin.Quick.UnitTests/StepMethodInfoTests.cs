@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -81,8 +78,7 @@ namespace UnitTests
                 .Replace(@"(\d+)", $"{number}")
                 .Replace(@"(\w+)", $"{text}");
 
-            var step = CreateGherkinDocument("some scenario", "Then " + stepText)
-                .Feature.Children.First().Steps.First();
+            var step = new Gherkin.Ast.Step(null, "Then", stepText, null);
 
             //act / assert.
             Assert.Throws<InvalidOperationException>(() => sut.DigestScenarioStepValues(step));
@@ -114,8 +110,7 @@ namespace UnitTests
                 .Replace(@"(\w+)", $"{text}")
                 .Replace(@"([\d/]+)", $"{date.Month}/{date.Day}/{date.Year}");
 
-            var step = CreateGherkinDocument("some scenario", "Then " + stepText)
-                .Feature.Children.First().Steps.First();
+            var step = new Gherkin.Ast.Step(null, "Then", stepText, null);
 
             //act.
             sut.DigestScenarioStepValues(step);
@@ -124,26 +119,7 @@ namespace UnitTests
             var digestedText = sut.GetDigestedStepText();
             Assert.Equal(stepText, digestedText);
         }
-
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(string scenario, params string[] steps)
-        {
-            var gherkinText =
-@"Feature: Some Sample Feature
-    In order to learn Math
-    As a regular human
-    I want to add two numbers using Calculator
-
-Scenario: " + scenario + @"
-" + string.Join(Environment.NewLine, steps)
-;
-            using (var gherkinStream = new MemoryStream(Encoding.UTF8.GetBytes(gherkinText)))
-            using (var gherkinReader = new StreamReader(gherkinStream))
-            {
-                var parser = new Gherkin.Parser();
-                return parser.Parse(gherkinReader);
-            }
-        }
-
+        
         private sealed class FeatureForApplyArgumentValues : Feature
         {
             public const string StepMethodText = @"I should have (\d+) apples from (\w+) by ([\d/]+)";
@@ -221,13 +197,31 @@ Scenario: " + scenario + @"
                 featureInstance
                 );
 
-            var step = CreateGherkinDocument("some scenario 1212",
-                    "When " + FeatureWithDataTableScenarioStep.Steptext + Environment.NewLine +
-@"  | First argument | Second argument | Result |
-    | 1              |       2         |       3|
-    | a              |   b             | c      |
-"
-                    ).Feature.Children.First().Steps.First();
+            var step = new Gherkin.Ast.Step(
+                null,
+                "When",
+                FeatureWithDataTableScenarioStep.Steptext,
+                new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+            {
+                new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                {
+                    new Gherkin.Ast.TableCell(null, "First argument"),
+                    new Gherkin.Ast.TableCell(null, "Second argument"),
+                    new Gherkin.Ast.TableCell(null, "Result"),
+                }),
+                new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                {
+                    new Gherkin.Ast.TableCell(null, "1"),
+                    new Gherkin.Ast.TableCell(null, "2"),
+                    new Gherkin.Ast.TableCell(null, "3"),
+                }),
+                new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                {
+                    new Gherkin.Ast.TableCell(null, "a"),
+                    new Gherkin.Ast.TableCell(null, "b"),
+                    new Gherkin.Ast.TableCell(null, "c"),
+                })
+            }));
 
             //act.
             sut.DigestScenarioStepValues(step);
@@ -296,11 +290,11 @@ with multi lines
 ---
 in it";
 
-            var step = CreateGherkinDocument(scenarioName,
-                "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText + @"
-" + @"""""""
-" + docStringContent + @"
-""""""").Feature.Children.First().Steps.First();
+            var step = new Gherkin.Ast.Step(
+                null,
+                "Given",
+                FeatureWithDocStringScenarioStep.StepWithDocStringText,
+                new Gherkin.Ast.DocString(null, null, docStringContent));
 
             //act.
             sut.DigestScenarioStepValues(step);
