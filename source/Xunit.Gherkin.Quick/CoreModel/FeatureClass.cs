@@ -44,24 +44,17 @@ namespace Xunit.Gherkin.Quick
             return new FeatureClass(featureFilePath, stepMethods);
         }
 
-        public Scenario ExtractScenario(string scenarioName, FeatureFile featureFile)
+        public Scenario ExtractScenario(global::Gherkin.Ast.Scenario gherkinScenario)
         {
-            if (string.IsNullOrWhiteSpace(scenarioName))
-                throw new ArgumentNullException(nameof(scenarioName));
-
-            if (featureFile == null)
-                throw new ArgumentNullException(nameof(featureFile));
-
-            var gherkinScenario = featureFile.GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName);
             if (gherkinScenario == null)
-                throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
+                throw new ArgumentNullException(nameof(gherkinScenario));
 
             var matchingStepMethods = gherkinScenario.Steps
                 .Select(gherkingScenarioStep =>
                 {
                     var matchingStepMethod = _stepMethods.FirstOrDefault(stepMethod => IsStepMethodAMatch(gherkingScenarioStep, stepMethod));
                     if (matchingStepMethod == null)
-                        throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword}{gherkingScenarioStep.Text}`. Scenario `{scenarioName}`.");
+                        throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword}{gherkingScenarioStep.Text}`. Scenario `{gherkinScenario.Name}`.");
 
                     var stepMethodClone = matchingStepMethod.Clone();
                     stepMethodClone.DigestScenarioStepValues(gherkingScenarioStep);

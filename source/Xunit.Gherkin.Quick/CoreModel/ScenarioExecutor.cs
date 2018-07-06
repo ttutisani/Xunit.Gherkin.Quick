@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -8,21 +10,25 @@ namespace Xunit.Gherkin.Quick
 
         public ScenarioExecutor(IFeatureFileRepository featureFileRepository)
         {
-            _featureFileRepository = featureFileRepository ?? throw new System.ArgumentNullException(nameof(featureFileRepository));
+            _featureFileRepository = featureFileRepository ?? throw new ArgumentNullException(nameof(featureFileRepository));
         }
 
         public async Task ExecuteScenarioAsync(Feature featureInstance, string scenarioName)
         {
             if (featureInstance == null)
-                throw new System.ArgumentNullException(nameof(featureInstance));
+                throw new ArgumentNullException(nameof(featureInstance));
 
             if (string.IsNullOrWhiteSpace(scenarioName))
-                throw new System.ArgumentNullException(nameof(scenarioName));
+                throw new ArgumentNullException(nameof(scenarioName));
 
             var featureClass = FeatureClass.FromFeatureInstance(featureInstance);
             var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
 
-            var scenario = featureClass.ExtractScenario(scenarioName, featureFile);
+            var gherkinScenario = featureFile.GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName) as global::Gherkin.Ast.Scenario;
+            if (gherkinScenario == null)
+                throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
+
+            var scenario = featureClass.ExtractScenario(gherkinScenario);
             await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.Output));
         }
     }
