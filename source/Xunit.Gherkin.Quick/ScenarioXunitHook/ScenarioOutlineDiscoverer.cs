@@ -39,8 +39,10 @@ namespace Xunit.Gherkin.Quick
                         yield return new ScenarioXunitTestCase(
                             _messageSink, 
                             testMethod, 
-                            gherkinDocument.Feature.Name, 
-                            $"{scenario.Name} :: {example.Name} :: #{rowIndex + 1}", 
+                            gherkinDocument.Feature.Name,
+                            !string.IsNullOrWhiteSpace(example.Name)
+                                ? $"{scenario.Name} :: {example.Name} :: #{rowIndex + 1}"
+                                : $"{scenario.Name} :: #{rowIndex + 1}",
                             tags, 
                             new object[] { scenario.Name, example.Name, rowIndex });
 

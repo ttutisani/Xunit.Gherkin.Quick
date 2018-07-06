@@ -33,7 +33,7 @@ Scenario Outline: Add two numbers with examples
 	When I press add
 	Then the result should be <sum> on the screen
 
-	Examples: of small numbers
+	Examples:
 		| a   | b   | sum |
 		| 0   | 1   | 1   |
 		| 1   | 9   | 10  |
