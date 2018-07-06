@@ -24,7 +24,7 @@ namespace Xunit.Gherkin.Quick
             var featureClass = FeatureClass.FromFeatureInstance(featureInstance);
             var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
 
-            var gherkinScenario = featureFile.GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName) as global::Gherkin.Ast.Scenario;
+            var gherkinScenario = featureFile.GetScenario(scenarioName);
             if (gherkinScenario == null)
                 throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
 
