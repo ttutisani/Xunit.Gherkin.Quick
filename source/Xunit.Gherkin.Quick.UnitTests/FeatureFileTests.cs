@@ -24,7 +24,7 @@ namespace UnitTests
         {
             //arrange.
             var scenarioName = "name exists";
-            var sut = new FeatureFile(CreateGherkinDocument(scenarioName, new string[0]));
+            var sut = new FeatureFile(CreateGherkinDocumentWithScenario(scenarioName));
 
             //act.
             var scenario = sut.GetScenario(scenarioName);
@@ -38,7 +38,7 @@ namespace UnitTests
         public void GetScenario_Gives_Null_If_Not_Found()
         {
             //arrange.
-            var sut = new FeatureFile(CreateGherkinDocument("existing", new string[0]));
+            var sut = new FeatureFile(CreateGherkinDocumentWithScenario("existing"));
 
             //act.
             var scenario = sut.GetScenario("non-existing");
@@ -47,9 +47,36 @@ namespace UnitTests
             Assert.Null(scenario);
         }
 
-        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
+        [Fact]
+        public void GetScenarioOutline_Retrieves_If_Found()
+        {
+            //arrange.
+            var scenarioName = "name exists";
+            var sut = new FeatureFile(CreateGherkinDocumentWithScenarioOutline(scenarioName));
+
+            //act.
+            var scenario = sut.GetScenarioOutline(scenarioName);
+
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.Same(sut.GherkinDocument.Feature.Children.First(), scenario);
+        }
+
+        [Fact]
+        public void GetScenarioOutline_Gives_Null_If_Not_Found()
+        {
+            //arrange.
+            var sut = new FeatureFile(CreateGherkinDocumentWithScenarioOutline("existing"));
+
+            //act.
+            var scenario = sut.GetScenarioOutline("non-existing");
+
+            //assert.
+            Assert.Null(scenario);
+        }
+
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithScenario(
             string scenario,
-            string[] steps,
             Gherkin.Ast.StepArgument stepArgument = null)
         {
             return new Gherkin.Ast.GherkinDocument(
@@ -61,15 +88,26 @@ namespace UnitTests
                         null,
                         scenario,
                         null,
-                        steps.Select(s =>
-                        {
-                            var spaceIndex = s.IndexOf(' ');
-                            return new Gherkin.Ast.Step(
-                                null,
-                                s.Substring(0, spaceIndex).Trim(),
-                                s.Substring(spaceIndex).Trim(),
-                                stepArgument);
-                        }).ToArray())
+                        new Gherkin.Ast.Step[]{ })
+                }),
+                new Gherkin.Ast.Comment[0]);
+        }
+
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithScenarioOutline(
+            string scenario,
+            Gherkin.Ast.StepArgument stepArgument = null)
+        {
+            return new Gherkin.Ast.GherkinDocument(
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.ScenarioOutline(
+                        new Gherkin.Ast.Tag[0],
+                        null,
+                        null,
+                        scenario,
+                        null,
+                        new Gherkin.Ast.Step[]{ },
+                        new Gherkin.Ast.Examples[]{ })
                 }),
                 new Gherkin.Ast.Comment[0]);
         }
