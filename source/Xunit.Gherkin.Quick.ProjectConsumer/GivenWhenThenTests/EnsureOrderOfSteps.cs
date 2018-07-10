@@ -1,4 +1,4 @@
-namespace Xunit.Gherkin.Quick.UnitTests
+namespace Xunit.Gherkin.Quick.ProductConsumer
 {
     [FeatureFile("./GivenWhenThenTests/EnsureOrderOfSteps.feature")]
     public sealed class EnsureOrderOfSteps : Feature
