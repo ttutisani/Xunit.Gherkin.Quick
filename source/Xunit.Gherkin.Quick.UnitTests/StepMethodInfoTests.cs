@@ -283,7 +283,6 @@ namespace UnitTests
                 featureInstance
                 );
 
-            var scenarioName = "scenario ajshas a";
             var docStringContent = @"some content
 +++
 with multi lines

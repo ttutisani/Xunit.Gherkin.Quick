@@ -55,14 +55,14 @@ namespace UnitTests
             var sut = FeatureClass.FromFeatureInstance(featureInstance);
 
             //act.
-            var scenario = sut.ExtractScenario(scenarioName, new FeatureFile(CreateGherkinDocument(scenarioName,
+            var scenario = sut.ExtractScenario(CreateGherkinDocument(scenarioName,
                 new string[] 
                 {
                     "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
                     "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
                     "When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
                     "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
-                })));
+                }).Feature.Children.First() as Gherkin.Ast.Scenario);
 
             //assert.
             Assert.NotNull(scenario);
@@ -188,7 +188,7 @@ namespace UnitTests
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var sut = FeatureClass.FromFeatureInstance(featureInstance);
 
-            var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
+            var gherknScenario = CreateGherkinDocument(scenarioName,
                     new string[]
                     {
                         "When " + FeatureWithDataTableScenarioStep.Steptext
@@ -213,10 +213,10 @@ namespace UnitTests
                             new Gherkin.Ast.TableCell(null, "b"),
                             new Gherkin.Ast.TableCell(null, "c"),
                         })
-                    })));
+                    })).Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(scenarioName, featureFile);
+            var scenario = sut.ExtractScenario(gherknScenario);
 
             //assert.
             Assert.NotNull(scenario);
@@ -247,12 +247,13 @@ namespace UnitTests
 with multi lines
 ---
 in it";
-            var featureFile = new FeatureFile(CreateGherkinDocument(scenarioName,
+            var gherkinScenario = CreateGherkinDocument(scenarioName,
                     new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
-                    new Gherkin.Ast.DocString(null, null, docStringContent)));
+                    new Gherkin.Ast.DocString(null, null, docStringContent))
+                    .Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(scenarioName, featureFile);
+            var scenario = sut.ExtractScenario(gherkinScenario);
 
             //assert.
             Assert.NotNull(scenario);

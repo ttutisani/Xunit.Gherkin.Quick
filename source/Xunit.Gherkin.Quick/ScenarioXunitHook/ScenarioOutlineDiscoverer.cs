@@ -10,28 +10,45 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioDiscoverer : IXunitTestCaseDiscoverer
+    internal sealed class ScenarioOutlineDiscoverer : IXunitTestCaseDiscoverer
     {
         private readonly IMessageSink _messageSink;
 
-        public ScenarioDiscoverer(IMessageSink messageSink)
+        public ScenarioOutlineDiscoverer(IMessageSink messageSink)
         {
             _messageSink = messageSink;
         }
 
         public IEnumerable<IXunitTestCase> Discover(
-            ITestFrameworkDiscoveryOptions discoveryOptions, 
-            ITestMethod testMethod, 
+            ITestFrameworkDiscoveryOptions discoveryOptions,
+            ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
             var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
 
             var featureTags = gherkinDocument.Feature.Tags?.ToList();
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+            foreach (var scenario in gherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.ScenarioOutline>())
             {
                 var tags = featureTags.ToList().Union(scenario?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
-                
-                yield return new ScenarioXunitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, tags, new object[] { scenario.Name });
+
+                foreach (var example in scenario.Examples)
+                {
+                    var rowIndex = 0;
+                    foreach (var row in example.TableBody)
+                    {
+                        yield return new ScenarioXunitTestCase(
+                            _messageSink, 
+                            testMethod, 
+                            gherkinDocument.Feature.Name,
+                            !string.IsNullOrWhiteSpace(example.Name)
+                                ? $"{scenario.Name} :: {example.Name} :: #{rowIndex + 1}"
+                                : $"{scenario.Name} :: #{rowIndex + 1}",
+                            tags, 
+                            new object[] { scenario.Name, example.Name, rowIndex });
+
+                        rowIndex++;
+                    }
+                }
             }
         }
 

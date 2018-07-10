@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xunit.Gherkin.Quick.UnitTests
+namespace Xunit.Gherkin.Quick.ProductConsumer
 {
     [FeatureFile("./GivenWhenThenTests/SimpleParameterTypes.feature")]
     public sealed class SimpleParameterTypes : Feature

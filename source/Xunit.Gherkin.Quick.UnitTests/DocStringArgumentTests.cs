@@ -32,7 +32,6 @@ namespace UnitTests
         {
             //arrange.
             var sut = new DocStringArgument();
-            var scenarioName = "scenario-121kh2";
             var docStringContent = @"some content
 +++
 with multi lines
@@ -52,7 +51,6 @@ in it";
         {
             //arrange.
             var sut = new DocStringArgument();
-            var scenarioName = "scenario-121kh2";
             var docStringContent = @"some content
 +++
 with multi lines
