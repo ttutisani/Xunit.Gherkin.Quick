@@ -43,7 +43,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void ApplyExampleRow_Applies_Digests_Row_Values_Into_Scenario()
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario()
         {
             //arrange.
             var sut = new Gherkin.Ast.ScenarioOutline(
