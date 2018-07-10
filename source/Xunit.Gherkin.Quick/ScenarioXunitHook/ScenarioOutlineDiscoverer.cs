@@ -52,7 +52,7 @@ namespace Xunit.Gherkin.Quick
             }
         }
 
-        public static GherkinDocument GetGherkinDocumentByType(Type classType)
+        private static GherkinDocument GetGherkinDocumentByType(Type classType)
         {
             var fileName = classType.FullName;
             fileName = fileName.Substring(fileName.LastIndexOf('.') + 1) + ".feature";
