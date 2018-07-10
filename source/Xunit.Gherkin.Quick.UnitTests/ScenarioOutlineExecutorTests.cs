@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -291,267 +292,273 @@ namespace UnitTests
             }
         }
 
-//        [Fact]
-//        public async Task ExecuteScenario_Executes_Successful_Scenario_Steps_And_Skips_The_Rest()
-//        {
-//            //arrange.
-//            var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
-//            var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
-//            var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
-//            var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+        [Theory]
+        [InlineData("", 0, 0, 1, 1)]
+        [InlineData("", 1, 1, 9, 10)]
+        [InlineData("of bigger numbers", 0, 99, 1, 100)]
+        [InlineData("of bigger numbers", 1, 100, 200, 300)]
+        [InlineData("of large numbers", 0, 999, 1, 1000)]
+        [InlineData("of large numbers", 1, 9999, 1, 10000)]
+        public async Task ExecuteScenario_Executes_Successful_Scenario_Steps_And_Skips_The_Rest(
+            string exampleName,
+            int exampleRowIndex,
 
-//            var scenarioName = "scenario 12345";
-//            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
-//                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-//                    new string[]
-//                    {
-//                        step1Text,
-//                        step2Text,
-//                        step3Text,
-//                        step4Text
-//                    })))
-//                .Verifiable();
+            int a,
+            int b,
+            int sum
+            )
+        {
+            //arrange.
+            var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", $"{a}", StringComparison.InvariantCultureIgnoreCase);
+            var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
+            var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
+            var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", $"{sum}", StringComparison.InvariantCultureIgnoreCase);
 
-//            var featureInstance = new FeatureWithScenarioSteps_And_Throwing();
-//            var output = new Mock<ITestOutputHelper>();
-//            featureInstance.Output = output.Object;
+            var outlineName = "scenario 12345";
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
+                .Returns(new FeatureFile(CreateGherkinDocument(outlineName)))
+                .Verifiable();
 
-//            //act.
-//            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
-//            Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
+            var featureInstance = new FeatureWithScenarioSteps_And_Throwing();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
 
-//            //assert.
-//            _featureFileRepository.Verify();
+            //act.
+            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, outlineName, exampleName, exampleRowIndex));
+            Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
 
-//            Assert.Equal(2, featureInstance.CallStack.Count);
+            //assert.
+            _featureFileRepository.Verify();
 
-//            Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep1), featureInstance.CallStack[0].Key);
-//            Assert.NotNull(featureInstance.CallStack[0].Value);
-//            Assert.Single(featureInstance.CallStack[0].Value);
-//            Assert.Equal(12, featureInstance.CallStack[0].Value[0]);
-//            output.Verify(o => o.WriteLine($"{step1Text}: PASSED"), Times.Once);
+            Assert.Equal(2, featureInstance.CallStack.Count);
 
-//            Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep2), featureInstance.CallStack[1].Key);
-//            Assert.NotNull(featureInstance.CallStack[1].Value);
-//            Assert.Single(featureInstance.CallStack[1].Value);
-//            Assert.Equal(15, featureInstance.CallStack[1].Value[0]);
-//            output.Verify(o => o.WriteLine($"{step2Text}: FAILED"), Times.Once);
+            Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep1), featureInstance.CallStack[0].Key);
+            Assert.NotNull(featureInstance.CallStack[0].Value);
+            Assert.Single(featureInstance.CallStack[0].Value);
+            Assert.Equal(a, featureInstance.CallStack[0].Value[0]);
+            output.Verify(o => o.WriteLine($"{step1Text}: PASSED"), Times.Once);
 
-//            output.Verify(o => o.WriteLine($"{step3Text}: SKIPPED"), Times.Once);
+            Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep2), featureInstance.CallStack[1].Key);
+            Assert.NotNull(featureInstance.CallStack[1].Value);
+            Assert.Single(featureInstance.CallStack[1].Value);
+            Assert.Equal(b, featureInstance.CallStack[1].Value[0]);
+            output.Verify(o => o.WriteLine($"{step2Text}: FAILED"), Times.Once);
 
-//            output.Verify(o => o.WriteLine($"{step4Text}: SKIPPED"), Times.Once);
-//        }
+            output.Verify(o => o.WriteLine($"{step3Text}: SKIPPED"), Times.Once);
 
-//        private sealed class FeatureWithScenarioSteps_And_Throwing : Feature
-//        {
-//            public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
+            output.Verify(o => o.WriteLine($"{step4Text}: SKIPPED"), Times.Once);
+        }
 
-//            [Given("Non matching given")]
-//            public void NonMatchingStep1_before()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_before), null));
-//            }
+        private sealed class FeatureWithScenarioSteps_And_Throwing : Feature
+        {
+            public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
 
-//            public const string ScenarioStep1Text = @"I chose (\d+) as first number";
+            [Given("Non matching given")]
+            public void NonMatchingStep1_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_before), null));
+            }
 
-//            [Given(ScenarioStep1Text)]
-//            public void ScenarioStep1(int firstNumber)
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep1), new object[] { firstNumber }));
-//            }
+            public const string ScenarioStep1Text = @"I chose (\d+) as first number";
 
-//            [Given("Non matching given")]
-//            public void NonMatchingStep1_after()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_after), null));
-//            }
+            [Given(ScenarioStep1Text)]
+            public void ScenarioStep1(int firstNumber)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep1), new object[] { firstNumber }));
+            }
 
-//            [And("Non matching and")]
-//            public void NonMatchingStep2_before()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_before), null));
-//            }
+            [Given("Non matching given")]
+            public void NonMatchingStep1_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_after), null));
+            }
 
-//            public const string ScenarioStep2Text = @"I chose (\d+) as second number";
+            [And("Non matching and")]
+            public void NonMatchingStep2_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_before), null));
+            }
 
-//            [And(ScenarioStep2Text)]
-//            public void ScenarioStep2(int secondNumber)
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), new object[] { secondNumber }));
+            public const string ScenarioStep2Text = @"I chose (\d+) as second number";
 
-//                throw new InvalidOperationException("Some exception to stop execution of next steps.");
-//            }
+            [And(ScenarioStep2Text)]
+            public void ScenarioStep2(int secondNumber)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), new object[] { secondNumber }));
 
-//            [And("Non matching and")]
-//            public void NonMatchingStep2_after()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_after), null));
-//            }
+                throw new InvalidOperationException("Some exception to stop execution of next steps.");
+            }
 
-//            [When("Non matching when")]
-//            public void NonMatchingStep3_before()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_before), null));
-//            }
+            [And("Non matching and")]
+            public void NonMatchingStep2_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_after), null));
+            }
 
-//            public const string ScenarioStep3Text = "I press add";
+            [When("Non matching when")]
+            public void NonMatchingStep3_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_before), null));
+            }
 
-//            [When(ScenarioStep3Text)]
-//            public void ScenarioStep3()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep3), null));
-//            }
+            public const string ScenarioStep3Text = "I press add";
 
-//            [When("Non matching when")]
-//            public void NonMatchingStep3_after()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_after), null));
-//            }
+            [When(ScenarioStep3Text)]
+            public void ScenarioStep3()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep3), null));
+            }
 
-//            [Then("Non matching then")]
-//            public void NonMatchingStep4_before()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_before), null));
-//            }
+            [When("Non matching when")]
+            public void NonMatchingStep3_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_after), null));
+            }
 
-//            public const string ScenarioStep4Text = @"the result should be (\d+) on the screen";
+            [Then("Non matching then")]
+            public void NonMatchingStep4_before()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_before), null));
+            }
 
-//            [Then(ScenarioStep4Text)]
-//            public void ScenarioStep4(int result)
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep4), new object[] { result }));
-//            }
+            public const string ScenarioStep4Text = @"the result should be (\d+) on the screen";
 
-//            [Then("Non matching then")]
-//            public void NonMatchingStep4_after()
-//            {
-//                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
-//            }
-//        }
+            [Then(ScenarioStep4Text)]
+            public void ScenarioStep4(int result)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep4), new object[] { result }));
+            }
 
-//        [Fact]
-//        public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
-//        {
-//            //arrange.
-//            var scenarioName = "scenario123";
-//            var featureInstance = new FeatureWithDataTableScenarioStep();
-//            var output = new Mock<ITestOutputHelper>();
-//            featureInstance.Output = output.Object;
+            [Then("Non matching then")]
+            public void NonMatchingStep4_after()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
+            }
+        }
 
-//            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
-//                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-//                    new string[]
-//                    {
-//                        "When " + FeatureWithDataTableScenarioStep.Steptext
-//                    },
-//                    new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
-//                    {
-//                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-//                        {
-//                            new Gherkin.Ast.TableCell(null, "First argument"),
-//                            new Gherkin.Ast.TableCell(null, "Second argument"),
-//                            new Gherkin.Ast.TableCell(null, "Result"),
-//                        }),
-//                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-//                        {
-//                            new Gherkin.Ast.TableCell(null, "1"),
-//                            new Gherkin.Ast.TableCell(null, "2"),
-//                            new Gherkin.Ast.TableCell(null, "3"),
-//                        }),
-//                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-//                        {
-//                            new Gherkin.Ast.TableCell(null, "a"),
-//                            new Gherkin.Ast.TableCell(null, "b"),
-//                            new Gherkin.Ast.TableCell(null, "c"),
-//                        })
-//                    }))))
-//                .Verifiable();
+        //        [Fact]
+        //        public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
+        //        {
+        //            //arrange.
+        //            var scenarioName = "scenario123";
+        //            var featureInstance = new FeatureWithDataTableScenarioStep();
+        //            var output = new Mock<ITestOutputHelper>();
+        //            featureInstance.Output = output.Object;
 
-//            //act.
-//            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+        //            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+        //                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
+        //                    new string[]
+        //                    {
+        //                        "When " + FeatureWithDataTableScenarioStep.Steptext
+        //                    },
+        //                    new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+        //                    {
+        //                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+        //                        {
+        //                            new Gherkin.Ast.TableCell(null, "First argument"),
+        //                            new Gherkin.Ast.TableCell(null, "Second argument"),
+        //                            new Gherkin.Ast.TableCell(null, "Result"),
+        //                        }),
+        //                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+        //                        {
+        //                            new Gherkin.Ast.TableCell(null, "1"),
+        //                            new Gherkin.Ast.TableCell(null, "2"),
+        //                            new Gherkin.Ast.TableCell(null, "3"),
+        //                        }),
+        //                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+        //                        {
+        //                            new Gherkin.Ast.TableCell(null, "a"),
+        //                            new Gherkin.Ast.TableCell(null, "b"),
+        //                            new Gherkin.Ast.TableCell(null, "c"),
+        //                        })
+        //                    }))))
+        //                .Verifiable();
 
-//            //assert.
-//            _featureFileRepository.Verify();
+        //            //act.
+        //            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
 
-//            Assert.NotNull(featureInstance.ReceivedDataTable);
-//            Assert.Equal(3, featureInstance.ReceivedDataTable.Rows.Count());
+        //            //assert.
+        //            _featureFileRepository.Verify();
 
-//            AssertDataTableCell(0, 0, "First argument");
-//            AssertDataTableCell(0, 1, "Second argument");
-//            AssertDataTableCell(0, 2, "Result");
+        //            Assert.NotNull(featureInstance.ReceivedDataTable);
+        //            Assert.Equal(3, featureInstance.ReceivedDataTable.Rows.Count());
 
-//            AssertDataTableCell(1, 0, "1");
-//            AssertDataTableCell(1, 1, "2");
-//            AssertDataTableCell(1, 2, "3");
+        //            AssertDataTableCell(0, 0, "First argument");
+        //            AssertDataTableCell(0, 1, "Second argument");
+        //            AssertDataTableCell(0, 2, "Result");
 
-//            AssertDataTableCell(2, 0, "a");
-//            AssertDataTableCell(2, 1, "b");
-//            AssertDataTableCell(2, 2, "c");
+        //            AssertDataTableCell(1, 0, "1");
+        //            AssertDataTableCell(1, 1, "2");
+        //            AssertDataTableCell(1, 2, "3");
 
-//            void AssertDataTableCell(int rowIndex, int cellIndex, string value)
-//            {
-//                Assert.True(featureInstance.ReceivedDataTable.Rows.Count() > rowIndex);
-//                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex));
-//                Assert.True(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.Count() > cellIndex);
-//                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.ElementAt(cellIndex));
-//                Assert.Equal("First argument", featureInstance.ReceivedDataTable.Rows.ElementAt(0).Cells.ElementAt(0).Value);
-//            }
-//        }
+        //            AssertDataTableCell(2, 0, "a");
+        //            AssertDataTableCell(2, 1, "b");
+        //            AssertDataTableCell(2, 2, "c");
 
-//        private sealed class FeatureWithDataTableScenarioStep : Feature
-//        {
-//            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
+        //            void AssertDataTableCell(int rowIndex, int cellIndex, string value)
+        //            {
+        //                Assert.True(featureInstance.ReceivedDataTable.Rows.Count() > rowIndex);
+        //                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex));
+        //                Assert.True(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.Count() > cellIndex);
+        //                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.ElementAt(cellIndex));
+        //                Assert.Equal("First argument", featureInstance.ReceivedDataTable.Rows.ElementAt(0).Cells.ElementAt(0).Value);
+        //            }
+        //        }
 
-//            public const string Steptext = "Some step text";
+        //        private sealed class FeatureWithDataTableScenarioStep : Feature
+        //        {
+        //            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
 
-//            [When(Steptext)]
-//            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
-//            {
-//                ReceivedDataTable = dataTable;
-//            }
-//        }
+        //            public const string Steptext = "Some step text";
 
-//        [Fact]
-//        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
-//        {
-//            //arrange.
-//            var featureInstance = new FeatureWithDocStringScenarioStep();
-//            var output = new Mock<ITestOutputHelper>();
-//            featureInstance.Output = output.Object;
-//            var docStringContent = "some content" + Environment.NewLine +
-//"+++" + Environment.NewLine +
-//"with multi lines" + Environment.NewLine +
-//"---" + Environment.NewLine +
-//"in it";
-//            var scenarioName = "scenario 1231121";
+        //            [When(Steptext)]
+        //            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
+        //            {
+        //                ReceivedDataTable = dataTable;
+        //            }
+        //        }
 
-//            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
-//                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-//                    new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
-//                    new Gherkin.Ast.DocString(null, null, docStringContent))))
-//                .Verifiable();
+        //        [Fact]
+        //        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
+        //        {
+        //            //arrange.
+        //            var featureInstance = new FeatureWithDocStringScenarioStep();
+        //            var output = new Mock<ITestOutputHelper>();
+        //            featureInstance.Output = output.Object;
+        //            var docStringContent = "some content" + Environment.NewLine +
+        //"+++" + Environment.NewLine +
+        //"with multi lines" + Environment.NewLine +
+        //"---" + Environment.NewLine +
+        //"in it";
+        //            var scenarioName = "scenario 1231121";
 
-//            //act.
-//            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+        //            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
+        //                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
+        //                    new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
+        //                    new Gherkin.Ast.DocString(null, null, docStringContent))))
+        //                .Verifiable();
 
-//            //assert.
-//            _featureFileRepository.Verify();
+        //            //act.
+        //            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
 
-//            Assert.NotNull(featureInstance.ReceivedDocString);
-//            Assert.Equal(docStringContent, featureInstance.ReceivedDocString.Content);
-//        }
+        //            //assert.
+        //            _featureFileRepository.Verify();
 
-//        private sealed class FeatureWithDocStringScenarioStep : Feature
-//        {
-//            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+        //            Assert.NotNull(featureInstance.ReceivedDocString);
+        //            Assert.Equal(docStringContent, featureInstance.ReceivedDocString.Content);
+        //        }
 
-//            public const string StepWithDocStringText = "Step with docstirng";
+        //        private sealed class FeatureWithDocStringScenarioStep : Feature
+        //        {
+        //            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
 
-//            [Given(StepWithDocStringText)]
-//            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
-//            {
-//                ReceivedDocString = docString;
-//            }
-//        }
+        //            public const string StepWithDocStringText = "Step with docstirng";
+
+        //            [Given(StepWithDocStringText)]
+        //            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
+        //            {
+        //                ReceivedDocString = docString;
+        //            }
+        //        }
     }
 }
