@@ -615,47 +615,150 @@ namespace UnitTests
             }
         }
 
-        //        [Fact]
-        //        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
-        //        {
-        //            //arrange.
-        //            var featureInstance = new FeatureWithDocStringScenarioStep();
-        //            var output = new Mock<ITestOutputHelper>();
-        //            featureInstance.Output = output.Object;
-        //            var docStringContent = "some content" + Environment.NewLine +
-        //"+++" + Environment.NewLine +
-        //"with multi lines" + Environment.NewLine +
-        //"---" + Environment.NewLine +
-        //"in it";
-        //            var scenarioName = "scenario 1231121";
+        //========================================
 
-        //            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
-        //                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-        //                    new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
-        //                    new Gherkin.Ast.DocString(null, null, docStringContent))))
-        //                .Verifiable();
+        [Theory]
+        [InlineData("", 0)]
+        [InlineData("", 1)]
+        [InlineData("of bigger numbers", 0)]
+        [InlineData("of bigger numbers", 1)]
+        [InlineData("of large numbers", 0)]
+        [InlineData("of large numbers", 1)]
+        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString(
+            string exampleName,
+            int exampleRowIndex)
+        {
+            //arrange.
+            var scenarioName = "scenario123";
+            var featureInstance = new FeatureWithDocStringScenarioStep();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
 
-        //            //act.
-        //            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            var docStringContent = "some content" + Environment.NewLine +
+"+++" + Environment.NewLine +
+"with multi lines" + Environment.NewLine +
+"---" + Environment.NewLine +
+"in it";
 
-        //            //assert.
-        //            _featureFileRepository.Verify();
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDocStringScenarioStep)}.feature"))
+                .Returns(new FeatureFile(FeatureWithDocStringScenarioStep.CreateGherkinDocument(scenarioName,
+                    new Gherkin.Ast.DocString(null, null, docStringContent))))
+                    .Verifiable();
 
-        //            Assert.NotNull(featureInstance.ReceivedDocString);
-        //            Assert.Equal(docStringContent, featureInstance.ReceivedDocString.Content);
-        //        }
+            //act.
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex);
 
-        //        private sealed class FeatureWithDocStringScenarioStep : Feature
-        //        {
-        //            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+            //assert.
+            _featureFileRepository.Verify();
 
-        //            public const string StepWithDocStringText = "Step with docstirng";
+            Assert.NotNull(featureInstance.ReceivedDocString);
+            Assert.Equal(docStringContent, featureInstance.ReceivedDocString.Content);
+        }
 
-        //            [Given(StepWithDocStringText)]
-        //            public void Step_With_DocString_Argument(Gherkin.Ast.DocString docString)
-        //            {
-        //                ReceivedDocString = docString;
-        //            }
-        //        }
+        private sealed class FeatureWithDocStringScenarioStep : Feature
+        {
+            public Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+
+            public const string Steptext = @"Step text 1212121";
+
+            [Given(Steptext)]
+            public void When_DocString_Is_Expected(Gherkin.Ast.DocString docString)
+            {
+                ReceivedDocString = docString;
+            }
+
+            public static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
+                string outlineName,
+                Gherkin.Ast.StepArgument stepArgument = null)
+            {
+                return new Gherkin.Ast.GherkinDocument(
+                    new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                    {
+                    new Gherkin.Ast.ScenarioOutline(
+                        new Gherkin.Ast.Tag[0],
+                        null,
+                        null,
+                        outlineName,
+                        null,
+                        new Gherkin.Ast.Step[]
+                        {
+                            new Gherkin.Ast.Step(null, "Given", Steptext, stepArgument)
+                        },
+                        new Gherkin.Ast.Examples[]
+                        {
+                            new Gherkin.Ast.Examples(null, null, null, "", null,
+                                new Gherkin.Ast.TableRow(null,
+                                    new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "a"),
+                                        new Gherkin.Ast.TableCell(null, "b"),
+                                        new Gherkin.Ast.TableCell(null, "sum"),
+                                    }),
+                                new Gherkin.Ast.TableRow[]
+                                {
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "0"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "1")
+                                    }),
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "9"),
+                                        new Gherkin.Ast.TableCell(null, "10")
+                                    })
+                                }),
+                            new Gherkin.Ast.Examples(null, null, null, "of bigger numbers", null,
+                                new Gherkin.Ast.TableRow(null,
+                                    new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "a"),
+                                        new Gherkin.Ast.TableCell(null, "b"),
+                                        new Gherkin.Ast.TableCell(null, "sum"),
+                                    }),
+                                new Gherkin.Ast.TableRow[]
+                                {
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "99"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "100")
+                                    }),
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "100"),
+                                        new Gherkin.Ast.TableCell(null, "200"),
+                                        new Gherkin.Ast.TableCell(null, "300")
+                                    })
+                                }),
+                            new Gherkin.Ast.Examples(null, null, null, "of large numbers", null,
+                                new Gherkin.Ast.TableRow(null,
+                                    new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "a"),
+                                        new Gherkin.Ast.TableCell(null, "b"),
+                                        new Gherkin.Ast.TableCell(null, "sum"),
+                                    }),
+                                new Gherkin.Ast.TableRow[]
+                                {
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "999"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "1000")
+                                    }),
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "9999"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "10000")
+                                    })
+                                })
+                        })
+                    }),
+                    new Gherkin.Ast.Comment[0]);
+            }
+        }
     }
 }
