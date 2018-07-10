@@ -56,7 +56,7 @@ namespace UnitTests
         [InlineData("of bigger numbers", 1, 100, 200, 300)]
         [InlineData("of large numbers", 0, 999, 1, 1000)]
         [InlineData("of large numbers", 1, 9999, 1, 10000)]
-        public async Task ExecuteScenarioOutline_Executes_All_Scenario_Steps(
+        public async Task ExecuteScenarioOutlineAsync_Executes_All_Scenario_Steps(
             string exampleName,
             int exampleRowIndex,
 
@@ -299,7 +299,7 @@ namespace UnitTests
         [InlineData("of bigger numbers", 1, 100, 200, 300)]
         [InlineData("of large numbers", 0, 999, 1, 1000)]
         [InlineData("of large numbers", 1, 9999, 1, 10000)]
-        public async Task ExecuteScenario_Executes_Successful_Scenario_Steps_And_Skips_The_Rest(
+        public async Task ExecuteScenarioOutlineAsync_Executes_Successful_Scenario_Steps_And_Skips_The_Rest(
             string exampleName,
             int exampleRowIndex,
 
@@ -443,7 +443,7 @@ namespace UnitTests
         [InlineData("of bigger numbers", 1)]
         [InlineData("of large numbers", 0)]
         [InlineData("of large numbers", 1)]
-        public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable(
+        public async Task ExecuteScenarioOutlineAsync_Executes_ScenarioStep_With_DataTable(
             string exampleName,
             int exampleRowIndex)
         {
@@ -615,8 +615,6 @@ namespace UnitTests
             }
         }
 
-        //========================================
-
         [Theory]
         [InlineData("", 0)]
         [InlineData("", 1)]
@@ -624,7 +622,7 @@ namespace UnitTests
         [InlineData("of bigger numbers", 1)]
         [InlineData("of large numbers", 0)]
         [InlineData("of large numbers", 1)]
-        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString(
+        public async Task ExecuteScenarioOutlineAsync_Executes_ScenarioStep_With_DocString(
             string exampleName,
             int exampleRowIndex)
         {
