@@ -24,7 +24,8 @@ namespace Xunit.Gherkin.Quick
             string exampleName, 
             int exampleIndex)
         {
-            throw new NotImplementedException();
+            var scenarioOutlineExecutor = new ScenarioOutlineExecutor(new FeatureFileRepository());
+            await scenarioOutlineExecutor.ExecuteScenarioOutlineAsync(this, scenarioOutlineName, exampleName, exampleIndex);
         }
     }
 }
