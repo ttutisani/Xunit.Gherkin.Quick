@@ -436,87 +436,184 @@ namespace UnitTests
             }
         }
 
-        //        [Fact]
-        //        public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
-        //        {
-        //            //arrange.
-        //            var scenarioName = "scenario123";
-        //            var featureInstance = new FeatureWithDataTableScenarioStep();
-        //            var output = new Mock<ITestOutputHelper>();
-        //            featureInstance.Output = output.Object;
+        [Theory]
+        [InlineData("", 0)]
+        [InlineData("", 1)]
+        [InlineData("of bigger numbers", 0)]
+        [InlineData("of bigger numbers", 1)]
+        [InlineData("of large numbers", 0)]
+        [InlineData("of large numbers", 1)]
+        public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable(
+            string exampleName,
+            int exampleRowIndex)
+        {
+            //arrange.
+            var scenarioName = "scenario123";
+            var featureInstance = new FeatureWithDataTableScenarioStep();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.Output = output.Object;
 
-        //            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
-        //                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
-        //                    new string[]
-        //                    {
-        //                        "When " + FeatureWithDataTableScenarioStep.Steptext
-        //                    },
-        //                    new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
-        //                    {
-        //                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-        //                        {
-        //                            new Gherkin.Ast.TableCell(null, "First argument"),
-        //                            new Gherkin.Ast.TableCell(null, "Second argument"),
-        //                            new Gherkin.Ast.TableCell(null, "Result"),
-        //                        }),
-        //                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-        //                        {
-        //                            new Gherkin.Ast.TableCell(null, "1"),
-        //                            new Gherkin.Ast.TableCell(null, "2"),
-        //                            new Gherkin.Ast.TableCell(null, "3"),
-        //                        }),
-        //                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-        //                        {
-        //                            new Gherkin.Ast.TableCell(null, "a"),
-        //                            new Gherkin.Ast.TableCell(null, "b"),
-        //                            new Gherkin.Ast.TableCell(null, "c"),
-        //                        })
-        //                    }))))
-        //                .Verifiable();
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+                .Returns(new FeatureFile(FeatureWithDataTableScenarioStep.CreateGherkinDocument(scenarioName,
+                    new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
+                    {
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "First argument"),
+                            new Gherkin.Ast.TableCell(null, "Second argument"),
+                            new Gherkin.Ast.TableCell(null, "Result"),
+                        }),
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "1"),
+                            new Gherkin.Ast.TableCell(null, "2"),
+                            new Gherkin.Ast.TableCell(null, "3"),
+                        }),
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "a"),
+                            new Gherkin.Ast.TableCell(null, "b"),
+                            new Gherkin.Ast.TableCell(null, "c"),
+                        })
+                    }))))
+                    .Verifiable();
 
-        //            //act.
-        //            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            //act.
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex);
 
-        //            //assert.
-        //            _featureFileRepository.Verify();
+            //assert.
+            _featureFileRepository.Verify();
 
-        //            Assert.NotNull(featureInstance.ReceivedDataTable);
-        //            Assert.Equal(3, featureInstance.ReceivedDataTable.Rows.Count());
+            Assert.NotNull(featureInstance.ReceivedDataTable);
+            Assert.Equal(3, featureInstance.ReceivedDataTable.Rows.Count());
 
-        //            AssertDataTableCell(0, 0, "First argument");
-        //            AssertDataTableCell(0, 1, "Second argument");
-        //            AssertDataTableCell(0, 2, "Result");
+            AssertDataTableCell(0, 0, "First argument");
+            AssertDataTableCell(0, 1, "Second argument");
+            AssertDataTableCell(0, 2, "Result");
 
-        //            AssertDataTableCell(1, 0, "1");
-        //            AssertDataTableCell(1, 1, "2");
-        //            AssertDataTableCell(1, 2, "3");
+            AssertDataTableCell(1, 0, "1");
+            AssertDataTableCell(1, 1, "2");
+            AssertDataTableCell(1, 2, "3");
 
-        //            AssertDataTableCell(2, 0, "a");
-        //            AssertDataTableCell(2, 1, "b");
-        //            AssertDataTableCell(2, 2, "c");
+            AssertDataTableCell(2, 0, "a");
+            AssertDataTableCell(2, 1, "b");
+            AssertDataTableCell(2, 2, "c");
 
-        //            void AssertDataTableCell(int rowIndex, int cellIndex, string value)
-        //            {
-        //                Assert.True(featureInstance.ReceivedDataTable.Rows.Count() > rowIndex);
-        //                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex));
-        //                Assert.True(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.Count() > cellIndex);
-        //                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.ElementAt(cellIndex));
-        //                Assert.Equal("First argument", featureInstance.ReceivedDataTable.Rows.ElementAt(0).Cells.ElementAt(0).Value);
-        //            }
-        //        }
+            void AssertDataTableCell(int rowIndex, int cellIndex, string value)
+            {
+                Assert.True(featureInstance.ReceivedDataTable.Rows.Count() > rowIndex);
+                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex));
+                Assert.True(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.Count() > cellIndex);
+                Assert.NotNull(featureInstance.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.ElementAt(cellIndex));
+                Assert.Equal("First argument", featureInstance.ReceivedDataTable.Rows.ElementAt(0).Cells.ElementAt(0).Value);
+            }
+        }
 
-        //        private sealed class FeatureWithDataTableScenarioStep : Feature
-        //        {
-        //            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
+        private sealed class FeatureWithDataTableScenarioStep : Feature
+        {
+            public Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
 
-        //            public const string Steptext = "Some step text";
+            public const string Steptext = @"Step text 1212121";
 
-        //            [When(Steptext)]
-        //            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
-        //            {
-        //                ReceivedDataTable = dataTable;
-        //            }
-        //        }
+            [Given(Steptext)]
+            public void When_DataTable_Is_Expected(Gherkin.Ast.DataTable dataTable)
+            {
+                ReceivedDataTable = dataTable;
+            }
+
+            public static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
+                string outlineName,
+                Gherkin.Ast.StepArgument stepArgument = null)
+            {
+                return new Gherkin.Ast.GherkinDocument(
+                    new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                    {
+                    new Gherkin.Ast.ScenarioOutline(
+                        new Gherkin.Ast.Tag[0],
+                        null,
+                        null,
+                        outlineName,
+                        null,
+                        new Gherkin.Ast.Step[]
+                        {
+                            new Gherkin.Ast.Step(null, "Given", Steptext, stepArgument)
+                        },
+                        new Gherkin.Ast.Examples[]
+                        {
+                            new Gherkin.Ast.Examples(null, null, null, "", null,
+                                new Gherkin.Ast.TableRow(null,
+                                    new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "a"),
+                                        new Gherkin.Ast.TableCell(null, "b"),
+                                        new Gherkin.Ast.TableCell(null, "sum"),
+                                    }),
+                                new Gherkin.Ast.TableRow[]
+                                {
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "0"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "1")
+                                    }),
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "9"),
+                                        new Gherkin.Ast.TableCell(null, "10")
+                                    })
+                                }),
+                            new Gherkin.Ast.Examples(null, null, null, "of bigger numbers", null,
+                                new Gherkin.Ast.TableRow(null,
+                                    new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "a"),
+                                        new Gherkin.Ast.TableCell(null, "b"),
+                                        new Gherkin.Ast.TableCell(null, "sum"),
+                                    }),
+                                new Gherkin.Ast.TableRow[]
+                                {
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "99"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "100")
+                                    }),
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "100"),
+                                        new Gherkin.Ast.TableCell(null, "200"),
+                                        new Gherkin.Ast.TableCell(null, "300")
+                                    })
+                                }),
+                            new Gherkin.Ast.Examples(null, null, null, "of large numbers", null,
+                                new Gherkin.Ast.TableRow(null,
+                                    new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "a"),
+                                        new Gherkin.Ast.TableCell(null, "b"),
+                                        new Gherkin.Ast.TableCell(null, "sum"),
+                                    }),
+                                new Gherkin.Ast.TableRow[]
+                                {
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "999"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "1000")
+                                    }),
+                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                                    {
+                                        new Gherkin.Ast.TableCell(null, "9999"),
+                                        new Gherkin.Ast.TableCell(null, "1"),
+                                        new Gherkin.Ast.TableCell(null, "10000")
+                                    })
+                                })
+                        })
+                    }),
+                    new Gherkin.Ast.Comment[0]);
+            }
+        }
 
         //        [Fact]
         //        public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
