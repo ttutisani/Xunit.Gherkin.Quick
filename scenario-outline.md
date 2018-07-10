@@ -73,4 +73,4 @@ public sealed class AddTwoNumbers : Feature
 }
 ```
 
-In this class, all methods will execute in the order as if each example row is a scenario of its own.
+In this class, all methods will execute in the order as if each example row is a scenario of its own (just as you would naturally expect).
