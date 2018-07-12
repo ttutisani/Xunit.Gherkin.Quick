@@ -7,7 +7,7 @@ namespace Xunit.Gherkin.Quick
 {
     internal static class GherkinScenarioOutlineExtensions
     {
-        private static readonly Regex _placeholderRegex = new Regex(@"<(.+)>");
+        private static readonly Regex _placeholderRegex = new Regex(@"<([^>]+)>");
 
         public static global::Gherkin.Ast.Scenario ApplyExampleRow(
             this global::Gherkin.Ast.ScenarioOutline @this,

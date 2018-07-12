@@ -109,5 +109,71 @@ namespace UnitTests
                 Assert.Equal(text, step.Text);
             }
         }
+
+        [Fact]
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Multiple_Placeholders_Per_Step()
+        {
+            //arrange.
+            var sut = new Gherkin.Ast.ScenarioOutline(
+                null,
+                null,
+                null,
+                "outline123",
+                null,
+                new Gherkin.Ast.Step[]
+                {
+                    new Gherkin.Ast.Step(null, "Given", "I chose <a> as first number and <b> as second number", null),
+                    new Gherkin.Ast.Step(null, "When", "I press add", null),
+                    new Gherkin.Ast.Step(null, "Then", "the result should be <sum> on the screen", null),
+                },
+                new Gherkin.Ast.Examples[]
+                {
+                    new Gherkin.Ast.Examples(
+                        null,
+                        null,
+                        null,
+                        "existing example",
+                        null,
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "a"),
+                            new Gherkin.Ast.TableCell(null, "b"),
+                            new Gherkin.Ast.TableCell(null, "sum")
+                        }),
+                        new Gherkin.Ast.TableRow[]
+                        {
+                            new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                            {
+                                new Gherkin.Ast.TableCell(null, "1"),
+                                new Gherkin.Ast.TableCell(null, "2"),
+                                new Gherkin.Ast.TableCell(null, "3")
+                            })
+                        })
+                });
+
+            //act.
+            var scenario = sut.ApplyExampleRow("existing example", 0);
+
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.Equal(sut.Name, scenario.Name);
+            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
+            Assert.Equal(3, scenario.Steps.Count());
+
+            var sutSteps = sut.Steps.ToList();
+            var scenarioSteps = scenario.Steps.ToList();
+
+            ValidateStep(scenarioSteps[0], "Given", "I chose 1 as first number and 2 as second number", sutSteps[0]);
+            ValidateStep(scenarioSteps[1], "When", "I press add", sutSteps[1]);
+            ValidateStep(scenarioSteps[2], "Then", "the result should be 3 on the screen", sutSteps[2]);
+
+            void ValidateStep(Gherkin.Ast.Step step, string keyword, string text,
+                Gherkin.Ast.Step other)
+            {
+                Assert.NotSame(other, step);
+                Assert.Equal(keyword, step.Keyword);
+                Assert.Equal(text, step.Text);
+            }
+        }
     }
 }
