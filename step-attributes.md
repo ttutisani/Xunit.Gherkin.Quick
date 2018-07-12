@@ -28,6 +28,6 @@ Here are commonly seen use cases that need to be handled carefully, accounting R
 | Given my name is "Tengiz" | [Given(@"my name is (.+)")]] | string | `"\"Tengiz\""` (string starting and ending with quote character) |
 | Given my name is "Tengiz" | [Given(@"my name is my name is ""(\w+)""")]] | string | "Tengiz" |
 | Given my name is "Tengiz" | [Given(@"my name is (\w+)")]] | any type | error: will not match string with quotes |
-| Given Coffee costs $5.00 today | Given(@"Coffee costs \$([\d\.]+) today") | decimal | 5.00 |
+| Given Coffee costs $5.00 today | Given(@"Coffee costs \\$([\d\.]+) today") | decimal | 5.00 |
 | Given Coffee costs $5.00 today | Given(@"Coffee costs $([\d\.]+) today") | any type | error: will not match dollar sign |
 | Given Coffee costs $5.00 today | Given(@"Coffee costs ([\d\.]+) today") | any type | error: will not match dollar sign |
