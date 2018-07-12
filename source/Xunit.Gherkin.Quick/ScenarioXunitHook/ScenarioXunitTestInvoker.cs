@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -38,7 +39,11 @@ namespace Xunit.Gherkin.Quick
 
             featureClassInstance.Output = _testOutputHelper;
 
-            return await base.InvokeTestMethodAsync(testClassInstance);
+            await featureClassInstance.InvokeAsync(BeforeAfterAttributeHelper.InvokeMethodType.BeforeFeature);
+            var r = await base.InvokeTestMethodAsync(testClassInstance);
+            await featureClassInstance.InvokeAsync(BeforeAfterAttributeHelper.InvokeMethodType.AfterFeature);
+
+            return r;
         }
     }
 }

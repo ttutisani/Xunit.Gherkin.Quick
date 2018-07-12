@@ -17,9 +17,13 @@ namespace Xunit.Gherkin.Quick
 
         public async Task InvokeMethodAsync(object[] parameters)
         {
+            var featureTarget = _target as Feature;
+
+            await featureTarget.InvokeAsync(BeforeAfterAttributeHelper.InvokeMethodType.BeforeStep);
             var result = _methodInfo.Invoke(_target, parameters);
             if (result is Task resultAsTask)
                 await resultAsTask;
+            await featureTarget.InvokeAsync(BeforeAfterAttributeHelper.InvokeMethodType.AfterStep);
         }
 
         public bool IsSameAs(MethodInfoWrapper other)

@@ -43,7 +43,7 @@ namespace UnitTests
                 new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep2)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep2Text),
                 new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep3)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep3Text),
                 new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke.ScenarioStep4)), featureInstance), FeatureWithStepMethodsToInvoke.ScenarioStep4Text)
-            });
+            }, featureInstance);
 
             var output = new Mock<IScenarioOutput>();
 
@@ -72,6 +72,47 @@ namespace UnitTests
             public List<string> CallStack { get; } = new List<string>();
 
             public const string ScenarioStep1Text = "I chose 12 as first number";
+
+            public int BeforeFeatureExecutedTimes { get; private set; }
+            public int AfterFeatureExecutedTimes { get; private set; }
+            public int BeforeScenarioExecutedTimes { get; private set; }
+            public int AfterScenarioExecutedTimes { get; private set; }
+            public int BeforeStepExecutedTimes { get; private set; }
+            public int AfterStepExecutedTimes { get; private set; }
+
+
+            [BeforeFeature]
+            public void B1()
+            {
+                BeforeFeatureExecutedTimes++;
+            }
+            [AfterFeature]
+            public void A1()
+            {
+                BeforeFeatureExecutedTimes++;
+            }
+
+            [BeforeScenario]
+            public void B2()
+            {
+                BeforeScenarioExecutedTimes++;
+            }
+            [AfterScenario]
+            public void A2()
+            {
+                AfterScenarioExecutedTimes++;
+            }
+
+            [BeforeStep]
+            public void B3()
+            {
+                BeforeStepExecutedTimes++;
+            }
+            [AfterStep]
+            public void A3()
+            {
+                AfterStepExecutedTimes++;
+            }
 
             [Given(ScenarioStep1Text)]
             public void ScenarioStep1()
@@ -132,7 +173,7 @@ namespace UnitTests
         public async Task ExecuteAsync_Requires_Output()
         {
             //arrange.
-            var sut = new Scenario(new List<StepMethod>());
+            var sut = new Scenario(new List<StepMethod>(), null);
 
             //act / assert.
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.ExecuteAsync(null));
@@ -150,7 +191,7 @@ namespace UnitTests
                 new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke_And_Throwing.ScenarioStep2)), featureInstance), FeatureWithStepMethodsToInvoke_And_Throwing.ScenarioStep2Text),
                 new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke_And_Throwing.ScenarioStep3)), featureInstance), FeatureWithStepMethodsToInvoke_And_Throwing.ScenarioStep3Text),
                 new StepMethod(StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureWithStepMethodsToInvoke_And_Throwing.ScenarioStep4)), featureInstance), FeatureWithStepMethodsToInvoke_And_Throwing.ScenarioStep4Text)
-            });
+            }, featureInstance);
 
             var output = new Mock<IScenarioOutput>();
 
