@@ -37,7 +37,7 @@ namespace Xunit.Gherkin.Quick
             var gherkinScenario = gherkinScenarioOutline.ApplyExampleRow(exampleName, exampleRowIndex);
 
             var scenario = featureClass.ExtractScenario(gherkinScenario);
-            await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.Output));
+            await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.InternalOutput));
         }
     }
 }

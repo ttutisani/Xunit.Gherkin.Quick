@@ -47,6 +47,9 @@
     <None Update="Discounts\Discounts.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestOutput\OutputMessages.feature">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Texts\TextBuilder.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
