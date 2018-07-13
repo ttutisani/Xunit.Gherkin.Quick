@@ -66,7 +66,7 @@ namespace UnitTests
 
             var featureInstance = new FeatureWithScenarioSteps();
             var output = new Mock<ITestOutputHelper>();
-            featureInstance.Output = output.Object;
+            featureInstance.InternalOutput = output.Object;
 
             //act.
             await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
@@ -234,7 +234,7 @@ namespace UnitTests
 
             var featureInstance = new FeatureWithScenarioSteps_And_Throwing();
             var output = new Mock<ITestOutputHelper>();
-            featureInstance.Output = output.Object;
+            featureInstance.InternalOutput = output.Object;
 
             //act.
             var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
@@ -356,7 +356,7 @@ namespace UnitTests
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
-            featureInstance.Output = output.Object;
+            featureInstance.InternalOutput = output.Object;
 
             _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
@@ -437,7 +437,7 @@ namespace UnitTests
             //arrange.
             var featureInstance = new FeatureWithDocStringScenarioStep();
             var output = new Mock<ITestOutputHelper>();
-            featureInstance.Output = output.Object;
+            featureInstance.InternalOutput = output.Object;
             var docStringContent = "some content" + Environment.NewLine +
 "+++" + Environment.NewLine +
 "with multi lines" + Environment.NewLine +

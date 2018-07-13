@@ -36,7 +36,7 @@ namespace Xunit.Gherkin.Quick
             if (featureClassInstance == null)
                 throw new InvalidOperationException($"Test class should derive from `{nameof(Feature)}`.");
 
-            featureClassInstance.Output = _testOutputHelper;
+            featureClassInstance.InternalOutput = _testOutputHelper;
 
             return await base.InvokeTestMethodAsync(testClassInstance);
         }

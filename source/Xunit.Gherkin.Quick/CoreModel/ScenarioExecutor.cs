@@ -28,7 +28,7 @@ namespace Xunit.Gherkin.Quick
                 throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
 
             var scenario = featureClass.ExtractScenario(gherkinScenario);
-            await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.Output));
+            await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.InternalOutput));
         }
     }
 }

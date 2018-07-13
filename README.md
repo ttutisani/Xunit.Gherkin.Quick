@@ -123,6 +123,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 - [DocString (multi-line text) Argument usage instructions](/docstring-argument.md)
 - [Gherking Tags usage instructions](/tags.md)
 - [Scenario Outline usage instructions](/scenario-outline.md)
+- [Logging Output from Scenario Steps to Standard Test Output](/log-test-output.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
 
