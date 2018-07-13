@@ -1,5 +1,6 @@
 ﻿using Gherkin.Ast;
 using System;
+using System.Globalization;
 using System.Reflection;
 
 namespace Xunit.Gherkin.Quick
@@ -26,7 +27,7 @@ namespace Xunit.Gherkin.Quick
             if (argumentValues.Length <= _index)
                 throw new InvalidOperationException($"Cannot extract value for parameter `{_parameterInfo.Name}` at index {_index}; only {argumentValues.Length} parameters were provided. Method `{_parameterInfo.Member.Name}`.");
 
-            Value = Convert.ChangeType(argumentValues[_index], _parameterInfo.ParameterType);
+            Value = Convert.ChangeType(argumentValues[_index], _parameterInfo.ParameterType, CultureInfo.InvariantCulture);
         }
 
         public override bool IsSameAs(StepMethodArgument other)
