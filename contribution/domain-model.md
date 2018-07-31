@@ -30,7 +30,14 @@ Once the `Scenario` instance is extracted out of the `FeatureClass`, we just nee
 
 ### Class Diagram
 
-![Domain Model class diagram](XGQFrameworkDomainModel.jpg)
+![Domain Model class diagram](ScenarioExecution.jpg)
 
+## Model for Executing Scenario Outline
 
+In order to understand what this means, let's first understand what Scenario Outline is.
 
+Scenario Outline is a generalized representaiton of a Scenario. It has everything that a scenario can have (including non-primitive step arguments such as `DataTable`). In addition to that, it has placeholders which need to be replaced with concrete values. For that purpose, Scenario Outline has Examples table attached to it. Each row in the Examples table has substitution values for those placeholders. When we replace values of all placeholders from the given row, the Scenario Outline turns into a regular Scenario and can be executed as any other Scenario. This is expressed in the model.
+
+`ScenarioOutlineExecutor` does the same thing as the `ScenarioExecutor`, plus it turns `ScenarioOutline` into a `Scenario`. That is done by applying a given example row to the `ScenarioOutline`. As we said before, when we apply values of a single example row to the Scenario Outline placeholders, it turns into a regular Scenario. After this is done, the process is straightforward - by repeating the steps to execute a regular `Scenario`.
+
+![Scenario Outline Execution](ScenarioOutlineExecution.jpg)
