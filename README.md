@@ -118,18 +118,16 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 ## See Also
 
-- [Step Attributes (Given, When, Then, And, But) usage instructions](/step-attributes.md)
-- [DataTable Argument usage instructions](/datatable-argument.md)
-- [DocString (multi-line text) Argument usage instructions](/docstring-argument.md)
-- [Gherking Tags usage instructions](/tags.md)
-- [Scenario Outline usage instructions](/scenario-outline.md)
-- [Logging Output from Scenario Steps to Standard Test Output](/log-test-output.md)
+- [Step Attributes (Given, When, Then, And, But) usage instructions](/docs/step-attributes.md)
+- [DataTable Argument usage instructions](/docs/datatable-argument.md)
+- [DocString (multi-line text) Argument usage instructions](/docs/docstring-argument.md)
+- [Gherking Tags usage instructions](/docs/tags.md)
+- [Scenario Outline usage instructions](/docs/scenario-outline.md)
+- [Logging Output from Scenario Steps to Standard Test Output](/docs/log-test-output.md)
+- [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
+- [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
-
-### Extensions for enabling syntax highlighting of Gherkin/Cucumber 
-- [Visual Studio 2015 & 2017](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.SyntaxHighlightingPack)
-- [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete)
 
 ### Integrating Test Results With PicklesDoc
 
