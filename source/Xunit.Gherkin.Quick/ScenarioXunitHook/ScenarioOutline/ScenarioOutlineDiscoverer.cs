@@ -27,7 +27,7 @@ namespace Xunit.Gherkin.Quick
             var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
 
             var featureTags = gherkinDocument.Feature.Tags?.ToList();
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.ScenarioOutline>())
+            foreach (var scenario in gherkinDocument.Feature.Children.OfType<ScenarioOutline>())
             {
                 var tags = featureTags.ToList().Union(scenario?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
 
