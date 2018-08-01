@@ -27,11 +27,11 @@ namespace Xunit.Gherkin.Quick
             var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
 
             var featureTags = gherkinDocument.Feature.Tags?.ToList();
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<ScenarioOutline>())
+            foreach (var scenarioOutline in gherkinDocument.Feature.Children.OfType<ScenarioOutline>())
             {
-                var tags = featureTags.ToList().Union(scenario?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
+                var tags = featureTags.ToList().Union(scenarioOutline?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
 
-                foreach (var example in scenario.Examples)
+                foreach (var example in scenarioOutline.Examples)
                 {
                     var rowIndex = 0;
                     foreach (var row in example.TableBody)
@@ -41,10 +41,10 @@ namespace Xunit.Gherkin.Quick
                             testMethod, 
                             gherkinDocument.Feature.Name,
                             !string.IsNullOrWhiteSpace(example.Name)
-                                ? $"{scenario.Name} :: {example.Name} :: #{rowIndex + 1}"
-                                : $"{scenario.Name} :: #{rowIndex + 1}",
+                                ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
+                                : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
                             tags, 
-                            new object[] { scenario.Name, example.Name, rowIndex });
+                            new object[] { scenarioOutline.Name, example.Name, rowIndex });
 
                         rowIndex++;
                     }
