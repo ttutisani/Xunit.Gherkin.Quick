@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal static class GherkinExtensions
+    internal static class GherkinScenarioOutlineExtensions
     {
         private static readonly Regex _placeholderRegex = new Regex(@"<([^>]+)>");
 

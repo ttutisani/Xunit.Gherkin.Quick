@@ -26,10 +26,13 @@ namespace Xunit.Gherkin.Quick
         {
             var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
 
-            var featureTags = gherkinDocument.Feature.Tags?.ToList();
+            var featureTags = gherkinDocument.Feature.Tags?.ToList() ?? new List<Tag>();
             foreach (var scenario in gherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Scenario>())
             {
-                var tags = featureTags.ToList().Union(scenario?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
+                var tags = featureTags
+                    .Union(scenario?.Tags ?? new List<Tag>())
+                    .Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name)
+                    .Distinct();
                 
                 yield return new ScenarioXunitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, tags, new object[] { scenario.Name });
             }
