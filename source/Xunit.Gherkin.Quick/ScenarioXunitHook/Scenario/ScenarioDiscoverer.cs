@@ -24,17 +24,13 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
+            var feature = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType()).Feature;
 
-            var featureTags = gherkinDocument.Feature.Tags?.ToList() ?? new List<Tag>();
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+            foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
             {
-                var tags = featureTags
-                    .Union(scenario?.Tags ?? new List<Tag>())
-                    .Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name)
-                    .Distinct();
+                var tags = feature.GetScenarioTags(scenario.Name);
                 
-                yield return new ScenarioXunitTestCase(_messageSink, testMethod, gherkinDocument.Feature.Name, scenario.Name, tags, new object[] { scenario.Name });
+                yield return new ScenarioXunitTestCase(_messageSink, testMethod, feature.Name, scenario.Name, tags, new object[] { scenario.Name });
             }
         }
 
