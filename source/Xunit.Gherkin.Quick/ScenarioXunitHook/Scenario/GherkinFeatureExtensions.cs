@@ -31,5 +31,15 @@ namespace Xunit.Gherkin.Quick
 
             return scenarioTags ?? new List<string>();
         }
+
+        public const string IgnoreTag = "@ignore";
+
+        public static bool IsScenarioIgnored(
+            this global::Gherkin.Ast.Feature feature,
+            string scenarioName)
+        {
+            var scenarioTags = feature.GetScenarioTags(scenarioName);
+            return scenarioTags.Contains(IgnoreTag);
+        }
     }
 }

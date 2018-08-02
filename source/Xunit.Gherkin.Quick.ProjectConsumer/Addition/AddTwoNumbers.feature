@@ -47,3 +47,10 @@ Scenario Outline: Add two numbers with examples
 		| a    | b | sum   |
 		| 999  | 1 | 1000  |
 		| 9999 | 1 | 10000 |
+
+@ignore
+Scenario: Add floating point numbers
+	Given I chose 1.11 as first number
+	And I chose 2.22 as second number
+	When I press add
+	Then the result should be 3.33 on the screen

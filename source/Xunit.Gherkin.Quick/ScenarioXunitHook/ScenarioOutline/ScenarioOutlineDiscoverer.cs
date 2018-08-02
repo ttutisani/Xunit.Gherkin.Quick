@@ -43,7 +43,8 @@ namespace Xunit.Gherkin.Quick
                             !string.IsNullOrWhiteSpace(example.Name)
                                 ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
                                 : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
-                            tags, 
+                            tags,
+                            false,
                             new object[] { scenarioOutline.Name, example.Name, rowIndex });
 
                         rowIndex++;
