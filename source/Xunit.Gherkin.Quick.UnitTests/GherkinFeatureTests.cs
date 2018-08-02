@@ -21,7 +21,7 @@ namespace UnitTests
 
         [Theory]
         [MemberData(nameof(DataFor_Required_Arguments))]
-        public void GetCombinedTags_Requires_Arguments(
+        public void GetScenarioTags_Requires_Arguments(
             Gherkin.Ast.Feature feature,
             string scenarioName
             )
@@ -31,7 +31,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void GetCombinedTags_Retrieves_Tags_Of_Feature_And_Scenario_Combined()
+        public void GetScenarioTags_Retrieves_Tags_Of_Feature_And_Scenario_Combined()
         {
             //arrange.
             var featureTags = new Gherkin.Ast.Tag[] 
