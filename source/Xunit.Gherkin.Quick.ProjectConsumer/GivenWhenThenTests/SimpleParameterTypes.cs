@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 
 namespace Xunit.Gherkin.Quick.ProductConsumer
 {
     [FeatureFile("./GivenWhenThenTests/SimpleParameterTypes.feature")]
     public sealed class SimpleParameterTypes : Feature
     {
+        public SimpleParameterTypes()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+        }
+
         [Given(@"Value (\d) should be 1")]
         public void Value_1_should_be_1(int value)
         {

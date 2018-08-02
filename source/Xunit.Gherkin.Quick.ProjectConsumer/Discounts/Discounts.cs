@@ -1,9 +1,17 @@
-﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Discounts
+﻿using System.Globalization;
+using System.Threading;
+
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Discounts
 {
     [FeatureFile("./Discounts/Discounts.feature")]
     public sealed class Discounts : Feature
     {
         private readonly DiscountCalculator _discountCalculator = new DiscountCalculator();
+
+        public Discounts()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+        }
 
         [Given(@"items like (.+) costing \$([\d\.]+) in John's cart")]
         public void Given_Items_With_Price(string items, decimal price)
