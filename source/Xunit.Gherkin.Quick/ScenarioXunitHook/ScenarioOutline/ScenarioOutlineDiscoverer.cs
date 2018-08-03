@@ -35,6 +35,7 @@ namespace Xunit.Gherkin.Quick
                     foreach (var row in example.TableBody)
                     {
                         var tags = feature.GetExamplesTags(scenarioOutline.Name, example.Name);
+                        var skip = feature.IsExamplesIgnored(scenarioOutline.Name, example.Name);
 
                         yield return new ScenarioXunitTestCase(
                             _messageSink, 
@@ -44,7 +45,7 @@ namespace Xunit.Gherkin.Quick
                                 ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
                                 : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
                             tags,
-                            false,
+                            skip,
                             new object[] { scenarioOutline.Name, example.Name, rowIndex });
 
                         rowIndex++;
