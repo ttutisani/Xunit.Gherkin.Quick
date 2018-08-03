@@ -59,14 +59,6 @@ namespace Xunit.Gherkin.Quick
             return null;
         }
 
-        protected override void Initialize()
-        {
-            base.Initialize();
-
-            SkipReason = GetSkipReason(null);
-            //TODO: fails when Run All is clicked. Otherwise works.
-        }
-
         public override void Serialize(IXunitSerializationInfo data)
         {
             base.Serialize(data);
