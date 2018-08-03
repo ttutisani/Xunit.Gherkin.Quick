@@ -10,45 +10,35 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioOutlineDiscoverer : IXunitTestCaseDiscoverer
+    internal sealed class ScenarioDiscoverer : IXunitTestCaseDiscoverer
     {
         private readonly IMessageSink _messageSink;
 
-        public ScenarioOutlineDiscoverer(IMessageSink messageSink)
+        public ScenarioDiscoverer(IMessageSink messageSink)
         {
             _messageSink = messageSink;
         }
 
         public IEnumerable<IXunitTestCase> Discover(
-            ITestFrameworkDiscoveryOptions discoveryOptions,
-            ITestMethod testMethod,
+            ITestFrameworkDiscoveryOptions discoveryOptions, 
+            ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            var gherkinDocument = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType());
+            var feature = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType()).Feature;
 
-            var featureTags = gherkinDocument.Feature.Tags?.ToList();
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.ScenarioOutline>())
+            foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
             {
-                var tags = featureTags.ToList().Union(scenario?.Tags ?? new List<Tag>()).Select(t => t.Name.StartsWith("@") ? t.Name.Substring(1) : t.Name).Distinct();
+                var tags = feature.GetScenarioTags(scenario.Name);
+                bool skip = feature.IsScenarioIgnored(scenario.Name);
 
-                foreach (var example in scenario.Examples)
-                {
-                    var rowIndex = 0;
-                    foreach (var row in example.TableBody)
-                    {
-                        yield return new ScenarioXunitTestCase(
-                            _messageSink, 
-                            testMethod, 
-                            gherkinDocument.Feature.Name,
-                            !string.IsNullOrWhiteSpace(example.Name)
-                                ? $"{scenario.Name} :: {example.Name} :: #{rowIndex + 1}"
-                                : $"{scenario.Name} :: #{rowIndex + 1}",
-                            tags, 
-                            new object[] { scenario.Name, example.Name, rowIndex });
-
-                        rowIndex++;
-                    }
-                }
+                yield return new ScenarioXunitTestCase(
+                    _messageSink, 
+                    testMethod, 
+                    feature.Name, 
+                    scenario.Name, 
+                    tags,
+                    skip,
+                    new object[] { scenario.Name });
             }
         }
 
