@@ -176,11 +176,5 @@ namespace UnitTests
             //assert.
             Assert.True(isIgnored);
         }
-
-        [Fact(Skip = "something")]
-        public void Should_Skip()
-        {
-
-        }
     }
 }

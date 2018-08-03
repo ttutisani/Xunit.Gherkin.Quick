@@ -82,6 +82,15 @@ namespace Xunit.Gherkin.Quick
             ExceptionAggregator aggregator, 
             CancellationTokenSource cancellationTokenSource)
         {
+            //This may seem an overhead, but this ensures that SkipReason is calculated correctly.
+            //Reason: base class in Xunit library, strangely, initializes during desrialization
+            //routine because EnsureInitialize() call is made inside every property setter.
+            //that reasons in calling Initialize() too ealy, even before Deserialize() is called.
+            //Deserialize is not able to set the _skip flag to its correct value early enough.
+            //So here, we are forcidly repeating initialization call - so that _skip flag is used
+            //after is has correct value in it.
+            Initialize();
+
             return await new ScenarioXunitTestCaseRunner(
                 this, 
                 DisplayName, 
