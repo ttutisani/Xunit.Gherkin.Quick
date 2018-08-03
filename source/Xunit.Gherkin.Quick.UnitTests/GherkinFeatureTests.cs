@@ -253,115 +253,201 @@ namespace UnitTests
             Assert.Equal(expectedTagNames, examplesTagNames);
         }
 
-        //[Theory]
-        //[MemberData(nameof(DataFor_Required_Arguments))]
-        //public void IsScenarioIgnored_Requires_Arguments(
-        //    Gherkin.Ast.Feature feature,
-        //    string scenarioName
-        //    )
-        //{
-        //    //act / assert.
-        //    Assert.Throws<ArgumentNullException>(() => feature.IsScenarioIgnored(scenarioName));
-        //}
+        [Theory]
+        [MemberData(nameof(DataFor_Feature_And_ScenarioOutline_And_Examples_Null_Arguments))]
+        public void IsExamplesIgnored_Requires_Arguments(
+            Gherkin.Ast.Feature feature,
+            string scenarioOutlineName,
+            string examplesName
+            )
+        {
+            //act / assert.
+            Assert.Throws<ArgumentNullException>(() => feature.IsExamplesIgnored(scenarioOutlineName, examplesName));
+        }
 
 
-        //[Fact]
-        //public void IsScenarioIgnored_Does_Not_Treat_Ignored_If_No_Ignore_Tag()
-        //{
-        //    //arrange.
-        //    var featureTags = new Gherkin.Ast.Tag[]
-        //    {
-        //        new Gherkin.Ast.Tag(null, "featuretag-1"),
-        //        new Gherkin.Ast.Tag(null, "featuretag-2")
-        //    };
+        [Fact]
+        public void IsExamplesIgnored_Does_Not_Treat_Ignored_If_No_Ignore_Tag()
+        {
+            //arrange.
+            var featureTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "featuretag-1"),
+                new Gherkin.Ast.Tag(null, "featuretag-2")
+            };
 
-        //    var scenarioTags = new Gherkin.Ast.Tag[]
-        //    {
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-1"),
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-2"),
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-3")
-        //    };
+            var outlineTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "outlinetag-1"),
+                new Gherkin.Ast.Tag(null, "outlinetag-2"),
+                new Gherkin.Ast.Tag(null, "outlinetag-3")
+            };
 
-        //    var scenarioName = "scenario name 123";
+            var examplesTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "examplestag-1"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, "examplestag-3")
+            };
 
-        //    var feature = new Gherkin.Ast.Feature(
-        //        featureTags, null, null, null, null, null,
-        //        new Gherkin.Ast.ScenarioDefinition[]
-        //        {
-        //            new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
-        //        });
+            var scenarioOutlineName = "scenario name 123";
+            var examplesName = "examples name 123";
 
-        //    //act.
-        //    var isIgnored = feature.IsScenarioIgnored(scenarioName);
+            var feature = new Gherkin.Ast.Feature(
+                featureTags, null, null, null, null, null,
+                new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Examples[]
+                    {
+                        new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
+                    })
+                });
 
-        //    //assert.
-        //    Assert.False(isIgnored);
-        //}
+            //act.
+            var isIgnored = feature.IsExamplesIgnored(scenarioOutlineName, examplesName);
 
-        //[Fact]
-        //public void IsScenarioIgnored_Treats_Ignored_If_Feature_Is_Ignored()
-        //{
-        //    //arrange.
-        //    var featureTags = new Gherkin.Ast.Tag[]
-        //    {
-        //        new Gherkin.Ast.Tag(null, "featuretag-1"),
-        //        new Gherkin.Ast.Tag(null, GherkinFeatureExtensions.IgnoreTag)
-        //    };
+            //assert.
+            Assert.False(isIgnored);
+        }
 
-        //    var scenarioTags = new Gherkin.Ast.Tag[]
-        //    {
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-1"),
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-2"),
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-3")
-        //    };
+        [Fact]
+        public void IsExamplesIgnored_Treats_Ignored_If_Feature_Is_Ignored()
+        {
+            //arrange.
+            var featureTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "featuretag-1"),
+                new Gherkin.Ast.Tag(null, GherkinFeatureExtensions.IgnoreTag)
+            };
 
-        //    var scenarioName = "scenario name 123";
+            var outlineTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "outlinetag-1"),
+                new Gherkin.Ast.Tag(null, "outlinetag-2"),
+                new Gherkin.Ast.Tag(null, "outlinetag-3")
+            };
 
-        //    var feature = new Gherkin.Ast.Feature(
-        //        featureTags, null, null, null, null, null,
-        //        new Gherkin.Ast.ScenarioDefinition[]
-        //        {
-        //            new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
-        //        });
+            var examplesTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "examplestag-1"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, "examplestag-3")
+            };
 
-        //    //act.
-        //    var isIgnored = feature.IsScenarioIgnored(scenarioName);
+            var scenarioOutlineName = "scenario name 123";
+            var examplesName = "examples name 123";
 
-        //    //assert.
-        //    Assert.True(isIgnored);
-        //}
+            var feature = new Gherkin.Ast.Feature(
+                featureTags, null, null, null, null, null,
+                new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Examples[]
+                    {
+                        new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
+                    })
+                });
 
-        //[Fact]
-        //public void IsScenarioIgnored_Treats_Ignored_If_Scenario_Is_Ignored()
-        //{
-        //    //arrange.
-        //    var featureTags = new Gherkin.Ast.Tag[]
-        //    {
-        //        new Gherkin.Ast.Tag(null, "featuretag-1"),
-        //        new Gherkin.Ast.Tag(null, "featuretag-2")
-        //    };
+            //act.
+            var isIgnored = feature.IsExamplesIgnored(scenarioOutlineName, examplesName);
 
-        //    var scenarioTags = new Gherkin.Ast.Tag[]
-        //    {
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-1"),
-        //        new Gherkin.Ast.Tag(null, GherkinFeatureExtensions.IgnoreTag),
-        //        new Gherkin.Ast.Tag(null, "scenarioTag-3")
-        //    };
+            //assert.
+            Assert.True(isIgnored);
+        }
 
-        //    var scenarioName = "scenario name 123";
+        [Fact]
+        public void IsExamplesIgnored_Treats_Ignored_If_ScenarioOutline_Is_Ignored()
+        {
+            //arrange.
+            var featureTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "featuretag-1"),
+                new Gherkin.Ast.Tag(null, "featuretag-1")
+            };
 
-        //    var feature = new Gherkin.Ast.Feature(
-        //        featureTags, null, null, null, null, null,
-        //        new Gherkin.Ast.ScenarioDefinition[]
-        //        {
-        //            new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
-        //        });
+            var outlineTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "outlinetag-1"),
+                new Gherkin.Ast.Tag(null, GherkinFeatureExtensions.IgnoreTag),
+                new Gherkin.Ast.Tag(null, "outlinetag-3")
+            };
 
-        //    //act.
-        //    var isIgnored = feature.IsScenarioIgnored(scenarioName);
+            var examplesTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "examplestag-1"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, "examplestag-3")
+            };
 
-        //    //assert.
-        //    Assert.True(isIgnored);
-        //}
+            var scenarioOutlineName = "scenario name 123";
+            var examplesName = "examples name 123";
+
+            var feature = new Gherkin.Ast.Feature(
+                featureTags, null, null, null, null, null,
+                new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Examples[]
+                    {
+                        new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
+                    })
+                });
+
+            //act.
+            var isIgnored = feature.IsExamplesIgnored(scenarioOutlineName, examplesName);
+
+            //assert.
+            Assert.True(isIgnored);
+        }
+
+        [Fact]
+        public void IsExamplesIgnored_Treats_Ignored_If_Examples_Is_Ignored()
+        {
+            //arrange.
+            var featureTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "featuretag-1"),
+                new Gherkin.Ast.Tag(null, "featuretag-2")
+            };
+
+            var outlineTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "outlinetag-1"),
+                new Gherkin.Ast.Tag(null, "outlinetag-2"),
+                new Gherkin.Ast.Tag(null, "outlinetag-3")
+            };
+
+            var examplesTags = new Gherkin.Ast.Tag[]
+            {
+                new Gherkin.Ast.Tag(null, "examplestag-1"),
+                new Gherkin.Ast.Tag(null, "examplestag-2"),
+                new Gherkin.Ast.Tag(null, GherkinFeatureExtensions.IgnoreTag),
+                new Gherkin.Ast.Tag(null, "examplestag-3")
+            };
+
+            var scenarioOutlineName = "scenario name 123";
+            var examplesName = "examples name 123";
+
+            var feature = new Gherkin.Ast.Feature(
+                featureTags, null, null, null, null, null,
+                new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Examples[]
+                    {
+                        new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
+                    })
+                });
+
+            //act.
+            var isIgnored = feature.IsExamplesIgnored(scenarioOutlineName, examplesName);
+
+            //assert.
+            Assert.True(isIgnored);
+        }
     }
 }

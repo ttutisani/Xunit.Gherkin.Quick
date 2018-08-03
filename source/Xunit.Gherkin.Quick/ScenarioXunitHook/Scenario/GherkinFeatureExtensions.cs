@@ -72,5 +72,14 @@ namespace Xunit.Gherkin.Quick
 
             return examplesTags ?? new List<string>();
         }
+
+        public static bool IsExamplesIgnored(
+            this global::Gherkin.Ast.Feature feature,
+            string scenarioOutlineName,
+            string examplesName)
+        {
+            var examplesTags = feature.GetExamplesTags(scenarioOutlineName, examplesName);
+            return examplesTags.Contains(IgnoreTag);
+        }
     }
 }
