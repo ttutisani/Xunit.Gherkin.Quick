@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -7,6 +9,11 @@ namespace UnitTests
 {
     public sealed class StepMethodInfoTests
     {
+        public StepMethodInfoTests()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+        }
+
         [Fact]
         public void Ctor_Initializes_Properties()
         {

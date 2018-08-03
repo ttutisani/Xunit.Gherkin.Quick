@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
+using System.Threading;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -7,6 +9,11 @@ namespace UnitTests
 {
     public sealed class PrimitiveTypeArgumentTests
     {
+        public PrimitiveTypeArgumentTests()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+        }
+
         private static ParameterInfo GetParamAt(int index)
         {
             return typeof(PrimitiveTypeArgumentTests).GetMethod(nameof(MethodWithParameters), BindingFlags.NonPublic | BindingFlags.Instance)
