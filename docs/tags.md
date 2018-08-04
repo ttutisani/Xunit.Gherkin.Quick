@@ -2,6 +2,8 @@
 
 Tags are supported as a way to organize features and scenarios. You can add any number of tags to a Gherkin feature, scenario, scenario outline, or examples. Then, you can execute them selectively, by specifying tag as an argument (either through command line, or through Test Explorer in Visual Studio).
 
+In Gherkin, tag is a word (or a combination of alphanumeric characters) prefixed with `@` sign. For example `@addition`.
+
 ## Example
 
 Gherkin feature file ("./Addition/AddTwoNumbers.feature"):
