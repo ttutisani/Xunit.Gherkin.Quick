@@ -1,6 +1,8 @@
 # Tag Support
 
-Tags are supported as a way to organize features and scenarios. You can add any number of tags to a Gherkin feature or scenario. Then, you can execute scenarios selectively, by specifying tag as an argument (either through command line, or through Test Explorer in Visual Studio).
+Tags are supported as a way to organize features and scenarios. You can add any number of tags to a Gherkin feature, scenario, scenario outline, or examples. Then, you can execute them selectively, by specifying tag as an argument (either through command line, or through Test Explorer in Visual Studio).
+
+In Gherkin, tag is a word (or a combination of alphanumeric characters) prefixed with `@` sign. For example `@addition`.
 
 ## Example
 
@@ -32,4 +34,4 @@ When executing tests, you can specify the tests which should be run using the `C
 
 This will execute only scenario "Add two bigger numbers", since it's the only one having "bigaddition" tag attached to it.
 
-**Note**: Tags applied to the feature are inherited by all scenarios in the same file.
+**Note**: Tags are inherited. i.e., if you apply a tag to a feature, all scenarios and scenario outlines under it will also assume that tag.
