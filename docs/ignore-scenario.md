@@ -4,7 +4,7 @@ There are cases when you want to temporarily ignore a scenario, scenario outline
 
 For this, you can use `@ignore` tag. You can attach it to any of the elements listed above. This tag (just as any other tag) gets inherited. i.e. when you ignore a feature, all scenarios and scenario outlines are ignored under that feature.
 
-Here is the example of a feature which has 2 elements ignored - examples "of large numbers" under a scenario outline named "Add two numbers with examples", and a scenario named "Add floating point numbers".
+Here is the example of a feature which has 2 elements ignored - examples "of floating point numbers" under a scenario outline named "Add two numbers with examples", and a scenario named "Add floating point numbers".
 
 ```Gherkin
 Feature: AddTwoNumbers
@@ -52,7 +52,7 @@ Scenario: Add floating point numbers
 
 Items that are not ignored will execute as usual, i.e. other examples of the scenario outline "Add two numbers with examples".
 
-Ignored elements are still discovered by the test runners, but they are skipped during execution. Interface and output will be similar to ignored/skipped unit test.
+Ignored elements are still discovered by the test runners, but they are skipped during execution. Interface and output will be similar to ignored/skipped unit test execution.
 
 Yellow triangle in front of the 2 scenarios below denotes skipped items after test execution in Visual Studio test runner.
 
