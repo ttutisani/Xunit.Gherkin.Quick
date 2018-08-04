@@ -124,6 +124,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 - [Gherking Tags usage instructions](/docs/tags.md)
 - [Scenario Outline usage instructions](/docs/scenario-outline.md)
 - [Logging Output from Scenario Steps to Standard Test Output](/docs/log-test-output.md)
+- [Ignoring Scenario, Scenario Outline, Examples, or Feature](/docs/ignore-scenario.md)
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
