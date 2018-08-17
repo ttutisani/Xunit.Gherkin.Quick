@@ -473,5 +473,69 @@ namespace UnitTests
                 ReceivedDocString = docString;
             }
         }
+
+        [Fact]
+        public async Task ExecuteScenario_Executes_Scenario_With_Shared_StepMethod()
+        {
+            //arrange.
+            const string scenarioName = "scenario 123";
+
+            var featureInstance = new FeatureWithSharedStepMethod();
+            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithSharedStepMethod)))
+                .Returns(new FeatureFile(CreateGherkinDocument(scenarioName, new string[]
+                {
+                    "Given I chose 1 as first number",
+                    "And I chose 2 as second number",
+                    "And I chose 3 as third number",
+                    "When I choose 4 as fourth number",
+                    "And I choose 5 as fifth number",
+                    "And I choose 6 as sixth number",
+                    $"Then result should be {1+2+3+4+5+6} on the screen"
+                })));
+
+            //act.
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+
+            //assert.
+            Assert.Equal(7, featureInstance.CallStack.Count);
+
+            Assert_Callback(0, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 1);
+            Assert_Callback(1, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 2);
+            Assert_Callback(2, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 3);
+            Assert_Callback(3, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 4);
+            Assert_Callback(4, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 5);
+            Assert_Callback(5, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 6);
+            Assert_Callback(6, nameof(FeatureWithSharedStepMethod.Result_should_be_x_on_the_screen), (1 + 2 + 3 + 4 + 5 + 6));
+
+            void Assert_Callback(int index, string methodName, int value)
+            {
+                Assert.Equal(methodName, featureInstance.CallStack[index].Key);
+                Assert.NotNull(featureInstance.CallStack[index].Value);
+                Assert.Single(featureInstance.CallStack[index].Value);
+                Assert.Equal(value, featureInstance.CallStack[index].Value[0]);
+            }
+        }
+
+        private sealed class FeatureWithSharedStepMethod : Feature
+        {
+            public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
+
+            [Given(@"I chose (\d+) as first number")]
+            [And(@"I chose (\d+) as second number")]
+            [And(@"I chose (\d+) as third number")]
+            [When(@"I choose (\d+) as fourth number")]
+            [And(@"I choose (\d+) as fifth number")]
+            [And(@"I choose (\d+) as sixth number")]
+            public void Selecting_numbers(int x)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(Selecting_numbers), new object[] { x }));
+            }
+
+            [Then(@"Result should be (\d+) on the screen")]
+            public void Result_should_be_x_on_the_screen(int x)
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(Result_should_be_x_on_the_screen), new object[] { x }));
+            }
+        }
     }
 }
