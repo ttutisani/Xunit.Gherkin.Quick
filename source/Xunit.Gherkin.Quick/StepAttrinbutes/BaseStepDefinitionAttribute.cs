@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Xunit.Gherkin.Quick
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public abstract class BaseStepDefinitionAttribute : Attribute
     {
         public string Keyword { get; }
