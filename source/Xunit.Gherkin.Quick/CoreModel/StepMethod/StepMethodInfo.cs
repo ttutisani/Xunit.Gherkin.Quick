@@ -11,24 +11,23 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethodInfo
     {
-        public string Pattern { get; }
+        private readonly ReadOnlyCollection<ScenarioStepPattern> _scenarioStepPatterns;
 
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
-
-        public StepMethodKind Kind { get; }
 
         private readonly MethodInfoWrapper _methodInfoWrapper;
 
         private string _lastDigestedStepText;
 
         private StepMethodInfo(
-            StepMethodKind kind, 
-            string pattern,
+            IEnumerable<ScenarioStepPattern> scenarioStepPatterns,
             IEnumerable<StepMethodArgument> arguments,
             MethodInfoWrapper methodInfoWrapper)
         {
-            Kind = kind;
-            Pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
+            _scenarioStepPatterns = scenarioStepPatterns != null
+                ? scenarioStepPatterns.ToList().AsReadOnly()
+                : throw new ArgumentNullException(nameof(scenarioStepPatterns));
+
             _arguments = arguments != null
                 ? arguments.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(arguments));
@@ -49,11 +48,10 @@ namespace Xunit.Gherkin.Quick
             if (methodInfo == null)
                 throw new ArgumentNullException(nameof(methodInfo));
 
-            var stepDefinitionAttribute = methodInfo.GetCustomAttribute<BaseStepDefinitionAttribute>();
+            var stepDefinitionAttribute = methodInfo.GetCustomAttributes<BaseStepDefinitionAttribute>();
 
             return new StepMethodInfo(
-                StepMethodKindExtensions.ToStepMethodKind(stepDefinitionAttribute),
-                stepDefinitionAttribute.Pattern,
+                ScenarioStepPattern.ListFromStepAttributes(stepDefinitionAttribute),
                 StepMethodArgument.ListFromMethodInfo(methodInfo),
                 new MethodInfoWrapper(methodInfo, featureInstance));
         }
@@ -64,41 +62,23 @@ namespace Xunit.Gherkin.Quick
                 return true;
 
             return other != null
-                && other.Kind == Kind
-                && other.Pattern == Pattern
-                && ArgumentsEqual(other._arguments, _arguments)
                 && other._methodInfoWrapper.IsSameAs(_methodInfoWrapper);
         }
-
-        private static bool ArgumentsEqual(IList<StepMethodArgument> first, IList<StepMethodArgument> second)
-        {
-            if (first.Count != second.Count)
-                return false;
-
-            for (int index = 0; index < first.Count; index++)
-            {
-                if (!first[index].IsSameAs(second[index]))
-                    return false;
-            }
-
-            return true;
-        }
-
+        
         public async Task ExecuteAsync()
         {
             await _methodInfoWrapper.InvokeMethodAsync(_arguments.Select(arg => arg.Value).ToArray());
         }
 
-        
-
         public StepMethodInfo Clone()
         {
             var argumentsClone = _arguments.Select(arg => arg.Clone());
 
-            return new StepMethodInfo(Kind, Pattern, argumentsClone, _methodInfoWrapper);
+            return new StepMethodInfo(_scenarioStepPatterns, argumentsClone, _methodInfoWrapper);
         }
 
-
+        //TODO: move this method onto StepMethod - because that's only when digest makes sense.
+        //StepMethodInfo has multiple patterns, so digest is ambiguous here.
         public void DigestScenarioStepValues(Step gherkingScenarioStep)
         {
             if (_arguments.Count == 0)
@@ -106,7 +86,7 @@ namespace Xunit.Gherkin.Quick
 
             var stepText = gherkingScenarioStep.Text.Trim();
 
-            var argumentValuesFromStep = Regex.Match(stepText, Pattern).Groups.Cast<Group>()
+            var argumentValuesFromStep = Regex.Match(stepText, "" /*Pattern*/).Groups.Cast<Group>()
                 .Skip(1)
                 .Select(g => g.Value)
                 .ToArray();

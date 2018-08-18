@@ -18,7 +18,7 @@ namespace Xunit.Gherkin.Quick
                 ? stepText
                 : throw new ArgumentNullException(nameof(stepText));
 
-            Kind = stepMethodInfo.Kind;
+            //Kind = stepMethodInfo.Kind;
         }
 
         public async Task ExecuteAsync()
