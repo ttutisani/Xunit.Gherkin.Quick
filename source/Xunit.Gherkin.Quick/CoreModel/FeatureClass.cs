@@ -54,7 +54,7 @@ namespace Xunit.Gherkin.Quick
                 {
                     var matchingStepMethod = _stepMethods.FirstOrDefault(stepMethod => IsStepMethodAMatch(gherkingScenarioStep, stepMethod));
                     if (matchingStepMethod == null)
-                        throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword}{gherkingScenarioStep.Text}`. Scenario `{gherkinScenario.Name}`.");
+                        throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword.Trim()} {gherkingScenarioStep.Text.Trim()}`. Scenario `{gherkinScenario.Name}`.");
 
                     var stepMethodClone = matchingStepMethod.Clone();
                     stepMethodClone.DigestScenarioStepValues(gherkingScenarioStep);
@@ -67,18 +67,21 @@ namespace Xunit.Gherkin.Quick
 
             bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
             {
-                var firstPattern = stepMethod.ScenarioStepPatterns.First();
-
-                if (!firstPattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
-                    return false;
-
                 var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
-                var match = Regex.Match(gherkinStepText, firstPattern.Pattern);
-                if (!match.Success || !match.Value.Equals(gherkinStepText))
-                    return false;
+                foreach (var pattern in stepMethod.ScenarioStepPatterns)
+                {
+                    if (!pattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
+                        continue;
 
-                return true;
+                    var match = Regex.Match(gherkinStepText, pattern.Pattern);
+                    if (!match.Success || !match.Value.Equals(gherkinStepText))
+                        continue;
+
+                    return true;
+                }
+
+                return false;
             }
         }
     }

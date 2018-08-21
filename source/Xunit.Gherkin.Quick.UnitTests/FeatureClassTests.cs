@@ -271,5 +271,37 @@ in it";
                 ReceivedDocString = docString;
             }
         }
+
+        [Fact]
+        public void ExtractScenario_Extracts_Steps_With_Multiple_Patterns()
+        {
+            //arrange.
+            var sut = FeatureClass.FromFeatureInstance(new FeatureWithMultipleStepPatterns());
+
+            //act.
+            var scenario = sut.ExtractScenario(CreateGherkinDocument("scenario 123", new string[]
+            {
+                "Given something else"
+            }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First());
+
+            //assert.
+            Assert.NotNull(scenario);
+        }
+
+        private sealed class FeatureWithMultipleStepPatterns : Feature
+        {
+            [Given("something")]
+            [Given("something else")]
+            [And("something")]
+            [And("something else")]
+            [When("something")]
+            [When("something else")]
+            [And("something")]
+            [And("something else")]
+            [But("something")]
+            [But("something else")]
+            public void Step_With_Multiple_Patterns()
+            { }
+        }
     }
 }
