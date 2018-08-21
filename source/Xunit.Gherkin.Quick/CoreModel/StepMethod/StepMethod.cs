@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Xunit.Gherkin.Quick
@@ -11,14 +12,47 @@ namespace Xunit.Gherkin.Quick
 
         public PatternKind Kind { get; }
 
-        public StepMethod(StepMethodInfo stepMethodInfo, string stepText)
+        public string Pattern { get; }
+
+        private StepMethod(StepMethodInfo stepMethodInfo, PatternKind kind, string pattern, string stepText)
         {
             _stepMethodInfo = stepMethodInfo ?? throw new ArgumentNullException(nameof(stepMethodInfo));
+            Kind = kind;
+            Pattern = !string.IsNullOrWhiteSpace(pattern) ? pattern : throw new ArgumentNullException(nameof(pattern));
+
             StepText = !string.IsNullOrWhiteSpace(stepText)
                 ? stepText
                 : throw new ArgumentNullException(nameof(stepText));
 
-            //Kind = stepMethodInfo.Kind;
+        }
+
+        public static StepMethod FromStepMethodInfo(StepMethodInfo stepMethod, global::Gherkin.Ast.Step gherkinScenarioStep)
+        {
+            var matchingPattern = GetMatchingPattern(stepMethod, gherkinScenarioStep);
+
+            if (matchingPattern == null)
+                throw new InvalidOperationException($"This step method info (`{stepMethod.GetMethodName()}`) cannot handle given scenario step: `{gherkinScenarioStep.Keyword.Trim()} {gherkinScenarioStep.Text.Trim()}`.");
+
+            return new StepMethod(stepMethod, matchingPattern.Kind, matchingPattern.Pattern, gherkinScenarioStep.Text);
+        }
+
+        private static ScenarioStepPattern GetMatchingPattern(StepMethodInfo stepMethod, global::Gherkin.Ast.Step gherkinScenarioStep)
+        {
+            var gherkinStepText = gherkinScenarioStep.Text.Trim();
+
+            foreach (var pattern in stepMethod.ScenarioStepPatterns)
+            {
+                if (!pattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var match = Regex.Match(gherkinStepText, pattern.Pattern);
+                if (!match.Success || !match.Value.Equals(gherkinStepText))
+                    continue;
+
+                return pattern;
+            }
+
+            return null;
         }
 
         public async Task ExecuteAsync()

@@ -17,6 +17,10 @@ namespace Xunit.Gherkin.Quick
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
 
         private readonly MethodInfoWrapper _methodInfoWrapper;
+        public string GetMethodName()
+        {
+            return _methodInfoWrapper.GetMethodName();
+        }
 
         private string _lastDigestedStepText;
 

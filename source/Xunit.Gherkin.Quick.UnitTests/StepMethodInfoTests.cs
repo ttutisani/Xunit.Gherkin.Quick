@@ -340,5 +340,31 @@ in it";
             public void Step_With_Multiple_Patterns()
             { }
         }
+
+        [Fact]
+        public void GetMethodName_Returns_Wrapped_Method_Name()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMethodName();
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureForMethodName.Step_Name_Must_Be_This)),
+                featureInstance
+                );
+
+            //act.
+            var methodName = sut.GetMethodName();
+
+            //assert.
+            Assert.Equal(nameof(FeatureForMethodName.Step_Name_Must_Be_This), methodName);
+        }
+
+        private sealed class FeatureForMethodName : Feature
+        {
+            [Given("something")]
+            public void Step_Name_Must_Be_This()
+            {
+
+            }
+        }
     }
 }
