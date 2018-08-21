@@ -9,7 +9,7 @@ namespace Xunit.Gherkin.Quick
 
         public string StepText { get; }
 
-        public StepMethodKind Kind { get; }
+        public PatternKind Kind { get; }
 
         public StepMethod(StepMethodInfo stepMethodInfo, string stepText)
         {

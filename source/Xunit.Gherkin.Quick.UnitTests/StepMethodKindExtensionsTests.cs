@@ -14,27 +14,27 @@ namespace UnitTests
                     new object[]
                     {
                         new GivenAttribute("123"),
-                        StepMethodKind.Given
+                        PatternKind.Given
                     },
                     new object[]
                     {
                         new WhenAttribute("123"),
-                        StepMethodKind.When
+                        PatternKind.When
                     },
                     new object[]
                     {
                         new ThenAttribute("123"),
-                        StepMethodKind.Then
+                        PatternKind.Then
                     },
                     new object[]
                     {
                         new AndAttribute("123"),
-                        StepMethodKind.And
+                        PatternKind.And
                     },
                     new object[]
                     {
                         new ButAttribute("123"),
-                        StepMethodKind.But
+                        PatternKind.But
                     }
                 };
             }
@@ -44,11 +44,11 @@ namespace UnitTests
         [MemberData(nameof(AllStepDefinitionAttributes))]
         internal void ToStepMethodKind_Converts_based_on_Attribute_type(
             BaseStepDefinitionAttribute attribute,
-            StepMethodKind kind
+            PatternKind kind
             )
         {
             //act.
-            var actualKind = StepMethodKindExtensions.ToStepMethodKind(attribute);
+            var actualKind = PatternKindExtensions.ToPatternKind(attribute);
 
             //assert.
             Assert.Equal(kind, actualKind);

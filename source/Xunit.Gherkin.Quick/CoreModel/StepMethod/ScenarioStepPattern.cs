@@ -7,9 +7,12 @@ namespace Xunit.Gherkin.Quick
     internal sealed class ScenarioStepPattern
     {
         private readonly string _pattern;
-        private readonly StepMethodKind _stepMethodKind;
+        public string Pattern { get { return _pattern; } }
 
-        public ScenarioStepPattern(string pattern, StepMethodKind stepMethodKind)
+        private readonly PatternKind _stepMethodKind;
+        public PatternKind Kind { get { return _stepMethodKind; } }
+
+        public ScenarioStepPattern(string pattern, PatternKind stepMethodKind)
         {
             _pattern = !string.IsNullOrWhiteSpace(pattern) 
                 ? pattern 
@@ -22,7 +25,7 @@ namespace Xunit.Gherkin.Quick
             return baseStepDefinitionAttributes.Select(attribute => 
                 new ScenarioStepPattern(
                     attribute.Pattern, 
-                    StepMethodKindExtensions.ToStepMethodKind(attribute)))
+                    PatternKindExtensions.ToPatternKind(attribute)))
                 .ToList();
         }
     }

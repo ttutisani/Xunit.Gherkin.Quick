@@ -12,6 +12,7 @@ namespace Xunit.Gherkin.Quick
     internal sealed class StepMethodInfo
     {
         private readonly ReadOnlyCollection<ScenarioStepPattern> _scenarioStepPatterns;
+        public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get { return _scenarioStepPatterns; } }
 
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
 
@@ -76,7 +77,7 @@ namespace Xunit.Gherkin.Quick
 
             return new StepMethodInfo(_scenarioStepPatterns, argumentsClone, _methodInfoWrapper);
         }
-
+        
         //TODO: move this method onto StepMethod - because that's only when digest makes sense.
         //StepMethodInfo has multiple patterns, so digest is ambiguous here.
         public void DigestScenarioStepValues(Step gherkingScenarioStep)
@@ -100,7 +101,7 @@ namespace Xunit.Gherkin.Quick
         }
     }
 
-    internal enum StepMethodKind
+    internal enum PatternKind
     {
         Given,
         When,
@@ -109,9 +110,9 @@ namespace Xunit.Gherkin.Quick
         But
     }
 
-    internal static class StepMethodKindExtensions
+    internal static class PatternKindExtensions
     {
-        public static StepMethodKind ToStepMethodKind(BaseStepDefinitionAttribute @this)
+        public static PatternKind ToPatternKind(BaseStepDefinitionAttribute @this)
         {
             if (@this == null)
                 throw new ArgumentNullException(nameof(@this));
@@ -119,19 +120,19 @@ namespace Xunit.Gherkin.Quick
             switch (@this)
             {
                 case GivenAttribute _:
-                    return StepMethodKind.Given;
+                    return PatternKind.Given;
 
                 case WhenAttribute _:
-                    return StepMethodKind.When;
+                    return PatternKind.When;
 
                 case ThenAttribute _:
-                    return StepMethodKind.Then;
+                    return PatternKind.Then;
 
                 case AndAttribute _:
-                    return StepMethodKind.And;
+                    return PatternKind.And;
 
                 case ButAttribute _:
-                    return StepMethodKind.But;
+                    return PatternKind.But;
 
                 default:
                     throw new NotSupportedException($"Cannot convert into step method kind: Attribute type {@this.GetType()} is not supported.");

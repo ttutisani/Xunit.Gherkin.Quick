@@ -67,12 +67,14 @@ namespace Xunit.Gherkin.Quick
 
             bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
             {
-                if (!(stepMethod != null)/*.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase)*/)
+                var firstPattern = stepMethod.ScenarioStepPatterns.First();
+
+                if (!firstPattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
                     return false;
 
                 var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
-                var match = Regex.Match(gherkinStepText, "" /*stepMethod.Pattern*/);
+                var match = Regex.Match(gherkinStepText, firstPattern.Pattern);
                 if (!match.Success || !match.Value.Equals(gherkinStepText))
                     return false;
 
