@@ -481,7 +481,10 @@ namespace UnitTests
             const string scenarioName = "scenario 123";
 
             var featureInstance = new FeatureWithSharedStepMethod();
-            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithSharedStepMethod)))
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.InternalOutput = output.Object;
+
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithSharedStepMethod)}.feature"))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName, new string[]
                 {
                     "Given I chose 1 as first number",
@@ -490,7 +493,7 @@ namespace UnitTests
                     "When I choose 4 as fourth number",
                     "And I choose 5 as fifth number",
                     "And I choose 6 as sixth number",
-                    $"Then result should be {1+2+3+4+5+6} on the screen"
+                    $"Then Result should be {1+2+3+4+5+6} on the screen"
                 })));
 
             //act.
