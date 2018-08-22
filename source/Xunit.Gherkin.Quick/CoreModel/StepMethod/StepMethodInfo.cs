@@ -82,27 +82,49 @@ namespace Xunit.Gherkin.Quick
             return new StepMethodInfo(_scenarioStepPatterns, argumentsClone, _methodInfoWrapper);
         }
         
-        //TODO: move this method onto StepMethod - because that's only when digest makes sense.
-        //StepMethodInfo has multiple patterns, so digest is ambiguous here.
-        public void DigestScenarioStepValues(Step gherkingScenarioStep)
+        public void DigestScenarioStepValues(Step gherkinScenarioStep)
         {
             if (_arguments.Count == 0)
                 return;
 
-            var stepText = gherkingScenarioStep.Text.Trim();
+            var matchingPattern = FindMatchingPattern(gherkinScenarioStep);
+            var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
-            var argumentValuesFromStep = Regex.Match(stepText, "" /*Pattern*/).Groups.Cast<Group>()
+            if (matchingPattern == null)
+                throw new InvalidOperationException($"This step (`{_methodInfoWrapper.GetMethodName()}`) cannot handle scenario step `{gherkinScenarioStep.Keyword.Trim()} {gherkinStepText}`.");
+
+            var argumentValuesFromStep = Regex.Match(gherkinStepText, matchingPattern.Pattern).Groups.Cast<Group>()
                 .Skip(1)
                 .Select(g => g.Value)
                 .ToArray();
             
             foreach (var arg in _arguments)
             {
-                arg.DigestScenarioStepValues(argumentValuesFromStep, gherkingScenarioStep.Argument);
+                arg.DigestScenarioStepValues(argumentValuesFromStep, gherkinScenarioStep.Argument);
             }
 
-            _lastDigestedStepText = stepText;
+            _lastDigestedStepText = gherkinStepText;
+
+            ScenarioStepPattern FindMatchingPattern(Step gStep)
+            {
+                var gStepText = gStep.Text.Trim();
+
+                foreach (var pattern in _scenarioStepPatterns)
+                {
+                    if (!pattern.Kind.ToString().Equals(gStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    var match = Regex.Match(gStepText, pattern.Pattern);
+                    if (!match.Success || !match.Value.Equals(gStepText))
+                        continue;
+
+                    return pattern;
+                }
+
+                return null;
+            }
         }
+        
     }
 
     internal enum PatternKind

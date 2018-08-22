@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Gherkin.Ast;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -26,17 +27,19 @@ namespace Xunit.Gherkin.Quick
 
         }
 
-        public static StepMethod FromStepMethodInfo(StepMethodInfo stepMethod, global::Gherkin.Ast.Step gherkinScenarioStep)
+        public static StepMethod FromStepMethodInfo(StepMethodInfo stepMethodInfo, Step gherkinScenarioStep)
         {
-            var matchingPattern = GetMatchingPattern(stepMethod, gherkinScenarioStep);
+            var matchingPattern = GetMatchingPattern(stepMethodInfo, gherkinScenarioStep);
 
             if (matchingPattern == null)
-                throw new InvalidOperationException($"This step method info (`{stepMethod.GetMethodName()}`) cannot handle given scenario step: `{gherkinScenarioStep.Keyword.Trim()} {gherkinScenarioStep.Text.Trim()}`.");
+                throw new InvalidOperationException($"This step method info (`{stepMethodInfo.GetMethodName()}`) cannot handle given scenario step: `{gherkinScenarioStep.Keyword.Trim()} {gherkinScenarioStep.Text.Trim()}`.");
 
-            return new StepMethod(stepMethod, matchingPattern.Kind, matchingPattern.Pattern, gherkinScenarioStep.Text);
+            var stepMethodInfoClone = stepMethodInfo.Clone();
+            stepMethodInfoClone.DigestScenarioStepValues(gherkinScenarioStep);
+            return new StepMethod(stepMethodInfoClone, matchingPattern.Kind, matchingPattern.Pattern, gherkinScenarioStep.Text);
         }
 
-        private static ScenarioStepPattern GetMatchingPattern(StepMethodInfo stepMethod, global::Gherkin.Ast.Step gherkinScenarioStep)
+        private static ScenarioStepPattern GetMatchingPattern(StepMethodInfo stepMethod, Step gherkinScenarioStep)
         {
             var gherkinStepText = gherkinScenarioStep.Text.Trim();
 

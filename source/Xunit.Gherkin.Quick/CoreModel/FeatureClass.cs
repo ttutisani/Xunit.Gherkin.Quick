@@ -52,21 +52,18 @@ namespace Xunit.Gherkin.Quick
             var matchingStepMethods = gherkinScenario.Steps
                 .Select(gherkingScenarioStep =>
                 {
-                    var matchingStepMethod = _stepMethods.FirstOrDefault(stepMethod => IsStepMethodAMatch(gherkingScenarioStep, stepMethod));
-                    if (matchingStepMethod == null)
+                    var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => IsStepMethodInfoAMatch(gherkingScenarioStep, stepMethodInfo));
+                    if (matchingStepMethodInfo == null)
                         throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword.Trim()} {gherkingScenarioStep.Text.Trim()}`. Scenario `{gherkinScenario.Name}`.");
 
-                    var stepMethodClone = matchingStepMethod.Clone();
-                    stepMethodClone.DigestScenarioStepValues(gherkingScenarioStep);
-
-                    return StepMethod.FromStepMethodInfo(stepMethodClone, gherkingScenarioStep);
-                    //return new StepMethod(stepMethodClone, gherkingScenarioStep.Text);
+                    var stepMethod = StepMethod.FromStepMethodInfo(matchingStepMethodInfo, gherkingScenarioStep);
+                    return stepMethod;
                 })
                 .ToList();
 
             return new Scenario(matchingStepMethods);
 
-            bool IsStepMethodAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
+            bool IsStepMethodInfoAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
             {
                 var gherkinStepText = gherkinScenarioStep.Text.Trim();
 

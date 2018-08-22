@@ -13,23 +13,27 @@ namespace UnitTests
             //arrange.
             var featureInstance = new Feature_For_ExecuteAsync_Test();
             var stepMethodInfo = StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(Feature_For_ExecuteAsync_Test.But_This_Method)), featureInstance);
-            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "But", "what", null));
+            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "But", "what 123 exactly", null));
 
             //act.
             await sut.ExecuteAsync();
 
             //assert.
             Assert.True(featureInstance.Called);
+            Assert.Equal(123, featureInstance.Value);
         }
 
         private sealed class Feature_For_ExecuteAsync_Test : Feature
         {
             public bool Called { get; private set; }
 
-            [But("what")]
-            public void But_This_Method()
+            public int Value { get; private set; }
+
+            [But(@"what (\d+) exactly")]
+            public void But_This_Method(int value)
             {
                 Called = true;
+                Value = value;
             }
         }
 
@@ -44,20 +48,20 @@ namespace UnitTests
                 );
 
             //act.
-            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "Given", "something else", null));
+            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "Given", "something 123 else", null));
 
             //assert.
             Assert.NotNull(sut);
             Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].Kind, sut.Kind);
             Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].Pattern, sut.Pattern);
-            Assert.Equal("something else", sut.StepText);
+            Assert.Equal("something 123 else", sut.StepText);
         }
 
         private sealed class Feature_For_FromStepMethodInfo : Feature
         {
-            [Given("something")]
-            [Given("something else")]
-            public void Step_With_Multiple_Patterns()
+            [Given(@"something (\d+) exact")]
+            [Given(@"something (\d+) else")]
+            public void Step_With_Multiple_Patterns(int value)
             {
 
             }
