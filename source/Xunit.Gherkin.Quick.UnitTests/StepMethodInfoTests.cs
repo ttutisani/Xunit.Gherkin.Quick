@@ -24,8 +24,12 @@ namespace UnitTests
             var sut = StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance);
 
             //assert.
-            //Assert.Equal(StepMethodKind.When, sut.Kind);
-            //Assert.Equal(FeatureForCtorTest.WhenStepText, sut.Pattern);
+            Assert.NotNull(sut);
+            Assert.NotNull(sut.ScenarioStepPatterns);
+            Assert.Single(sut.ScenarioStepPatterns);
+
+            Assert.Equal(PatternKind.When, sut.ScenarioStepPatterns[0].Kind);
+            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.ScenarioStepPatterns[0].Pattern);
         }
 
         private sealed class FeatureForCtorTest : Feature
