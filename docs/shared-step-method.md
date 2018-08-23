@@ -1,4 +1,4 @@
-# Shared Step Method With Multiple Step Patterns
+# Shared Step Method With Multiple Step Attributes
 
 In some cases, you will want to share the single method among steps. i.e. your method in the `Feature` class needs to handle multiple scenario steps listed in the Gherkin feature file. To achieve this, simply apply multiple step attributes to the same method.
 
