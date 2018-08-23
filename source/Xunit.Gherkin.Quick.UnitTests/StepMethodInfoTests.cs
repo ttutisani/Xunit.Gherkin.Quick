@@ -24,8 +24,12 @@ namespace UnitTests
             var sut = StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForCtorTest.When_Something)), featureInstance);
 
             //assert.
-            Assert.Equal(StepMethodKind.When, sut.Kind);
-            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.Pattern);
+            Assert.NotNull(sut);
+            Assert.NotNull(sut.ScenarioStepPatterns);
+            Assert.Single(sut.ScenarioStepPatterns);
+
+            Assert.Equal(PatternKind.When, sut.ScenarioStepPatterns[0].Kind);
+            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.ScenarioStepPatterns[0].Pattern);
         }
 
         private sealed class FeatureForCtorTest : Feature
@@ -308,6 +312,84 @@ in it";
             //assert.
             var digestedText = sut.GetDigestedStepText();
             Assert.Equal(FeatureWithDocStringScenarioStep.StepWithDocStringText, digestedText);
+        }
+
+        [Fact]
+        public void FromMethodInfo_Creates_StepMethodInfo_With_Multiple_Patterns()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithMultipleStepPatterns();
+
+            //act.
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureWithMultipleStepPatterns.Step_With_Multiple_Patterns)),
+                featureInstance);
+
+            //assert.
+            Assert.NotNull(sut);
+            Assert.Equal(10, sut.ScenarioStepPatterns.Count);
+
+            AssertPattern(0, PatternKind.Given, "something");
+            AssertPattern(1, PatternKind.Given, "something else");
+            AssertPattern(2, PatternKind.And, "something");
+            AssertPattern(3, PatternKind.And, "something else");
+            AssertPattern(4, PatternKind.When, "something");
+            AssertPattern(5, PatternKind.When, "something else");
+            AssertPattern(6, PatternKind.And, "something");
+            AssertPattern(7, PatternKind.And, "something else");
+            AssertPattern(8, PatternKind.But, "something");
+            AssertPattern(9, PatternKind.But, "something else");
+
+            void AssertPattern(int index, PatternKind patternKind, string pattern)
+            {
+                var thePattern = sut.ScenarioStepPatterns[index];
+
+                Assert.NotNull(thePattern);
+                Assert.Equal(patternKind, thePattern.Kind);
+                Assert.Equal(pattern, thePattern.Pattern);
+            }
+        }
+
+        private sealed class FeatureWithMultipleStepPatterns : Feature
+        {
+            [Given("something")]
+            [Given("something else")]
+            [And("something")]
+            [And("something else")]
+            [When("something")]
+            [When("something else")]
+            [And("something")]
+            [And("something else")]
+            [But("something")]
+            [But("something else")]
+            public void Step_With_Multiple_Patterns()
+            { }
+        }
+
+        [Fact]
+        public void GetMethodName_Returns_Wrapped_Method_Name()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMethodName();
+            var sut = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(FeatureForMethodName.Step_Name_Must_Be_This)),
+                featureInstance
+                );
+
+            //act.
+            var methodName = sut.GetMethodName();
+
+            //assert.
+            Assert.Equal(nameof(FeatureForMethodName.Step_Name_Must_Be_This), methodName);
+        }
+
+        private sealed class FeatureForMethodName : Feature
+        {
+            [Given("something")]
+            public void Step_Name_Must_Be_This()
+            {
+
+            }
         }
     }
 }
