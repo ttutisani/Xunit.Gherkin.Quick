@@ -125,7 +125,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 - [Scenario Outline usage instructions](/docs/scenario-outline.md)
 - [Logging Output from Scenario Steps to Standard Test Output](/docs/log-test-output.md)
 - [Ignoring Scenario, Scenario Outline, Examples, or Feature](/docs/ignore-scenario.md)
-- [Shared Step Methods with Multiple Step Attributes](/docs/shared-step-method.md)
+- [Shared Step Method With Multiple Step Attributes](/docs/shared-step-method.md)
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
