@@ -148,7 +148,7 @@ namespace UnitTests
             var sut = StepMethodInfo.FromMethodInfo(featureInstance.GetType().GetMethod(nameof(FeatureForExecuteTest.Call_This_Method)), featureInstance);
 
             //act.
-            await sut.ExecuteAsync();
+            await sut.ExecuteAsync(null);
 
             //assert.
             Assert.True(featureInstance.Called);

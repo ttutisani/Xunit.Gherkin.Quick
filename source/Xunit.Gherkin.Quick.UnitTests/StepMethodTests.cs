@@ -16,7 +16,7 @@ namespace UnitTests
             var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "But", "what 123 exactly", null));
 
             //act.
-            await sut.ExecuteAsync();
+            await sut.ExecuteAsync(null);
 
             //assert.
             Assert.True(featureInstance.Called);

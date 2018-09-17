@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -15,8 +16,13 @@ namespace Xunit.Gherkin.Quick
             _target = target ?? throw new ArgumentNullException(nameof(target));
         }
 
-        public async Task InvokeMethodAsync(object[] parameters)
+        public async Task InvokeMethodAsync(Dictionary<string, object> scenarioContext, object[] parameters)
         {
+			if(_target is StepContainer contextualTarget)
+			{
+				contextualTarget.ScenarioContext = scenarioContext;
+			}
+
             var result = _methodInfo.Invoke(_target, parameters);
             if (result is Task resultAsTask)
                 await resultAsTask;

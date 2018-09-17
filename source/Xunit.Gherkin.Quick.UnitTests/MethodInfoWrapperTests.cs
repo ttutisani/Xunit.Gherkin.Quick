@@ -44,7 +44,7 @@ namespace UnitTests
             var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
 
             //act.
-            await sut.InvokeMethodAsync(null);
+            await sut.InvokeMethodAsync(null, null);
 
             //assert.
             Assert.True(target.Called);
@@ -58,7 +58,7 @@ namespace UnitTests
             var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCallAsync)), target);
 
             //act.
-            await sut.InvokeMethodAsync(null);
+            await sut.InvokeMethodAsync(null, null);
 
             //assert.
             Assert.True(target.Called);

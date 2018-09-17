@@ -41,10 +41,27 @@ namespace Xunit.Gherkin.Quick
                 .Select(m => StepMethodInfo.FromMethodInfo(m, featureInstance))
                 .ToList();
 
+			var sharedSteps =
+				featureType.GetTypeInfo()
+				.GetCustomAttributes<IncludeStepsAttribute>()
+				.SelectMany(attr => GetSharedSteps(attr.FromType));
+			
+			stepMethods.AddRange(sharedSteps);
+
             return new FeatureClass(featureFilePath, stepMethods);
         }
 
-        public Scenario ExtractScenario(global::Gherkin.Ast.Scenario gherkinScenario)
+		private static IEnumerable<StepMethodInfo> GetSharedSteps(Type fromType)
+		{
+			var instance = Activator.CreateInstance(fromType);
+
+			return 
+				fromType.GetTypeInfo().GetMethods()
+					.Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))
+					.Select(m => StepMethodInfo.FromMethodInfo(m, instance));		
+		}
+
+        public Scenario ExtractScenario(global::Gherkin.Ast.ScenarioDefinition gherkinScenario)
         {
             if (gherkinScenario == null)
                 throw new ArgumentNullException(nameof(gherkinScenario));

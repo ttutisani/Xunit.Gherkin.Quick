@@ -13,10 +13,15 @@ namespace Xunit.Gherkin.Quick
             GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
         }
 
-        public global::Gherkin.Ast.Scenario GetScenario(string scenarioName)
+        public global::Gherkin.Ast.ScenarioDefinition GetScenario(string scenarioName)
         {
-            return GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName) as global::Gherkin.Ast.Scenario;
+            return GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName);
         }
+
+		public global::Gherkin.Ast.ScenarioDefinition GetBackgroundScenario()
+		{
+			return GherkinDocument.Feature.Children.SingleOrDefault(s => s.Keyword == "Background");
+		}
 
         internal ScenarioOutline GetScenarioOutline(string scenarioOutlineName)
         {

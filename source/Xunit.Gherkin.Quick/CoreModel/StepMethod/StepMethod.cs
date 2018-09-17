@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Gherkin.Ast;
@@ -58,9 +59,9 @@ namespace Xunit.Gherkin.Quick
             return null;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(Dictionary<string, object> scenarioContext)
         {
-            await _stepMethodInfo.ExecuteAsync();
+            await _stepMethodInfo.ExecuteAsync(scenarioContext);
         }
     }
 }

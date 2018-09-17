@@ -1,12 +1,12 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick
 {
-    public abstract class Feature
+    public abstract class Feature : StepContainer
     {
-        internal ITestOutputHelper InternalOutput { get; set; }
+        internal ITestOutputHelper InternalOutput { get; set; }		
 
         [Scenario]
         internal async Task Scenario(string scenarioName)
