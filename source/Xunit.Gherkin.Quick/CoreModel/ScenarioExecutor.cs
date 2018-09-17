@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Xunit.Gherkin.Quick
@@ -27,7 +28,15 @@ namespace Xunit.Gherkin.Quick
             if (gherkinScenario == null)
                 throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
 
-            var scenario = featureClass.ExtractScenario(gherkinScenario);
+			var scenario = featureClass.ExtractScenario(gherkinScenario);
+
+			var background = featureFile.GetBackgroundScenario();
+			if (background != null)
+			{				
+				var backgroundScenario = featureClass.ExtractScenario(background);
+				scenario = new Scenario(backgroundScenario, scenario);				
+			}						
+			
             await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.InternalOutput));
         }
     }

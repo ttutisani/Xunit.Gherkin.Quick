@@ -48,7 +48,7 @@ namespace Xunit.Gherkin.Quick
             return _lastDigestedStepText;
         }
 
-        public static StepMethodInfo FromMethodInfo(MethodInfo methodInfo, Feature featureInstance)
+        public static StepMethodInfo FromMethodInfo(MethodInfo methodInfo, object instance)
         {
             if (methodInfo == null)
                 throw new ArgumentNullException(nameof(methodInfo));
@@ -58,7 +58,7 @@ namespace Xunit.Gherkin.Quick
             return new StepMethodInfo(
                 ScenarioStepPattern.ListFromStepAttributes(stepDefinitionAttribute),
                 StepMethodArgument.ListFromMethodInfo(methodInfo),
-                new MethodInfoWrapper(methodInfo, featureInstance));
+                new MethodInfoWrapper(methodInfo, instance));
         }
 
         public bool IsSameAs(StepMethodInfo other)
@@ -70,9 +70,9 @@ namespace Xunit.Gherkin.Quick
                 && other._methodInfoWrapper.IsSameAs(_methodInfoWrapper);
         }
         
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(Dictionary<string, object> scenarioContext)
         {
-            await _methodInfoWrapper.InvokeMethodAsync(_arguments.Select(arg => arg.Value).ToArray());
+            await _methodInfoWrapper.InvokeMethodAsync(scenarioContext, _arguments.Select(arg => arg.Value).ToArray());
         }
 
         public StepMethodInfo Clone()
