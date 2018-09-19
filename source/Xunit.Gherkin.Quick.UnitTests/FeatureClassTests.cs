@@ -296,7 +296,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void BuildScenario_Extracts_Scenario_With_DocString()
+        public void ExtractScenario_Extracts_Scenario_With_DocString()
         {
             //arrange.
             var featureInstance = new FeatureWithDocStringScenarioStep();
