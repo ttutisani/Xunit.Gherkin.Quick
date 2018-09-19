@@ -44,24 +44,34 @@ namespace Xunit.Gherkin.Quick
             return new FeatureClass(featureFilePath, stepMethods);
         }
 
-        public Scenario ExtractScenario(global::Gherkin.Ast.Scenario gherkinScenario)
+		public Scenario ExtractScenario(global::Gherkin.Ast.Scenario scenario, global::Gherkin.Ast.Background background)
+		{
+			if (scenario == null)
+				throw new ArgumentNullException(nameof(scenario));
+
+			var steps = ExtractSteps(scenario);
+			if (background != null)
+				steps = ExtractSteps(background).Concat(steps).ToList();
+
+			return new Scenario(steps);
+		}
+
+		private List<StepMethod> ExtractSteps(global::Gherkin.Ast.ScenarioDefinition gherkinScenario)
         {
             if (gherkinScenario == null)
                 throw new ArgumentNullException(nameof(gherkinScenario));
 
-            var matchingStepMethods = gherkinScenario.Steps
-                .Select(gherkingScenarioStep =>
-                {
-                    var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => IsStepMethodInfoAMatch(gherkingScenarioStep, stepMethodInfo));
-                    if (matchingStepMethodInfo == null)
-                        throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword.Trim()} {gherkingScenarioStep.Text.Trim()}`. Scenario `{gherkinScenario.Name}`.");
+			return gherkinScenario.Steps
+				.Select(gherkingScenarioStep =>
+				{
+					var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => IsStepMethodInfoAMatch(gherkingScenarioStep, stepMethodInfo));
+					if (matchingStepMethodInfo == null)
+						throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword.Trim()} {gherkingScenarioStep.Text.Trim()}`. Scenario `{gherkinScenario.Name}`.");
 
-                    var stepMethod = StepMethod.FromStepMethodInfo(matchingStepMethodInfo, gherkingScenarioStep);
-                    return stepMethod;
-                })
-                .ToList();
-
-            return new Scenario(matchingStepMethods);
+					var stepMethod = StepMethod.FromStepMethodInfo(matchingStepMethodInfo, gherkingScenarioStep);
+					return stepMethod;
+				})
+				.ToList();            
 
             bool IsStepMethodInfoAMatch(global::Gherkin.Ast.Step gherkinScenarioStep, StepMethodInfo stepMethod)
             {

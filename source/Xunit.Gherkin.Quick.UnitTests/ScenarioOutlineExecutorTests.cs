@@ -49,6 +49,36 @@ namespace UnitTests
         private sealed class FeatureForNullArgumentTests : Feature
         { }
 
+		[Fact]
+		public async Task ScenarioOutline_Runs_Background_Steps_First()
+		{
+			var feature = new GherkinFeatureBuilder()
+				.WithBackground(sb => sb
+					.Given("background", null))
+				.WithScenarioOutline("test outline", sb => sb
+					.Given("I chose <a> as first number", null)
+					.And("I chose <b> as second number", null)
+					.When("I press add", null)
+					.Then("the result should be <sum> on the screen", null),
+					 eb => eb
+						.WithExampleHeadings("a", "b", "sum")
+						.WithExamples("", db => db.WithData("1", "2", "3")))
+				.Build();
+			
+			_featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+				.Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(feature, new Gherkin.Ast.Comment[0])))
+				.Verifiable();
+
+			var featureInstance = new FeatureWithScenarioSteps();
+			var output = new Mock<ITestOutputHelper>();
+			featureInstance.InternalOutput = output.Object;
+		
+			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0);
+
+			Assert.Equal(5, featureInstance.CallStack.Count);
+			Assert.Equal(nameof(FeatureWithScenarioSteps.BackgroundStep), featureInstance.CallStack[0].Key);
+		}
+
         [Theory]
         [InlineData("", 0, 0, 1, 1)]
         [InlineData("", 1, 1, 9, 10)]
@@ -115,101 +145,37 @@ namespace UnitTests
             string outlineName,
             Gherkin.Ast.StepArgument stepArgument = null)
         {
-            return new Gherkin.Ast.GherkinDocument(
-                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
-                {
-                    new Gherkin.Ast.ScenarioOutline(
-                        new Gherkin.Ast.Tag[0],
-                        null,
-                        null,
-                        outlineName,
-                        null,
-                        new Gherkin.Ast.Step[]
-                        {
-                            new Gherkin.Ast.Step(null, "Given", "I chose <a> as first number", stepArgument),
-                            new Gherkin.Ast.Step(null, "And", "I chose <b> as second number", stepArgument),
-                            new Gherkin.Ast.Step(null, "When", "I press add", stepArgument),
-                            new Gherkin.Ast.Step(null, "Then", "the result should be <sum> on the screen", stepArgument)
-                        },
-                        new Gherkin.Ast.Examples[]
-                        {
-                            new Gherkin.Ast.Examples(null, null, null, "", null,
-                                new Gherkin.Ast.TableRow(null,
-                                    new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "a"),
-                                        new Gherkin.Ast.TableCell(null, "b"),
-                                        new Gherkin.Ast.TableCell(null, "sum"),
-                                    }),
-                                new Gherkin.Ast.TableRow[]
-                                {
-                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "0"),
-                                        new Gherkin.Ast.TableCell(null, "1"),
-                                        new Gherkin.Ast.TableCell(null, "1")
-                                    }),
-                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "1"),
-                                        new Gherkin.Ast.TableCell(null, "9"),
-                                        new Gherkin.Ast.TableCell(null, "10")
-                                    })
-                                }),
-                            new Gherkin.Ast.Examples(null, null, null, "of bigger numbers", null,
-                                new Gherkin.Ast.TableRow(null,
-                                    new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "a"),
-                                        new Gherkin.Ast.TableCell(null, "b"),
-                                        new Gherkin.Ast.TableCell(null, "sum"),
-                                    }),
-                                new Gherkin.Ast.TableRow[]
-                                {
-                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "99"),
-                                        new Gherkin.Ast.TableCell(null, "1"),
-                                        new Gherkin.Ast.TableCell(null, "100")
-                                    }),
-                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "100"),
-                                        new Gherkin.Ast.TableCell(null, "200"),
-                                        new Gherkin.Ast.TableCell(null, "300")
-                                    })
-                                }),
-                            new Gherkin.Ast.Examples(null, null, null, "of large numbers", null,
-                                new Gherkin.Ast.TableRow(null,
-                                    new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "a"),
-                                        new Gherkin.Ast.TableCell(null, "b"),
-                                        new Gherkin.Ast.TableCell(null, "sum"),
-                                    }),
-                                new Gherkin.Ast.TableRow[]
-                                {
-                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "999"),
-                                        new Gherkin.Ast.TableCell(null, "1"),
-                                        new Gherkin.Ast.TableCell(null, "1000")
-                                    }),
-                                    new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                    {
-                                        new Gherkin.Ast.TableCell(null, "9999"),
-                                        new Gherkin.Ast.TableCell(null, "1"),
-                                        new Gherkin.Ast.TableCell(null, "10000")
-                                    })
-                                })
-                        })
-                }),
-                new Gherkin.Ast.Comment[0]);
+			return new Gherkin.Ast.GherkinDocument(
+				new GherkinFeatureBuilder()					
+					.WithScenarioOutline(outlineName, sb => sb
+						.Given("I chose <a> as first number", stepArgument)
+						.And("I chose <b> as second number", stepArgument)
+						.When("I press add", stepArgument)
+						.Then("the result should be <sum> on the screen", stepArgument),
+							eb => eb
+							.WithExampleHeadings("a", "b", "sum")
+							.WithExamples("", db => db
+								.WithData(0, 1, 1)
+								.WithData(1, 9, 10))
+							.WithExamples("of bigger numbers", db => db
+								.WithData(99, 1, 100)
+								.WithData(100, 200, 300))
+							.WithExamples("of large numbers", db => db
+								.WithData(999, 1, 1000)
+								.WithData(9999, 1, 10000)))
+					.Build(),					
+					new Gherkin.Ast.Comment[0]);
         }
 
         private sealed class FeatureWithScenarioSteps : Feature
         {
             public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
+
+			[Given("background")]
+			public void BackgroundStep()
+			{
+				CallStack.Add(new KeyValuePair<string, object[]>(nameof(BackgroundStep), null));
+			}
 
             [Given("Non matching given")]
             public void NonMatchingStep1_before()

@@ -41,7 +41,7 @@ namespace UnitTests
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
         }
 
-        private sealed class UselessFeature : Feature { }
+        private sealed class UselessFeature : Feature { }		
 
         [Fact]
         public async Task ExecuteScenario_Executes_All_Scenario_Steps()
@@ -349,7 +349,69 @@ namespace UnitTests
             }
         }
 
-        [Fact]
+		[Fact]
+		public async Task ExecuteScenario_Executes_Background_Steps_First()
+		{
+			var gherkinFeaure = new GherkinFeatureBuilder()
+				.WithBackground(sb => sb
+					.Given("given background", null)
+					.When("when background", null)
+					.Then("then background", null))
+				.WithScenario("test scenario", sb => sb
+					.Then("step one", null))
+				.Build();
+
+			var gherkinDocument = new Gherkin.Ast.GherkinDocument(gherkinFeaure, new Gherkin.Ast.Comment[0]);
+
+			_featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithBackgroundSteps)}.feature"))
+				.Returns(new FeatureFile(gherkinDocument))
+				.Verifiable();
+
+			var featureInstance = new FeatureWithBackgroundSteps();
+			var output = new Mock<ITestOutputHelper>();
+			featureInstance.InternalOutput = output.Object;
+
+			//act.
+			await _sut.ExecuteScenarioAsync(featureInstance, "test scenario");
+
+			//assert.
+			Assert.Equal("abcd", featureInstance.OrderValidator);
+			output.Verify(o => o.WriteLine($"Given given background: PASSED"), Times.Once);
+			output.Verify(o => o.WriteLine($"When when background: PASSED"), Times.Once);
+			output.Verify(o => o.WriteLine($"Then then background: PASSED"), Times.Once);
+			output.Verify(o => o.WriteLine($"Then step one: PASSED"), Times.Once);
+		}
+
+		private sealed class FeatureWithBackgroundSteps : Feature
+		{
+			public string OrderValidator = String.Empty;
+
+			[Given("given background")]
+			public void GivenBackground()
+			{
+				OrderValidator += "a";
+			}
+
+			[When("when background")]
+			public void WhenBackground()
+			{
+				OrderValidator += "b";
+			}
+
+			[Then("then background")]
+			public void ThenBackground()
+			{
+				OrderValidator += "c";
+			}
+
+			[Then("step one")]
+			public void ThenScenario()
+			{
+				OrderValidator += "d";
+			}
+		}
+
+		[Fact]
         public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
         {
             //arrange.
