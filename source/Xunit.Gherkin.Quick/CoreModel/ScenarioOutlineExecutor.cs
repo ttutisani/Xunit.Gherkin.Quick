@@ -33,11 +33,11 @@ namespace Xunit.Gherkin.Quick
             var gherkinScenarioOutline = featureFile.GetScenarioOutline(scenarioOutlineName);
             if (gherkinScenarioOutline == null)
                 throw new InvalidOperationException($"Cannot find scenario outline `{scenarioOutlineName}`.");
-
+            
+            var gherkinScenario = gherkinScenarioOutline.ApplyExampleRow(exampleName, exampleRowIndex);
             var gherkinBackground = featureFile.GetBackground();
-            var gherkinScenario = gherkinScenarioOutline
-                .ApplyExampleRow(exampleName, exampleRowIndex)
-                .ApplyBackground(gherkinBackground);
+            if(gherkinBackground != null)
+                gherkinScenario = gherkinScenario.ApplyBackground(gherkinBackground);
 
 			var scenario = featureClass.ExtractScenario(gherkinScenario);			
             await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.InternalOutput));
