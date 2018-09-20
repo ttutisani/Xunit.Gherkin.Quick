@@ -53,66 +53,66 @@ namespace UnitTests
             var scenarioName = "some scenario name 123";
             var featureInstance = new FeatureWithMatchingScenarioStepsToExtract();
             var sut = FeatureClass.FromFeatureInstance(featureInstance);
-			var gherkinScenario = CreateGherkinDocument(scenarioName,
-				new string[]
-				{
-					"Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
-					"And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
-					"When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
-					"Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
-				}).Feature.Children.First() as Gherkin.Ast.Scenario;
+            var gherkinScenario = CreateGherkinDocument(scenarioName,
+                new string[]
+                {
+                    "Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
+                    "And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
+                    "When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
+                    "Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
+                }).Feature.Children.First() as Gherkin.Ast.Scenario;
 
-			//act.
-			var scenario = sut.ExtractScenario(gherkinScenario);
+            //act.
+            var scenario = sut.ExtractScenario(gherkinScenario);
 
             //assert.
             Assert.NotNull(scenario);
         }		
 
-		private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
             string scenario,
             string[] steps,
             Gherkin.Ast.StepArgument stepArgument = null,
-			string[] backgroundSteps = null)
+            string[] backgroundSteps = null)
         {
 
-			var definitions = new List<global::Gherkin.Ast.ScenarioDefinition>
-			{
-				new Gherkin.Ast.Scenario(
-						new Gherkin.Ast.Tag[0],
-						null,
-						null,
-						scenario,
-						null,
-						steps.Select(s =>
-						{
-							var spaceIndex = s.IndexOf(' ');
-							return new Gherkin.Ast.Step(
-								null,
-								s.Substring(0, spaceIndex).Trim(),
-								s.Substring(spaceIndex).Trim(),
-								stepArgument);
-						}).ToArray())
-			};
+            var definitions = new List<global::Gherkin.Ast.ScenarioDefinition>
+            {
+                new Gherkin.Ast.Scenario(
+                        new Gherkin.Ast.Tag[0],
+                        null,
+                        null,
+                        scenario,
+                        null,
+                        steps.Select(s =>
+                        {
+                            var spaceIndex = s.IndexOf(' ');
+                            return new Gherkin.Ast.Step(
+                                null,
+                                s.Substring(0, spaceIndex).Trim(),
+                                s.Substring(spaceIndex).Trim(),
+                                stepArgument);
+                        }).ToArray())
+            };
 
-			if(backgroundSteps != null)
-			{
-				definitions.Add(
-					new Gherkin.Ast.Background(
-						null,
-						null,
-						"background",
-						null,
-						backgroundSteps.Select(s =>
-						{
-							var spaceIndex = s.IndexOf(' ');
-							return new Gherkin.Ast.Step(
-								null,
-								s.Substring(0, spaceIndex).Trim(),
-								s.Substring(spaceIndex).Trim(),
-								stepArgument);
-						}).ToArray()));
-			}
+            if(backgroundSteps != null)
+            {
+                definitions.Add(
+                    new Gherkin.Ast.Background(
+                        null,
+                        null,
+                        "background",
+                        null,
+                        backgroundSteps.Select(s =>
+                        {
+                            var spaceIndex = s.IndexOf(' ');
+                            return new Gherkin.Ast.Step(
+                                null,
+                                s.Substring(0, spaceIndex).Trim(),
+                                s.Substring(spaceIndex).Trim(),
+                                stepArgument);
+                        }).ToArray()));
+            }
 
             return new Gherkin.Ast.GherkinDocument(
                 new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, definitions.ToArray()),
@@ -123,11 +123,11 @@ namespace UnitTests
         {
             public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
 
-			[Given("a background step")]
-			public void GivenBackground()
-			{
-				CallStack.Add(new KeyValuePair<string, object[]>(nameof(GivenBackground), null));
-			}
+            [Given("a background step")]
+            public void GivenBackground()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(GivenBackground), null));
+            }
 
             [Given("Non matching given")]
             public void NonMatchingStep1_before()
@@ -273,10 +273,10 @@ namespace UnitTests
             var sut = FeatureClass.FromFeatureInstance(featureInstance);
             var scenarioName = "scenario-121kh2";
             var docStringContent = @"some content
-+++
-with multi lines
----
-in it";
+    +++
+    with multi lines
+    ---
+    in it";
             var gherkinScenario = CreateGherkinDocument(scenarioName,
                     new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
                     new Gherkin.Ast.DocString(null, null, docStringContent))

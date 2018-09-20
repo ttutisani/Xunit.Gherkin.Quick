@@ -5,8 +5,8 @@ using Gherkin.Ast;
 
 namespace UnitTests
 {
-    public class GherkinFeatureBuilder
-    {
+	public class GherkinFeatureBuilder
+	{
 		private List<ScenarioDefinition> _definitions;
 
 		public GherkinFeatureBuilder()

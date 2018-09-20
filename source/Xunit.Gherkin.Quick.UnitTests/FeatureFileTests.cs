@@ -75,23 +75,23 @@ namespace UnitTests
             Assert.Null(scenario);
         }
 
-		[Fact]
-		public void GetBackground_Retrieves_If_Present()
-		{
-			var sut = new FeatureFile(CreateGherkinDocumentWithBackground());
-			var background = sut.GetBackground();
-			Assert.NotNull(background);
-		}
+        [Fact]
+        public void GetBackground_Retrieves_If_Present()
+        {
+            var sut = new FeatureFile(CreateGherkinDocumentWithBackground());
+            var background = sut.GetBackground();
+            Assert.NotNull(background);
+        }
 
-		[Fact]
-		public void GetBackground_Gives_Null_If_Not_Present()
-		{
-			var sut = new FeatureFile(CreateGherkinDocumentWithScenario("test"));
-			var background = sut.GetBackground();
-			Assert.Null(background);
-		}
+        [Fact]
+        public void GetBackground_Gives_Null_If_Not_Present()
+        {
+            var sut = new FeatureFile(CreateGherkinDocumentWithScenario("test"));
+            var background = sut.GetBackground();
+            Assert.Null(background);
+        }
 
-		private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithScenario(
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithScenario(
             string scenario,
             Gherkin.Ast.StepArgument stepArgument = null)
         {
@@ -109,20 +109,20 @@ namespace UnitTests
                 new Gherkin.Ast.Comment[0]);
         }
 
-		private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithBackground()
-		{
-			return new Gherkin.Ast.GherkinDocument(
-			   new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
-			   {
-					new Gherkin.Ast.Background(
-						null,
-						null,
-						null,
-						null,
-						new Gherkin.Ast.Step[]{ })
-			   }),
-			   new Gherkin.Ast.Comment[0]);
-		}
+        private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithBackground()
+        {
+            return new Gherkin.Ast.GherkinDocument(
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                {
+                    new Gherkin.Ast.Background(
+                        null,
+                        null,
+                        null,
+                        null,
+                        new Gherkin.Ast.Step[]{ })
+                }),
+                new Gherkin.Ast.Comment[0]);
+        }
 
         private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithScenarioOutline(
             string scenario,
