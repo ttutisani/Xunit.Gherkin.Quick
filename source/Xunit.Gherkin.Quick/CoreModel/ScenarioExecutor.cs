@@ -24,13 +24,15 @@ namespace Xunit.Gherkin.Quick
             var featureClass = FeatureClass.FromFeatureInstance(featureInstance);
             var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
 
-			var gherkinScenario = featureFile.GetScenario(scenarioName);
+            var gherkinBackground = featureFile.GetBackground();
+            var gherkinScenario = featureFile
+                .GetScenario(scenarioName)
+                ?.ApplyBackground(gherkinBackground);
+
             if (gherkinScenario == null)
                 throw new InvalidOperationException($"Cannot find scenario `{scenarioName}`.");
-
-			var gherkinBackground = featureFile.GetBackground();
-
-			var scenario = featureClass.ExtractScenario(gherkinScenario, gherkinBackground);
+			
+			var scenario = featureClass.ExtractScenario(gherkinScenario);
             await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.InternalOutput));
         }
     }

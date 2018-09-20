@@ -63,41 +63,11 @@ namespace UnitTests
 				}).Feature.Children.First() as Gherkin.Ast.Scenario;
 
 			//act.
-			var scenario = sut.ExtractScenario(gherkinScenario, null);
+			var scenario = sut.ExtractScenario(gherkinScenario);
 
             //assert.
             Assert.NotNull(scenario);
-        }
-
-		[Fact]
-		public void ExtractScenario_Extracts_Scenario_With_Background()
-		{
-			//arrange.
-			var scenarioName = "some scenario name 123";
-			var featureInstance = new FeatureWithMatchingScenarioStepsToExtract();
-			var sut = FeatureClass.FromFeatureInstance(featureInstance);
-			var gherkinDocument = CreateGherkinDocument(scenarioName,
-				new string[]
-				{
-					"Given " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase),
-					"And " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase),
-					"When " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep3Text,
-					"Then " + FeatureWithMatchingScenarioStepsToExtract.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase)
-				},
-				null,
-				new string[]
-				{
-					"Given a background step"
-				});
-
-			//act.
-			var scenario = sut.ExtractScenario(
-				gherkinDocument.Feature.Children.OfType<Gherkin.Ast.Scenario>().First(),
-				gherkinDocument.Feature.Children.OfType<Gherkin.Ast.Background>().First());
-
-			//assert.
-			Assert.NotNull(scenario);
-		}
+        }		
 
 		private static Gherkin.Ast.GherkinDocument CreateGherkinDocument(
             string scenario,
@@ -276,7 +246,7 @@ namespace UnitTests
                     })).Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(gherknScenario, null);
+            var scenario = sut.ExtractScenario(gherknScenario);
 
             //assert.
             Assert.NotNull(scenario);
@@ -313,7 +283,7 @@ in it";
                     .Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(gherkinScenario, null);
+            var scenario = sut.ExtractScenario(gherkinScenario);
 
             //assert.
             Assert.NotNull(scenario);
@@ -342,7 +312,7 @@ in it";
             var scenario = sut.ExtractScenario(CreateGherkinDocument("scenario 123", new string[]
             {
                 "Given something else"
-            }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First(), null);
+            }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First());
 
             //assert.
             Assert.NotNull(scenario);

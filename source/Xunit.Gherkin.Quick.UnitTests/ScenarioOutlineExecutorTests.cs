@@ -75,6 +75,7 @@ namespace UnitTests
 		
 			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0);
 
+            _featureFileRepository.Verify();
 			Assert.Equal(5, featureInstance.CallStack.Count);
 			Assert.Equal(nameof(FeatureWithScenarioSteps.BackgroundStep), featureInstance.CallStack[0].Key);
 		}

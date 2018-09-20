@@ -374,7 +374,8 @@ namespace UnitTests
 			//act.
 			await _sut.ExecuteScenarioAsync(featureInstance, "test scenario");
 
-			//assert.
+            //assert.
+            _featureFileRepository.Verify();
 			Assert.Equal("abcd", featureInstance.OrderValidator);
 			output.Verify(o => o.WriteLine($"Given given background: PASSED"), Times.Once);
 			output.Verify(o => o.WriteLine($"When when background: PASSED"), Times.Once);

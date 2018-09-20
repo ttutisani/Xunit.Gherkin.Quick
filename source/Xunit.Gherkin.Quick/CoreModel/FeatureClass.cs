@@ -44,15 +44,12 @@ namespace Xunit.Gherkin.Quick
             return new FeatureClass(featureFilePath, stepMethods);
         }
 
-		public Scenario ExtractScenario(global::Gherkin.Ast.Scenario scenario, global::Gherkin.Ast.Background background)
+		public Scenario ExtractScenario(global::Gherkin.Ast.Scenario scenario)
 		{
 			if (scenario == null)
 				throw new ArgumentNullException(nameof(scenario));
 
-			var steps = ExtractSteps(scenario);
-			if (background != null)
-				steps = ExtractSteps(background).Concat(steps).ToList();
-
+            var steps = ExtractSteps(scenario);
 			return new Scenario(steps);
 		}
 
