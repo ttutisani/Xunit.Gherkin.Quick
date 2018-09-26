@@ -123,6 +123,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 - [DocString (multi-line text) Argument usage instructions](/docs/docstring-argument.md)
 - [Gherking Tags usage instructions](/docs/tags.md)
 - [Scenario Outline usage instructions](/docs/scenario-outline.md)
+- [Scenario Backrgound usage instructions](/docs/scenario-background.md)
 - [Logging Output from Scenario Steps to Standard Test Output](/docs/log-test-output.md)
 - [Ignoring Scenario, Scenario Outline, Examples, or Feature](/docs/ignore-scenario.md)
 - [Shared Step Method With Multiple Step Attributes](/docs/shared-step-method.md)
