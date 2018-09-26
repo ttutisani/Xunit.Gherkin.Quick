@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <None Remove="GivenWhenThenTests\EnsureOrderOfSteps.feature" />
-    <None Remove="GivenWhenThenTests\FeatureWithBackground.feature" />
     <None Remove="GivenWhenThenTests\SimpleParameterTypes.feature" />
   </ItemGroup>
 
@@ -20,9 +19,6 @@
     <Content Include="GivenWhenThenTests\EnsureOrderOfSteps.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Generator>SpecFlowSingleFileGenerator</Generator>
-    </Content>
-    <Content Include="GivenWhenThenTests\FeatureWithBackground.feature">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="GivenWhenThenTests\SimpleParameterTypes.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -42,6 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Addition\AddNumbersTo5.feature">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Addition\Async\AddTwoNumbersAsync.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
