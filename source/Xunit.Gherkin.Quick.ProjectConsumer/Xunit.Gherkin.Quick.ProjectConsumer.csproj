@@ -47,6 +47,9 @@
     <None Update="Addition\AddTwoNumbers.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="BeforeAfterHooks\BeforeAfter.feature">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Discounts\Discounts.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
