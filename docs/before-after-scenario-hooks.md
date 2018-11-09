@@ -1,4 +1,4 @@
-# Before / After Scenario Execution Hooks
+# Before and After Scenario Execution Hooks
 
 There are cases when you want to execute a code block before and/or after the scenario execution. "Xunit.Gherkin.Quick" framework does not add any specific handlers for these events, but it stays backwards compatible with Xunit's standard way to achieve this effect. In other words, just like you would do in a regular Xunit test class, you can make use of a constructor and "Dispose" method (implement `IDisposable` interface) to run a code block before and after the scenario execution, respectively.
 
