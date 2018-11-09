@@ -58,3 +58,7 @@ First step.
 Second step.
 After scenario execution.
 ```
+
+***
+
+Side note: in the example above the constructor receives an instance of `ITestOutputHelper`. This behavior works out of the box due to Xunit's capabilities (i.e. no special setup is necessary for the above code snippet to work). You can read more about this [here](log-test-output.md).
