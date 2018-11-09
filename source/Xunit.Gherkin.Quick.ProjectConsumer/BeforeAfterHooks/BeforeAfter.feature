@@ -4,4 +4,5 @@
 	So that I can write code that executes either before or after the Scenario
 
 Scenario: Scenario Before and After
-	Given this scenario executed
+	Given first step executed
+	And second step executed

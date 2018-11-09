@@ -15,10 +15,16 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.BeforeAfterHooks
             _testOutputHelper.WriteLine("Before executing scenario.");
         }
 
-        [Given("this scenario executed")]
-        public void This_Scenario_Executed()
+        [Given("first step executed")]
+        public void First_Step_Executed()
         {
-            _testOutputHelper.WriteLine("While executing scenario.");
+            _testOutputHelper.WriteLine("First step.");
+        }
+
+        [And("second step executed")]
+        public void Second_Step_Executed()
+        {
+            _testOutputHelper.WriteLine("Second step.");
         }
 
         public void Dispose()
