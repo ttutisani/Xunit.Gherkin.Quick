@@ -116,6 +116,12 @@ Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
 
+## Got stuck?
+
+Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) if your problem was already resolved. Also try [searching StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick).
+
+Feel free to post your question/problem either into our [issues repository](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues), or into [StackOverflow](https://stackoverflow.com).
+
 ## See Also
 
 - [Step Attributes (Given, When, Then, And, But) usage instructions](/docs/step-attributes.md)
@@ -132,3 +138,4 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
+- [Xunit.Gherkin.Quick on StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick)
