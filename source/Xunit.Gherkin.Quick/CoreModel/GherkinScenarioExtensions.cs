@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Xunit.Gherkin.Quick
 {
-    public static class GherkinScenarioExtensions
+    internal static class GherkinScenarioExtensions
     {
         public static global::Gherkin.Ast.Scenario ApplyBackground(
             this global::Gherkin.Ast.Scenario @this, 
