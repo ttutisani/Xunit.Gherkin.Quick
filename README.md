@@ -138,4 +138,5 @@ Feel free to post your question/problem either into our [issues repository](http
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
+- [Who uses Xunit.Gherkin.Quick and why?](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues/75)
 - [Xunit.Gherkin.Quick on StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick)
