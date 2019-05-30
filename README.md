@@ -48,7 +48,7 @@ Scenario: Add two numbers
 
 This is a BDD style feature written in [Gherkin language](https://docs.cucumber.io/gherkin/reference/).
 
-**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to `Copy Always` or `Copy if Newer`.
+**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to `Copy Always` or `Copy if Newer`. See [Copying feature files](/docs/copying-feature-files.md).
 
 Now it's time to implement the code to run scenarios of this feature.
 
@@ -136,6 +136,7 @@ Feel free to post your question/problem either into our [issues repository](http
 - [Before and After Scenario Execution Hooks](/docs/before-after-scenario-hooks.md)
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
+- [Copying feature files](/docs/copying-feature-files.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
 - [Who uses Xunit.Gherkin.Quick and why?](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues/75)
