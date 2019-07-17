@@ -19,6 +19,7 @@ Here are commonly seen use cases that need to be handled carefully, accounting R
 | Step text in Gherkin language | Attribute in feature class | Argument type | Argument value |
 | ----------------------------- | -------------------------- | ------------- | -------------- |
 | Given I chose 15 as second number | [Given(@"I chose (\d+) as second number")] | int | 15 |
+| Given I chose -15 as second number | [Given(@"I chose (-\d+) as second number")] | int | -15. Unfortunately the sign of the number needs to be known up front and cannot change between Examples.  |
 | Given I chose 15 as second number | [Given(@"I chose (\d+) as second number")] | string | "15" |
 | Given I chose 15 as second number | [Given(@"I chose (\d) as second number")] | any type | error: will not match 2 digits |
 | Given I chose 15.99 as second number | [Given(@"I chose (\d+) as second number")] | any type | error: will not match decimal point |
