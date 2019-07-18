@@ -74,3 +74,9 @@ public sealed class AddTwoNumbers : Feature
 ```
 
 In this class, all methods will execute in the order as if each example row is a scenario of its own (just as you would naturally expect).
+
+### Resharper
+
+You can use Resharper test runner to execute the tests but it has it's limitations. These limitations are not limited to Xunit.Gherkin.Quick but also apply to some core Xunit features.
+
+For Xunit.Gherkin.Quick the limitations are around Scenario Outline and Background usage. This is easily noticed when you run all tests with the Visual Studio harness and compare the output to Resharper's test harness. Resharper appears to have run fewer tests - in fact it will only run a single test per Scenario Outline, regardless of how many Examples are defined.

@@ -122,6 +122,8 @@ Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) 
 
 Feel free to post your question/problem either into our [issues repository](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues), or into [StackOverflow](https://stackoverflow.com).
 
+Also, as recommended by a user of this project, the unit test code can be a useful addendum to the documentation. E.g. see test files and matching feature files in [Xunit.Gherkin.Quick.ProjectConsumer](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/source/Xunit.Gherkin.Quick.ProjectConsumer). ([AddNumbersTo5.feature](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.feature), [AddNumbersTo5.cs](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.cs)) is a helpful starting place.
+
 ## See Also
 
 - [Step Attributes (Given, When, Then, And, But) usage instructions](/docs/step-attributes.md)
@@ -137,6 +139,7 @@ Feel free to post your question/problem either into our [issues repository](http
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Copying feature files](/docs/copying-feature-files.md)
+- [Feature file character encoding](/docs/encoding-feature-files.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
 - [Who uses Xunit.Gherkin.Quick and why?](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues/75)
