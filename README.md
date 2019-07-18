@@ -112,12 +112,6 @@ Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is
 
 ![Screenshot of scenario test run](scenario-test-run-screenshot.png)
 
-#### Resharper
-
-You can use Resharper test runner to execute the tests but it has it's limitations. These limitations are not limited to Xunit.Gherkin.Quick but also apply to some core Xunit features.
-
-For Xunit.Gherkin.Quick the limitations are around Scenario Background usage. This is easily noticed when you run all tests with the Visual Studio harness and compare the output to Resharper's test harness. Resharper appears to have run fewer tests - in fact it will only run a single test per Scenario, regardless of how many Examples are defined.
-
 ### Add More Scenarios
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
@@ -145,6 +139,7 @@ Also, as recommended by a user of this project, the unit test code can be a usef
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Copying feature files](/docs/copying-feature-files.md)
+- [Feature file character encoding](/docs/encoding-feature-files.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
 - [Versions](/versions)
 - [Who uses Xunit.Gherkin.Quick and why?](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues/75)
