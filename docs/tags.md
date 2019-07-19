@@ -30,7 +30,7 @@ Scenario: Add two bigger numbers
 
 When executing tests, you can specify the tests which should be run using the `Category` attribute, for example:
 
-`dotnet test --filter Category=bigaddition`
+`dotnet test --filter Category=@bigaddition`
 
 This will execute only scenario "Add two bigger numbers", since it's the only one having "bigaddition" tag attached to it.
 
