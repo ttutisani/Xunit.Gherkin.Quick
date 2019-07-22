@@ -106,7 +106,7 @@ Build BDD tests project.
 
 If you use command line to run unit tests, simply run them as always. You should see the scenario full name in the results as a newly added unit test name.
 
-If you use Visual Studio to run unit tests, open Test Explorer to see the new unit test. Right click and run it as you would usually run unit tests through test explorer.
+If you use Visual Studio to run unit tests, open Test Explorer to see the new test item (**important**: use built-in Test Explorer, not ReSharper or anything else). Right click and run it as you would usually run unit tests through test explorer.
 
 Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is a combination of feature name "AddTwoNumbers" and scenario name "Add two numbers".
 
