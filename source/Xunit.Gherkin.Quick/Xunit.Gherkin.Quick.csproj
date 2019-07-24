@@ -8,7 +8,7 @@
     <Description>Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets .NET Standard, can be used from both .NET and .NET Core test projects). It parses Gherkin language and executes Xunit tests corresponding to scenarios.</Description>
     <Authors>Tengiz Tutisani</Authors>
     <Company>Tengiz Tutisani</Company>
-    <Copyright>2018 Tengiz Tutisani</Copyright>
+    <Copyright>2018 - 2019 Tengiz Tutisani</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick</PackageProjectUrl>
