@@ -130,7 +130,7 @@ namespace Xunit.Gherkin.Quick
 
             foreach (var pattern in ScenarioStepPatterns)
             {
-                if (!pattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
+                if (!pattern.Kind.Matches(gherkinScenarioStep.Keyword.Trim()))
                     continue;
 
                 var match = Regex.Match(gherkinStepText, pattern.Pattern);
@@ -180,6 +180,11 @@ namespace Xunit.Gherkin.Quick
                 default:
                     throw new NotSupportedException($"Cannot convert into step method kind: Attribute type {@this.GetType()} is not supported.");
             }
+        }
+
+        public static bool Matches(this PatternKind patternKind, string keyword)
+        {
+            return patternKind.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

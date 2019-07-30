@@ -9,15 +9,14 @@ namespace Xunit.Gherkin.Quick
         private readonly string _pattern;
         public string Pattern { get { return _pattern; } }
 
-        private readonly PatternKind _stepMethodKind;
-        public PatternKind Kind { get { return _stepMethodKind; } }
+        public PatternKind Kind { get; }
 
         public ScenarioStepPattern(string pattern, PatternKind stepMethodKind)
         {
             _pattern = !string.IsNullOrWhiteSpace(pattern) 
                 ? pattern 
                 : throw new ArgumentNullException(nameof(pattern));
-            _stepMethodKind = stepMethodKind;
+            Kind = stepMethodKind;
         }
 
         public static List<ScenarioStepPattern> ListFromStepAttributes(IEnumerable<BaseStepDefinitionAttribute> baseStepDefinitionAttributes)

@@ -53,5 +53,26 @@ namespace UnitTests
             //assert.
             Assert.Equal(kind, actualKind);
         }
+
+        [Theory]
+        [InlineData(PatternKind.Given, "Given", true)]
+        [InlineData(PatternKind.Given, "And", false)]
+        [InlineData(PatternKind.When, "When", true)]
+        [InlineData(PatternKind.When, "Given", false)]
+        [InlineData(PatternKind.Then, "Then", true)]
+        [InlineData(PatternKind.Then, "But", false)]
+        [InlineData(PatternKind.And, "And", true)]
+        [InlineData(PatternKind.And, "Given", false)]
+        internal void Match_Is_Comparing_With_String_Keyword(
+            PatternKind patternKind,
+            string keyword,
+            bool expectedMatch)
+        {
+            //act.
+            var actualMatch = patternKind.Matches(keyword);
+
+            //assert.
+            Assert.Equal(expectedMatch, actualMatch);
+        }
     }
 }
