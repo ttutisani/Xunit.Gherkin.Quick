@@ -184,6 +184,9 @@ namespace Xunit.Gherkin.Quick
 
         public static bool Matches(this PatternKind patternKind, string keyword)
         {
+            if (keyword == "*")
+                return true;
+
             return patternKind.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase);
         }
     }

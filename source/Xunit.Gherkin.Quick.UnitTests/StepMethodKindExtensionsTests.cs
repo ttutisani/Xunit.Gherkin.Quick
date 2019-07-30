@@ -57,12 +57,16 @@ namespace UnitTests
         [Theory]
         [InlineData(PatternKind.Given, "Given", true)]
         [InlineData(PatternKind.Given, "And", false)]
+        [InlineData(PatternKind.Given, "*", true)]
         [InlineData(PatternKind.When, "When", true)]
         [InlineData(PatternKind.When, "Given", false)]
+        [InlineData(PatternKind.When, "*", true)]
         [InlineData(PatternKind.Then, "Then", true)]
         [InlineData(PatternKind.Then, "But", false)]
+        [InlineData(PatternKind.Then, "*", true)]
         [InlineData(PatternKind.And, "And", true)]
         [InlineData(PatternKind.And, "Given", false)]
+        [InlineData(PatternKind.And, "*", true)]
         internal void Match_Is_Comparing_With_String_Keyword(
             PatternKind patternKind,
             string keyword,
