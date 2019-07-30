@@ -118,6 +118,12 @@ namespace UnitTests
 				_steps.Add(new Step(null, "And", step, stepArgument));
 				return this;
 			}
+
+            public GherkinStepBuilder Star(string step, StepArgument stepArgument)
+            {
+                _steps.Add(new Step(null, "*", step, stepArgument));
+                return this;
+            }
 		}
 	}	
 }

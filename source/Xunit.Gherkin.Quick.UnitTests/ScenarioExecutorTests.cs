@@ -603,5 +603,40 @@ namespace UnitTests
                 CallStack.Add(new KeyValuePair<string, object[]>(nameof(Result_should_be_x_on_the_screen), new object[] { x }));
             }
         }
+
+        [Fact]
+        public async Task ExecuteScenario_Executes_Scenario_With_Star_Notation()
+        {
+            //arrange.
+            var gherkinFeature = new GherkinFeatureBuilder()
+                .WithScenario("S", steps => steps.Star("I have some cukes", null))
+                .Build();
+
+            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithStarNotation)}.feature"))
+                .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
+                .Verifiable();
+
+            var featureInstance = new FeatureWithStarNotation();
+
+            //act.
+            await _sut.ExecuteScenarioAsync(featureInstance, "S");
+
+            //assert.
+            _featureFileRepository.Verify();
+
+            Assert.Single(featureInstance.CallStack);
+            Assert.Equal(nameof(FeatureWithStarNotation.I_Have_Some_Cukes), featureInstance.CallStack[0].Key);
+        }
+
+        private sealed class FeatureWithStarNotation : Feature
+        {
+            public List<KeyValuePair<string, object[]>> CallStack { get; } = new List<KeyValuePair<string, object[]>>();
+
+            [Given("I have some cukes")]
+            public void I_Have_Some_Cukes()
+            {
+                CallStack.Add(new KeyValuePair<string, object[]>(nameof(I_Have_Some_Cukes), null));
+            }
+        }
     }
 }
