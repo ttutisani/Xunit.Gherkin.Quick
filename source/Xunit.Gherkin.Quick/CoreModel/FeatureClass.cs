@@ -61,14 +61,14 @@ namespace Xunit.Gherkin.Quick
 			return gherkinScenario.Steps
 				.Select(gherkingScenarioStep =>
 				{
-					var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => stepMethodInfo.Match(gherkingScenarioStep));
+					var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => stepMethodInfo.Matches(gherkingScenarioStep));
 					if (matchingStepMethodInfo == null)
 						throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword.Trim()} {gherkingScenarioStep.Text.Trim()}`. Scenario `{gherkinScenario.Name}`.");
 
 					var stepMethod = StepMethod.FromStepMethodInfo(matchingStepMethodInfo, gherkingScenarioStep);
 					return stepMethod;
 				})
-				.ToList();            
+				.ToList();
         }
     }
 }

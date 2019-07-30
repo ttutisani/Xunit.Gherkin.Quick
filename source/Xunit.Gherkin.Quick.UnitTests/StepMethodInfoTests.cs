@@ -402,7 +402,7 @@ in it";
                 featureInstance);
 
             //act.
-            var match = sut.Match(new Gherkin.Ast.Step(null, "When", "this matches", null));
+            var match = sut.Matches(new Gherkin.Ast.Step(null, "When", "this matches", null));
 
             //assert.
             Assert.True(match);
@@ -418,10 +418,26 @@ in it";
                 featureInstance);
 
             //act.
-            var match = sut.Match(new Gherkin.Ast.Step(null, "When", "this does not matches", null));
+            var match = sut.Matches(new Gherkin.Ast.Step(null, "When", "this does not matches", null));
 
             //assert.
             Assert.False(match);
+        }
+
+        [Fact]
+        public void Match_IsPositive_For_Star_Step()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMatch();
+            var sut = StepMethodInfo.FromMethodInfo(
+                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
+                featureInstance);
+
+            //act.
+            var match = sut.Matches(new Gherkin.Ast.Step(null, "*", "this matches", null));
+
+            //assert.
+            Assert.True(match);
         }
 
         private sealed class FeatureForMatch : Feature
@@ -429,7 +445,6 @@ in it";
             [When("this matches")]
             public void Method1()
             {
-
             }
         }
     }

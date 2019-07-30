@@ -124,7 +124,7 @@ namespace Xunit.Gherkin.Quick
             }
         }
         
-        public bool Match(Step gherkinScenarioStep)
+        public bool Matches(Step gherkinScenarioStep)
         {
             var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
