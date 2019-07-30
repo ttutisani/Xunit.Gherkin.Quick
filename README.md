@@ -104,7 +104,7 @@ Notice couple of things:
 
 Build BDD tests project.
 
-If you use command line to run unit tests, simply run them as always. You should see the scenario full name in the results as a newly added unit test name.
+If you use command line to run unit tests, simply run them as always (e.g., run `dotnet test` command inside a solution or test project folder). You should see the scenario full name in the results as a newly added unit test name.
 
 If you use Visual Studio to run unit tests, open Test Explorer to see the new test item (**important**: use built-in Test Explorer, not ReSharper or anything else). Right click and run it as you would usually run unit tests through test explorer.
 
