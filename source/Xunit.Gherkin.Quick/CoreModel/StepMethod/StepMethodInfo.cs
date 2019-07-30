@@ -11,8 +11,7 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethodInfo
     {
-        private readonly ReadOnlyCollection<ScenarioStepPattern> _scenarioStepPatterns;
-        public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get { return _scenarioStepPatterns; } }
+        public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get; }
 
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
 
@@ -29,7 +28,7 @@ namespace Xunit.Gherkin.Quick
             IEnumerable<StepMethodArgument> arguments,
             MethodInfoWrapper methodInfoWrapper)
         {
-            _scenarioStepPatterns = scenarioStepPatterns != null
+            ScenarioStepPatterns = scenarioStepPatterns != null
                 ? scenarioStepPatterns.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(scenarioStepPatterns));
 
@@ -79,7 +78,7 @@ namespace Xunit.Gherkin.Quick
         {
             var argumentsClone = _arguments.Select(arg => arg.Clone());
 
-            return new StepMethodInfo(_scenarioStepPatterns, argumentsClone, _methodInfoWrapper);
+            return new StepMethodInfo(ScenarioStepPatterns, argumentsClone, _methodInfoWrapper);
         }
         
         public void DigestScenarioStepValues(Step gherkinScenarioStep)
@@ -109,7 +108,7 @@ namespace Xunit.Gherkin.Quick
             {
                 var gStepText = gStep.Text.Trim();
 
-                foreach (var pattern in _scenarioStepPatterns)
+                foreach (var pattern in ScenarioStepPatterns)
                 {
                     if (!pattern.Kind.ToString().Equals(gStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -125,6 +124,24 @@ namespace Xunit.Gherkin.Quick
             }
         }
         
+        public bool Match(Step gherkinScenarioStep)
+        {
+            var gherkinStepText = gherkinScenarioStep.Text.Trim();
+
+            foreach (var pattern in ScenarioStepPatterns)
+            {
+                if (!pattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var match = Regex.Match(gherkinStepText, pattern.Pattern);
+                if (!match.Success || !match.Value.Equals(gherkinStepText))
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
     }
 
     internal enum PatternKind

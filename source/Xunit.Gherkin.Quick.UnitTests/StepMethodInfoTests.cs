@@ -391,5 +391,46 @@ in it";
 
             }
         }
+
+        [Fact]
+        public void Match_IsPositive_For_Corresponding_Step()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMatch();
+            var sut = StepMethodInfo.FromMethodInfo(
+                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
+                featureInstance);
+
+            //act.
+            var match = sut.Match(new Gherkin.Ast.Step(null, "When", "this matches", null));
+
+            //assert.
+            Assert.True(match);
+        }
+
+        [Fact]
+        public void Match_IsNegative_For_Different_Step()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMatch();
+            var sut = StepMethodInfo.FromMethodInfo(
+                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
+                featureInstance);
+
+            //act.
+            var match = sut.Match(new Gherkin.Ast.Step(null, "When", "this does not matches", null));
+
+            //assert.
+            Assert.False(match);
+        }
+
+        private sealed class FeatureForMatch : Feature
+        {
+            [When("this matches")]
+            public void Method1()
+            {
+
+            }
+        }
     }
 }
