@@ -86,7 +86,7 @@ namespace Xunit.Gherkin.Quick
             if (_arguments.Count == 0)
                 return;
 
-            var matchingPattern = FindMatchingPattern(gherkinScenarioStep);
+            var matchingPattern = GetMatchingPattern(gherkinScenarioStep);
             var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
             if (matchingPattern == null)
@@ -103,25 +103,6 @@ namespace Xunit.Gherkin.Quick
             }
 
             _lastDigestedStepText = gherkinStepText;
-
-            ScenarioStepPattern FindMatchingPattern(Step gStep)
-            {
-                var gStepText = gStep.Text.Trim();
-
-                foreach (var pattern in ScenarioStepPatterns)
-                {
-                    if (!pattern.Kind.ToString().Equals(gStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    var match = Regex.Match(gStepText, pattern.Pattern);
-                    if (!match.Success || !match.Value.Equals(gStepText))
-                        continue;
-
-                    return pattern;
-                }
-
-                return null;
-            }
         }
         
         public ScenarioStepPattern GetMatchingPattern(Step gherkinScenarioStep)

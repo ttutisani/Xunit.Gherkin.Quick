@@ -104,8 +104,10 @@ namespace UnitTests
             { }
         }
 
-        [Fact]
-        public void DigestScenarioStepValues_Sets_Primitive_Values()
+        [Theory]
+        [InlineData("Then")]
+        [InlineData("*")]
+        public void DigestScenarioStepValues_Sets_Primitive_Values(string keyword)
         {
             //arrange.
             var featureInstance = new FeatureForApplyArgumentValues();
@@ -121,7 +123,7 @@ namespace UnitTests
                 .Replace(@"(\w+)", $"{text}")
                 .Replace(@"([\d/]+)", $"{date.Month}/{date.Day}/{date.Year}");
 
-            var step = new Gherkin.Ast.Step(null, "Then", stepText, null);
+            var step = new Gherkin.Ast.Step(null, keyword, stepText, null);
 
             //act.
             sut.DigestScenarioStepValues(step);
@@ -392,8 +394,10 @@ in it";
             }
         }
 
-        [Fact]
-        public void GetMatchingPattern_Finds_Match_For_Step()
+        [Theory]
+        [InlineData("When")]
+        [InlineData("*")]
+        public void GetMatchingPattern_Finds_Match_For_Step(string keyword)
         {
             //arrange.
             var featureInstance = new FeatureForMatch();
@@ -402,7 +406,7 @@ in it";
                 featureInstance);
 
             //act.
-            var match = sut.GetMatchingPattern(new Gherkin.Ast.Step(null, "When", "this matches", null));
+            var match = sut.GetMatchingPattern(new Gherkin.Ast.Step(null, keyword, "this matches", null));
 
             //assert.
             Assert.NotNull(match);
@@ -426,8 +430,10 @@ in it";
             Assert.Null(match);
         }
 
-        [Fact]
-        public void GetMatchingPattern_Finds_Match_For_Star_Notation()
+        [Theory]
+        [InlineData("When")]
+        [InlineData("*")]
+        public void Match_IsPositive_For_Corresponding_Step(string keyword)
         {
             //arrange.
             var featureInstance = new FeatureForMatch();
@@ -436,25 +442,7 @@ in it";
                 featureInstance);
 
             //act.
-            var match = sut.GetMatchingPattern(new Gherkin.Ast.Step(null, "*", "this matches", null));
-
-            //assert.
-            Assert.NotNull(match);
-            Assert.Equal(PatternKind.When, match.Kind);
-            Assert.Equal("this matches", match.Pattern);
-        }
-
-        [Fact]
-        public void Match_IsPositive_For_Corresponding_Step()
-        {
-            //arrange.
-            var featureInstance = new FeatureForMatch();
-            var sut = StepMethodInfo.FromMethodInfo(
-                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
-                featureInstance);
-
-            //act.
-            var match = sut.Matches(new Gherkin.Ast.Step(null, "When", "this matches", null));
+            var match = sut.Matches(new Gherkin.Ast.Step(null, keyword, "this matches", null));
 
             //assert.
             Assert.True(match);
@@ -474,22 +462,6 @@ in it";
 
             //assert.
             Assert.False(match);
-        }
-
-        [Fact]
-        public void Match_IsPositive_For_Star_Step()
-        {
-            //arrange.
-            var featureInstance = new FeatureForMatch();
-            var sut = StepMethodInfo.FromMethodInfo(
-                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
-                featureInstance);
-
-            //act.
-            var match = sut.Matches(new Gherkin.Ast.Step(null, "*", "this matches", null));
-
-            //assert.
-            Assert.True(match);
         }
 
         private sealed class FeatureForMatch : Feature

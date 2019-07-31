@@ -617,6 +617,8 @@ namespace UnitTests
                 .Verifiable();
 
             var featureInstance = new FeatureWithStarNotation();
+            var output = new Mock<ITestOutputHelper>();
+            featureInstance.InternalOutput = output.Object;
 
             //act.
             await _sut.ExecuteScenarioAsync(featureInstance, "S");
