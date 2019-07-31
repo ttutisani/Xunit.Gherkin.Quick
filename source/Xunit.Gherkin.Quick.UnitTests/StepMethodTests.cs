@@ -37,8 +37,10 @@ namespace UnitTests
             }
         }
 
-        [Fact]
-        public void FromStepMethodInfo_Creates_Instance()
+        [Theory]
+        [InlineData("Given")]
+        [InlineData("*")]
+        public void FromStepMethodInfo_Creates_Instance_When_Step_Matches(string keyword)
         {
             //arrange.
             var featureInstance = new Feature_For_FromStepMethodInfo();
@@ -48,7 +50,7 @@ namespace UnitTests
                 );
 
             //act.
-            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "Given", "something 123 else", null));
+            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, keyword, "something 123 else", null));
 
             //assert.
             Assert.NotNull(sut);

@@ -11,8 +11,7 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethodInfo
     {
-        private readonly ReadOnlyCollection<ScenarioStepPattern> _scenarioStepPatterns;
-        public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get { return _scenarioStepPatterns; } }
+        public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get; }
 
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
 
@@ -29,7 +28,7 @@ namespace Xunit.Gherkin.Quick
             IEnumerable<StepMethodArgument> arguments,
             MethodInfoWrapper methodInfoWrapper)
         {
-            _scenarioStepPatterns = scenarioStepPatterns != null
+            ScenarioStepPatterns = scenarioStepPatterns != null
                 ? scenarioStepPatterns.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(scenarioStepPatterns));
 
@@ -79,7 +78,7 @@ namespace Xunit.Gherkin.Quick
         {
             var argumentsClone = _arguments.Select(arg => arg.Clone());
 
-            return new StepMethodInfo(_scenarioStepPatterns, argumentsClone, _methodInfoWrapper);
+            return new StepMethodInfo(ScenarioStepPatterns, argumentsClone, _methodInfoWrapper);
         }
         
         public void DigestScenarioStepValues(Step gherkinScenarioStep)
@@ -87,7 +86,7 @@ namespace Xunit.Gherkin.Quick
             if (_arguments.Count == 0)
                 return;
 
-            var matchingPattern = FindMatchingPattern(gherkinScenarioStep);
+            var matchingPattern = GetMatchingPattern(gherkinScenarioStep);
             var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
             if (matchingPattern == null)
@@ -104,27 +103,33 @@ namespace Xunit.Gherkin.Quick
             }
 
             _lastDigestedStepText = gherkinStepText;
-
-            ScenarioStepPattern FindMatchingPattern(Step gStep)
-            {
-                var gStepText = gStep.Text.Trim();
-
-                foreach (var pattern in _scenarioStepPatterns)
-                {
-                    if (!pattern.Kind.ToString().Equals(gStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    var match = Regex.Match(gStepText, pattern.Pattern);
-                    if (!match.Success || !match.Value.Equals(gStepText))
-                        continue;
-
-                    return pattern;
-                }
-
-                return null;
-            }
         }
         
+        public ScenarioStepPattern GetMatchingPattern(Step gherkinScenarioStep)
+        {
+            var gherkinStepText = gherkinScenarioStep.Text.Trim();
+
+            foreach (var pattern in ScenarioStepPatterns)
+            {
+                if (!pattern.Kind.Matches(gherkinScenarioStep.Keyword.Trim()))
+                    continue;
+
+                var match = Regex.Match(gherkinStepText, pattern.Pattern);
+                if (!match.Success || !match.Value.Equals(gherkinStepText))
+                    continue;
+
+                return pattern;
+            }
+
+            return null;
+        }
+
+        public bool Matches(Step gherkinScenarioStep)
+        {
+            var matchingPattern = GetMatchingPattern(gherkinScenarioStep);
+            var isMatch = matchingPattern != null;
+            return isMatch;
+        }
     }
 
     internal enum PatternKind
@@ -163,6 +168,14 @@ namespace Xunit.Gherkin.Quick
                 default:
                     throw new NotSupportedException($"Cannot convert into step method kind: Attribute type {@this.GetType()} is not supported.");
             }
+        }
+
+        public static bool Matches(this PatternKind patternKind, string keyword)
+        {
+            if (keyword == "*")
+                return true;
+
+            return patternKind.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
