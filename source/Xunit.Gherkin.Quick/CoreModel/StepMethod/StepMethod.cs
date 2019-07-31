@@ -29,7 +29,7 @@ namespace Xunit.Gherkin.Quick
 
         public static StepMethod FromStepMethodInfo(StepMethodInfo stepMethodInfo, Step gherkinScenarioStep)
         {
-            var matchingPattern = GetMatchingPattern(stepMethodInfo, gherkinScenarioStep);
+            var matchingPattern = stepMethodInfo.GetMatchingPattern(gherkinScenarioStep);
 
             if (matchingPattern == null)
                 throw new InvalidOperationException($"This step method info (`{stepMethodInfo.GetMethodName()}`) cannot handle given scenario step: `{gherkinScenarioStep.Keyword.Trim()} {gherkinScenarioStep.Text.Trim()}`.");
@@ -39,11 +39,11 @@ namespace Xunit.Gherkin.Quick
             return new StepMethod(stepMethodInfoClone, matchingPattern.Kind, matchingPattern.Pattern, gherkinScenarioStep.Text);
         }
 
-        private static ScenarioStepPattern GetMatchingPattern(StepMethodInfo stepMethod, Step gherkinScenarioStep)
+        private static ScenarioStepPattern GetMatchingPattern(StepMethodInfo stepMethodInfo, Step gherkinScenarioStep)
         {
             var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
-            foreach (var pattern in stepMethod.ScenarioStepPatterns)
+            foreach (var pattern in stepMethodInfo.ScenarioStepPatterns)
             {
                 if (!pattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
                     continue;

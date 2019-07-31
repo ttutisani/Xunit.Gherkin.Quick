@@ -124,7 +124,7 @@ namespace Xunit.Gherkin.Quick
             }
         }
         
-        public bool Matches(Step gherkinScenarioStep)
+        public ScenarioStepPattern GetMatchingPattern(Step gherkinScenarioStep)
         {
             var gherkinStepText = gherkinScenarioStep.Text.Trim();
 
@@ -137,10 +137,17 @@ namespace Xunit.Gherkin.Quick
                 if (!match.Success || !match.Value.Equals(gherkinStepText))
                     continue;
 
-                return true;
+                return pattern;
             }
 
-            return false;
+            return null;
+        }
+
+        public bool Matches(Step gherkinScenarioStep)
+        {
+            var matchingPattern = GetMatchingPattern(gherkinScenarioStep);
+            var isMatch = matchingPattern != null;
+            return isMatch;
         }
     }
 

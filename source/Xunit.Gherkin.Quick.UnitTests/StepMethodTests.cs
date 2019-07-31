@@ -38,7 +38,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void FromStepMethodInfo_Creates_Instance()
+        public void FromStepMethodInfo_Creates_Instance_When_Step_Matches()
         {
             //arrange.
             var featureInstance = new Feature_For_FromStepMethodInfo();
@@ -49,6 +49,26 @@ namespace UnitTests
 
             //act.
             var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "Given", "something 123 else", null));
+
+            //assert.
+            Assert.NotNull(sut);
+            Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].Kind, sut.Kind);
+            Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].Pattern, sut.Pattern);
+            Assert.Equal("something 123 else", sut.StepText);
+        }
+
+        [Fact]
+        public void FromStepMethodInfo_Creates_Instance_For_Star_Notation()
+        {
+            //arrange.
+            var featureInstance = new Feature_For_FromStepMethodInfo();
+            var stepMethodInfo = StepMethodInfo.FromMethodInfo(
+                featureInstance.GetType().GetMethod(nameof(Feature_For_FromStepMethodInfo.Step_With_Multiple_Patterns)),
+                featureInstance
+                );
+
+            //act.
+            var sut = StepMethod.FromStepMethodInfo(stepMethodInfo, new Gherkin.Ast.Step(null, "*", "something 123 else", null));
 
             //assert.
             Assert.NotNull(sut);

@@ -393,6 +393,58 @@ in it";
         }
 
         [Fact]
+        public void GetMatchingPattern_Finds_Match_For_Step()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMatch();
+            var sut = StepMethodInfo.FromMethodInfo(
+                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
+                featureInstance);
+
+            //act.
+            var match = sut.GetMatchingPattern(new Gherkin.Ast.Step(null, "When", "this matches", null));
+
+            //assert.
+            Assert.NotNull(match);
+            Assert.Equal(PatternKind.When, match.Kind);
+            Assert.Equal("this matches", match.Pattern);
+        }
+
+        [Fact]
+        public void GetMatchingPattern_Finds_Nothing_When_No_Match()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMatch();
+            var sut = StepMethodInfo.FromMethodInfo(
+                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
+                featureInstance);
+
+            //act.
+            var match = sut.GetMatchingPattern(new Gherkin.Ast.Step(null, "When", "this does not matches", null));
+
+            //assert.
+            Assert.Null(match);
+        }
+
+        [Fact]
+        public void GetMatchingPattern_Finds_Match_For_Star_Notation()
+        {
+            //arrange.
+            var featureInstance = new FeatureForMatch();
+            var sut = StepMethodInfo.FromMethodInfo(
+                typeof(FeatureForMatch).GetMethod(nameof(FeatureForMatch.Method1)),
+                featureInstance);
+
+            //act.
+            var match = sut.GetMatchingPattern(new Gherkin.Ast.Step(null, "*", "this matches", null));
+
+            //assert.
+            Assert.NotNull(match);
+            Assert.Equal(PatternKind.When, match.Kind);
+            Assert.Equal("this matches", match.Pattern);
+        }
+
+        [Fact]
         public void Match_IsPositive_For_Corresponding_Step()
         {
             //arrange.
