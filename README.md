@@ -134,7 +134,7 @@ Also, as recommended by a user of this project, the unit test code can be a usef
 - [Scenario Background usage instructions](/docs/scenario-background.md)
 - [Logging Output from Scenario Steps to Standard Test Output](/docs/log-test-output.md)
 - [Ignoring Scenario, Scenario Outline, Examples, or Feature](/docs/ignore-scenario.md)
-- [Start Notation Support - How to Not Write Given/When/Then/And/But](/docs/star-notation.md)
+- [Star Notation Support - How to Skip Keywords in Scenario Steps](/docs/star-notation.md)
 - [Shared Step Method With Multiple Step Attributes](/docs/shared-step-method.md)
 - [Before and After Scenario Execution Hooks](/docs/before-after-scenario-hooks.md)
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
