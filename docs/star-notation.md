@@ -1,4 +1,4 @@
-# Star Notation
+# Star Notation - How to Skip Scenario Step Keywords
 
 Gherkin language allows you to not specify Given/When/Then/And/But keywords in your scenario stepts. Instead, you can use an asterisk (*) to skip the keyword altogether. Such step will match a step method by the pattern text, without comparing the keyword.
 
