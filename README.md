@@ -28,7 +28,7 @@ That should be it, but if you need more info about installation or the nuget pac
 
 ### Create Gherkin feature file
 
-Create a new text file. Name it as 'AddTwoNumbers.feature'.
+Create a new text file. Name it as `AddTwoNumbers.feature`.
 
 _NOTE: In practice, you can name your files in any way you want, and .feature extension is not necessary either._
 
@@ -48,7 +48,7 @@ Scenario: Add two numbers
 
 This is a BDD style feature written in [Gherkin language](https://docs.cucumber.io/gherkin/reference/).
 
-**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to `Copy Always` or `Copy if Newer`. See [Copying feature files](/docs/copying-feature-files.md).
+**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to *Copy Always* or *Copy if Newer*. See [Copying feature files](/docs/copying-feature-files.md) for more options.
 
 Now it's time to implement the code to run scenarios of this feature.
 
@@ -92,7 +92,7 @@ public sealed class AddTwoNumbers : Feature
 }
 ```
 
-Notice couple of things:
+Notice a couple of things:
 
 - `FeatureFile` attribute for the class refers to the feature file location (**relative to the output folder, not relative to the class file**). You don't need to apply this attribute if you keep your feature files in the root directory of your project, because that's where it will be located by default. Buf if you keep it under a sub-folder (which I do), then make sure to specify the file location (either relative or absolute) using this attribute.
 
@@ -122,7 +122,7 @@ Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) 
 
 Feel free to post your question/problem either into our [issues repository](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues), or into [StackOverflow](https://stackoverflow.com).
 
-Also, as recommended by a user of this project, the unit test code can be a useful addendum to the documentation. E.g. see test files and matching feature files in [Xunit.Gherkin.Quick.ProjectConsumer](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/source/Xunit.Gherkin.Quick.ProjectConsumer). ([AddNumbersTo5.feature](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.feature), [AddNumbersTo5.cs](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.cs)) is a helpful starting place.
+Also, as recommended by a user of this project, the unit test code can be a useful addendum to the documentation. e.g., see test files and matching feature files in [Xunit.Gherkin.Quick.ProjectConsumer](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/source/Xunit.Gherkin.Quick.ProjectConsumer). [AddNumbersTo5.feature](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.feature)and [AddNumbersTo5.cs](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.cs) can be the helpful starting points.
 
 ## See Also
 
