@@ -1,14 +1,14 @@
 # Copying feature files to build output
 
-There are multiple ways to make sure that feature files are copied to the build output directory.
+There are two ways to make sure that feature files are copied to the build output directory.
 
-## Manually set the file property
+## A) Manually set the file property
 
 Open the properties window of the feature file and set the value of `Copy to Output Directory` to `Copy Always` or `Copy if Newer`.
 
 The disadvantage of this method is that you need to remember to set this property on each feature file you add to the project.
 
-## Automatically copy feature files
+## B) Automatically copy feature files
 
 It's also possible to leverage MSBuild to automatically copy any feature files.
 Especially the new `Microsoft.NET.Sdk` project file makes this very easy. 
