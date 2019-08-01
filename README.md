@@ -122,7 +122,7 @@ Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) 
 
 Feel free to post your question/problem either into our [issues repository](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues), or into [StackOverflow](https://stackoverflow.com).
 
-Also, as recommended by a user of this project, the unit test code can be a useful addendum to the documentation. e.g., see test files and matching feature files in [Xunit.Gherkin.Quick.ProjectConsumer](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/source/Xunit.Gherkin.Quick.ProjectConsumer). [AddNumbersTo5.feature](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.feature)and [AddNumbersTo5.cs](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.cs) can be the helpful starting points.
+Also, as recommended by a user of this project, the unit test code can be a useful addendum to the documentation. e.g., see test files and matching feature files in [Xunit.Gherkin.Quick.ProjectConsumer](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/source/Xunit.Gherkin.Quick.ProjectConsumer). [AddNumbersTo5.feature](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.feature) and [AddNumbersTo5.cs](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.cs) can be the helpful starting points.
 
 ## See Also
 
