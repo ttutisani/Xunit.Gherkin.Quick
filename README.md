@@ -124,6 +124,20 @@ Feel free to post your question/problem either into our [issues repository](http
 
 Also, as recommended by a user of this project, the unit test code can be a useful addendum to the documentation. e.g., see test files and matching feature files in [Xunit.Gherkin.Quick.ProjectConsumer](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/source/Xunit.Gherkin.Quick.ProjectConsumer). [AddNumbersTo5.feature](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.feature) and [AddNumbersTo5.cs](https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/source/Xunit.Gherkin.Quick.ProjectConsumer/Addition/AddNumbersTo5.cs) can be the helpful starting points.
 
+## Special Thanks
+
+I want to send special Thank You to all the contributors, which you can see here: https://github.com/ttutisani/Xunit.Gherkin.Quick/graphs/contributors
+
+Specifically:
+
+- [csurfleet](https://github.com/csurfleet)
+- [ChristianPejrup](https://github.com/ChristianPejrup)
+- [videege](https://github.com/videege)
+- [vinla](https://github.com/vinla)
+- [salaerts](https://github.com/salaerts)
+- [cathalmchale](https://github.com/cathalmchale)
+- [ahmadnazir](https://github.com/ahmadnazir)
+
 ## See Also
 
 - [Step Attributes (Given, When, Then, And, But) usage instructions](/docs/step-attributes.md)
