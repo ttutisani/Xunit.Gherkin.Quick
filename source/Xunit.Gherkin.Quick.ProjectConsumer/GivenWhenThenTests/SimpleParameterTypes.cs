@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading;
 
-namespace Xunit.Gherkin.Quick.ProductConsumer
+namespace Xunit.Gherkin.Quick.ProjectConsumer
 {
     [FeatureFile("./GivenWhenThenTests/SimpleParameterTypes.feature")]
     public sealed class SimpleParameterTypes : Feature
