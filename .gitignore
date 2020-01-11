@@ -289,3 +289,6 @@ __pycache__/
 /source/.vscode
 .vscode/tasks.json
 .vscode/launch.json
+
+# StarUML temporary file
+*.~ml
