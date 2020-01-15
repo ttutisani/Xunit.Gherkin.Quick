@@ -35,7 +35,7 @@ namespace Xunit.Gherkin.Quick
                   testMethodArguments)
         {
             DisplayName = _displayName = $"{featureName} :: {scenarioName}";
-
+            
             // These traits allow support for the picklesdoc results visualizer (http://www.picklesdoc.com/)
             Traits = new Dictionary<string, List<string>>
             {
@@ -93,7 +93,7 @@ namespace Xunit.Gherkin.Quick
 
             return await new ScenarioXunitTestCaseRunner(
                 this, 
-                DisplayName, 
+                _displayName, 
                 SkipReason, 
                 constructorArguments, 
                 TestMethodArguments, 
