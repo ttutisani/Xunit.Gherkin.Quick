@@ -7,16 +7,16 @@ namespace UnitTests
 {
     public sealed class ScenarioDiscoveryModel_Discover_Should
     {
-        private readonly Mock<IFileSystem> _fileSystem = new Mock<IFileSystem>();
+        private readonly Mock<IFeatureFileRepository> _featureFileRepository = new Mock<IFeatureFileRepository>();
         private readonly ScenarioDiscoveryModel _sut;
 
         public ScenarioDiscoveryModel_Discover_Should()
         {
-            _sut = new ScenarioDiscoveryModel(_fileSystem.Object);
+            _sut = new ScenarioDiscoveryModel(_featureFileRepository.Object);
         }
 
         [Fact]
-        public void Requires_FeatureClassType()
+        public void Require_FeatureClassType()
         {
             //act / assert.
             Assert.Throws<ArgumentNullException>(() => _sut.Discover(null));
@@ -25,20 +25,45 @@ namespace UnitTests
         [Theory]
         [InlineData(typeof(MyFeature), "MyFeature.feature")]
         [InlineData(typeof(MyFeatureWithAttribute), "/my/path/to/feature/file.feature")]
-        public void Discover_Throws_When_Feature_File_Not_Found(
+        public void Throw_When_Feature_File_Not_Found(
             Type featureClassType,
             string fileName)
         {
             //arrange.
-            _fileSystem.Setup(fs => fs.FileExists(fileName))
-                .Returns(false)
+            _featureFileRepository.Setup(r => r.GetByFilePath(fileName))
+                .Returns<FeatureFile>(null)
                 .Verifiable();
 
             //act / assert.
             Assert.Throws<System.IO.FileNotFoundException>(() => _sut.Discover(featureClassType));
 
             //assert.
-            _fileSystem.Verify();
+            _featureFileRepository.Verify();
+        }
+
+        [Theory]
+        [InlineData(typeof(MyFeature), "MyFeature.feature")]
+        [InlineData(typeof(MyFeatureWithAttribute), "/my/path/to/feature/file.feature")]
+        public void Find_Scenarios_In_Feature_File(
+            Type featureClassType,
+            string fileName)
+        {
+            //arrange.
+            var gherkinFeature = new GherkinFeatureBuilder().WithScenario("scenario1", steps =>
+                steps.Given("step 1", null))
+                .Build();
+            _featureFileRepository.Setup(r => r.GetByFilePath(fileName))
+                .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
+                .Verifiable();
+
+            //act.
+            var feature = _sut.Discover(featureClassType);
+
+            //assert.
+            _featureFileRepository.Verify();
+
+            Assert.NotNull(feature);
+            Assert.Same(gherkinFeature, feature);
         }
 
         private sealed class MyFeature : Feature

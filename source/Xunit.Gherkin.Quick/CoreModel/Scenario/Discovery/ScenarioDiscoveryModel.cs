@@ -5,23 +5,25 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class ScenarioDiscoveryModel
     {
-        private readonly IFileSystem _fileSystem;
+        private readonly IFeatureFileRepository _featureFileRepository;
 
-        public ScenarioDiscoveryModel(IFileSystem fileSystem)
+        public ScenarioDiscoveryModel(IFeatureFileRepository featureFileRepository)
         {
-            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+            _featureFileRepository = featureFileRepository ?? throw new ArgumentNullException(nameof(featureFileRepository));
         }
 
-        public List<ScenarioInfo> Discover(Type featureClassType)
+        public global::Gherkin.Ast.Feature Discover(Type featureClassType)
         {
             if (featureClassType == null)
                 throw new ArgumentNullException(nameof(featureClassType));
 
             var fileName = FeatureClassInfo.FromFeatureClassType(featureClassType).FeatureFilePath;
-            if (!_fileSystem.FileExists(fileName))
+            var featureFile = _featureFileRepository.GetByFilePath(fileName);
+            if (featureFile == null)
                 throw new System.IO.FileNotFoundException("Feature file not found.", fileName);
 
-            throw new NotImplementedException();
+            var feature = featureFile.GherkinDocument.Feature;
+            return feature;
         }
     }
 }
