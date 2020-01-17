@@ -2,11 +2,11 @@
 
 namespace Xunit.Gherkin.Quick
 {
-    internal sealed class ScenarioDiscoveryModel
+    internal sealed class FeatureDiscoveryModel
     {
         private readonly IFeatureFileRepository _featureFileRepository;
 
-        public ScenarioDiscoveryModel(IFeatureFileRepository featureFileRepository)
+        public FeatureDiscoveryModel(IFeatureFileRepository featureFileRepository)
         {
             _featureFileRepository = featureFileRepository ?? throw new ArgumentNullException(nameof(featureFileRepository));
         }

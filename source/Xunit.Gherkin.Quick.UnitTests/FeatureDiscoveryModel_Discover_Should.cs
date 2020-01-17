@@ -5,14 +5,14 @@ using Xunit.Gherkin.Quick;
 
 namespace UnitTests
 {
-    public sealed class ScenarioDiscoveryModel_Discover_Should
+    public sealed class FeatureDiscoveryModel_Discover_Should
     {
         private readonly Mock<IFeatureFileRepository> _featureFileRepository = new Mock<IFeatureFileRepository>();
-        private readonly ScenarioDiscoveryModel _sut;
+        private readonly FeatureDiscoveryModel _sut;
 
-        public ScenarioDiscoveryModel_Discover_Should()
+        public FeatureDiscoveryModel_Discover_Should()
         {
-            _sut = new ScenarioDiscoveryModel(_featureFileRepository.Object);
+            _sut = new FeatureDiscoveryModel(_featureFileRepository.Object);
         }
 
         [Fact]
