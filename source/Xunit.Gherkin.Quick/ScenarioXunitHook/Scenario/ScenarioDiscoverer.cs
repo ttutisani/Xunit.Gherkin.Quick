@@ -24,7 +24,6 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            //var feature = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType()).Feature;
             var feature = new FeatureDiscoveryModel(new FeatureFileRepository()).Discover(testMethod.TestClass.Class.ToRuntimeType());
 
             foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
