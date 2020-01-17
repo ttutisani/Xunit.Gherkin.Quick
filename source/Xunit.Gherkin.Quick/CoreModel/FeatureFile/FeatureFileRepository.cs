@@ -1,5 +1,6 @@
 ﻿using Gherkin;
 using Gherkin.Ast;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Xunit.Gherkin.Quick
@@ -23,6 +24,11 @@ namespace Xunit.Gherkin.Quick
                     return gherkinDocument;
                 }
             }
+        }
+
+        public List<string> GetFeatureFilePaths()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
