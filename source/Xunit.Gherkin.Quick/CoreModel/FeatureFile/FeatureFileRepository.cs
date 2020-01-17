@@ -2,6 +2,7 @@
 using Gherkin.Ast;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -28,7 +29,9 @@ namespace Xunit.Gherkin.Quick
 
         public List<string> GetFeatureFilePaths()
         {
-            throw new System.NotImplementedException();
+            var featureFilePaths = Directory.GetFiles("./", "*.feature"); //TODO: remove hardcoded extension.
+
+            return featureFilePaths.ToList();
         }
     }
 }
