@@ -43,34 +43,5 @@ namespace Xunit.Gherkin.Quick
             }
         }
 
-        private static GherkinDocument GetGherkinDocumentByType(Type classType)
-        {
-            var fileName = classType.FullName;
-            fileName = fileName.Substring(fileName.LastIndexOf('.') + 1) + ".feature";
-
-            if (!File.Exists(fileName))
-            {
-                var path = (classType.GetTypeInfo().GetCustomAttributes(typeof(FeatureFileAttribute))
-                    .FirstOrDefault() as FeatureFileAttribute)
-                    ?.Path;
-
-                if (path == null || !File.Exists(path))
-                {
-                    throw new TypeLoadException($"Cannot find feature file `{fileName}` in the output root directory. If it's somewhere else, use {nameof(FeatureFileAttribute)} to specify file path.");
-                }
-
-                fileName = path;
-            }
-
-            var parser = new Parser();
-            using (var gherkinFile = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using (var gherkinReader = new StreamReader(gherkinFile))
-                {
-                    var gherkinDocument = parser.Parse(gherkinReader);
-                    return gherkinDocument;
-                }
-            }
-        }
     }
 }
