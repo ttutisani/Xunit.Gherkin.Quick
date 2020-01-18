@@ -24,36 +24,37 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
-            return new List<IXunitTestCase>();
+            var testAssembly = testMethod.TestClass.Class.ToRuntimeType().GetTypeInfo().Assembly;
+            var features = new MissingFeatureDiscoveryModel(new FeatureFileRepository(), new FeatureClassInfoRepository(testAssembly)).Discover();
 
-            //var feature = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType())
-            //    .Feature;
+            foreach (var feature in features)
+            {
+                foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
+                {
+                    foreach (var example in scenarioOutline.Examples)
+                    {
+                        var rowIndex = 0;
+                        foreach (var row in example.TableBody)
+                        {
+                            var tags = feature.GetExamplesTags(scenarioOutline.Name, example.Name);
+                            var skip = feature.IsExamplesIgnored(scenarioOutline.Name, example.Name);
 
-            //foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
-            //{
-            //    foreach (var example in scenarioOutline.Examples)
-            //    {
-            //        var rowIndex = 0;
-            //        foreach (var row in example.TableBody)
-            //        {
-            //            var tags = feature.GetExamplesTags(scenarioOutline.Name, example.Name);
-            //            var skip = feature.IsExamplesIgnored(scenarioOutline.Name, example.Name);
+                            yield return new ScenarioXunitTestCase(
+                                _messageSink,
+                                testMethod,
+                                feature.Name,
+                                !string.IsNullOrWhiteSpace(example.Name)
+                                    ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
+                                    : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
+                                tags,
+                                skip,
+                                new object[] { scenarioOutline.Name, example.Name, rowIndex });
 
-            //            yield return new ScenarioXunitTestCase(
-            //                _messageSink, 
-            //                testMethod, 
-            //                feature.Name,
-            //                !string.IsNullOrWhiteSpace(example.Name)
-            //                    ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
-            //                    : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
-            //                tags,
-            //                skip,
-            //                new object[] { scenarioOutline.Name, example.Name, rowIndex });
-
-            //            rowIndex++;
-            //        }
-            //    }
-            //}
+                            rowIndex++;
+                        }
+                    }
+                }
+            }
         }
 
         private static GherkinDocument GetGherkinDocumentByType(Type classType)

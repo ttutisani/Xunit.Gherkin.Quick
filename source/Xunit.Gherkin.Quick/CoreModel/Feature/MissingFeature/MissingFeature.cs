@@ -27,7 +27,7 @@ namespace Xunit.Gherkin.Quick
             string exampleName,
             int exampleIndex)
         {
-            throw new NotImplementedException($"Scenario outline `{scenarioOutlineName}`, example `{exampleName}` `{exampleIndex + 1}` is not implemented.");
+            throw new NotImplementedException($"Scenario outline `{scenarioOutlineName}`, example `{exampleName}` `#{exampleIndex + 1}` is not implemented.");
         }
     }
 }
