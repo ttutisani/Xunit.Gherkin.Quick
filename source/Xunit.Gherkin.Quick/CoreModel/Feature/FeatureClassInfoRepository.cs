@@ -2,13 +2,20 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Xunit.Gherkin.Quick.CoreModel
+namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureClassInfoRepository : IFeatureClassInfoRepository
     {
+        private readonly Assembly _testAssembly;
+
+        public FeatureClassInfoRepository(Assembly testAssembly)
+        {
+            _testAssembly = testAssembly ?? throw new System.ArgumentNullException(nameof(testAssembly));
+        }
+
         public List<FeatureClassInfo> GetFeatureClassesInfo()
         {
-            var allClasses = Assembly.GetEntryAssembly().GetExportedTypes();
+            var allClasses = _testAssembly.GetExportedTypes();
 
             var featureClassType = typeof(Feature);
 

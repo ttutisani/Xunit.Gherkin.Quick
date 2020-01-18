@@ -12,10 +12,8 @@ namespace Xunit.Gherkin.Quick
     /// Derived classes should also specify the feature text file by using
     /// <see cref="FeatureFileAttribute"/>.
     /// </summary>
-    public abstract class Feature
+    public abstract class Feature : FeatureBase
     {
-        internal ITestOutputHelper InternalOutput { get; set; }
-
         [Scenario]
         internal async Task Scenario(string scenarioName)
         {

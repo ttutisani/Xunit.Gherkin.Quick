@@ -29,9 +29,11 @@ namespace Xunit.Gherkin.Quick
 
         public List<string> GetFeatureFilePaths()
         {
-            var featureFilePaths = Directory.GetFiles("./", "*.feature"); //TODO: remove hardcoded extension.
+            var featureFilePaths = Directory.GetFiles("./", "*.feature", SearchOption.AllDirectories) //TODO: remove hardcoded extension.
+                .Select(p => p.Replace('\\', '/'))
+                .ToList();
 
-            return featureFilePaths.ToList();
+            return featureFilePaths;
         }
     }
 }

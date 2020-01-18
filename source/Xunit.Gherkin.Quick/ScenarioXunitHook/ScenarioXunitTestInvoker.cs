@@ -32,9 +32,9 @@ namespace Xunit.Gherkin.Quick
 
         protected override async Task<decimal> InvokeTestMethodAsync(object testClassInstance)
         {
-            var featureClassInstance = testClassInstance as Feature;
+            var featureClassInstance = testClassInstance as FeatureBase;
             if (featureClassInstance == null)
-                throw new InvalidOperationException($"Test class should derive from `{nameof(Feature)}`.");
+                throw new InvalidOperationException($"Test class should derive from `{nameof(FeatureBase)}`.");
 
             featureClassInstance.InternalOutput = _testOutputHelper;
 

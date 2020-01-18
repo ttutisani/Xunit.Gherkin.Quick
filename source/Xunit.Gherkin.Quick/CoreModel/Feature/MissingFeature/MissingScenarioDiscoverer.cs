@@ -24,26 +24,31 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            var feature = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType()).Feature;
+            var testAssembly = testMethod.TestClass.Class.ToRuntimeType().GetTypeInfo().Assembly;
+            var features = new MissingFeatureDiscoveryModel(new FeatureFileRepository(), new FeatureClassInfoRepository(testAssembly)).Discover();
 
-            foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+            foreach (var feature in features)
             {
-                var tags = feature.GetScenarioTags(scenario.Name);
-                bool skip = feature.IsScenarioIgnored(scenario.Name);
+                foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+                {
+                    var tags = feature.GetScenarioTags(scenario.Name);
+                    bool skip = feature.IsScenarioIgnored(scenario.Name);
 
-                yield return new ScenarioXunitTestCase(
-                    _messageSink, 
-                    testMethod, 
-                    feature.Name, 
-                    scenario.Name, 
-                    tags,
-                    skip,
-                    new object[] { scenario.Name });
+                    yield return new ScenarioXunitTestCase(
+                        _messageSink,
+                        testMethod,
+                        feature.Name,
+                        scenario.Name,
+                        tags,
+                        skip,
+                        new object[] { scenario.Name });
+                }
             }
         }
 
         private static GherkinDocument GetGherkinDocumentByType(Type classType)
         {
+
             var fileName = classType.FullName;
             fileName = fileName.Substring(fileName.LastIndexOf('.') + 1) + ".feature";
 
