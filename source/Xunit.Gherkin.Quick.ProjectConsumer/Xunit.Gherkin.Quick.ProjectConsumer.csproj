@@ -41,7 +41,7 @@
     <None Update="Addition\AddNumbersTo5.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Addition\AddTwoNumbersNoFeatureClass.feature">
+    <None Update="Addition\MathWithInfinity.feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Addition\Async\AddTwoNumbersAsync.feature">
