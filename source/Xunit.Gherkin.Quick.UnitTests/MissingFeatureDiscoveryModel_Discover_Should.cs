@@ -25,7 +25,7 @@ namespace UnitTests
                 .Verifiable();
 
             _featureClassInfoRepository.Setup(r => r.GetFeatureClassesInfo())
-                .Returns(new List<FeatureClassInfo> { new FeatureClassInfo("path1") })
+                .Returns(new List<FeatureClassInfo> { FeatureClassInfo.FromFeatureClassType(typeof(MyFeature)) })
                 .Verifiable();
 
             var expectedFeature = new GherkinFeatureBuilder().Build();
@@ -45,5 +45,8 @@ namespace UnitTests
             Assert.Single(features);
             Assert.Same(expectedFeature, features[0]);
         }
+
+        [FeatureFile(path: "path1")]
+        private sealed class MyFeature : Feature { }
     }
 }

@@ -7,9 +7,11 @@ namespace Xunit.Gherkin.Quick
     {
         public string FeatureFilePath { get; }
 
-        public FeatureClassInfo(string featureFilePath)
+        private FeatureClassInfo(string featureFilePath)
         {
-            FeatureFilePath = featureFilePath;
+            FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath)
+                ? featureFilePath
+                : throw new ArgumentNullException(nameof(featureFilePath));
         }
 
         public static FeatureClassInfo FromFeatureClassType(Type featureClassType)

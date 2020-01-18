@@ -1,10 +1,6 @@
-﻿using Gherkin;
-using Gherkin.Ast;
-using System;
+﻿using Gherkin.Ast;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -24,7 +20,7 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
-            var feature = new FeatureDiscoveryModel(new FeatureFileRepository()).Discover(testMethod.TestClass.Class.ToRuntimeType());
+            var feature = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
 
             foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
             {
