@@ -42,20 +42,18 @@
     </None>
     <None Update="GivenWhenThenTests\EnsureOrderOfSteps.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator></Generator>
     </None>
     <None Update="GivenWhenThenTests\SimpleParameterTypes.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator></Generator>
     </None>
     <None Update="StarNotation\StarNotation.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestOutput\OutputMessages.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Texts\TextBuilder.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
