@@ -17,7 +17,7 @@ public sealed class HandleNotImplemented : MissingFeature
 }
 ```
 
-**Note**: `FeatureFileSearchPattern` attribute is optional. If all your feature files have an extension of `.feature`, then they will be discovered automatically. If your files are named differently, then you will need to specify their name pattern via this attribute. For example, if your feature files are named as `xxx.gherkin`, then your attribute should look like `[FeatureFileSearchPattern("*.gherkin")]`. If you fail to specify the correct feature file name pattern, then those files will not be discovered.
+**Note**: `FeatureFileSearchPattern` attribute is optional. If all your feature files have an extension of `.feature`, then they will be discovered automatically. If your files are named differently, then you will need to specify their name pattern via this attribute. For example, if your feature files are named as `xxx.gherkin`, then your attribute should look like `[FeatureFileSearchPattern("*.gherkin")]`. If you fail to specify the correct feature file name pattern, then those files will not be discovered. The same statement is true if you don't have a class in your project that derives from `MissingFeature` base class.
 
 Now, as an example, add a new feature file to the solution, name it as 'MathWithInfinity.feature', set its "Copy to Output Directory" property to "Copy if newer", and put the following content inside it:
 
