@@ -8,15 +8,15 @@
     <Description>BDD in .NET Core - Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets .NET Standard, can be used from both .NET and .NET Core test projects). It parses Gherkin language and executes Xunit tests corresponding to scenarios.</Description>
     <Authors>Tengiz Tutisani</Authors>
     <Company>Tengiz Tutisani</Company>
-    <Copyright>2018 - 2019 Tengiz Tutisani</Copyright>
+    <Copyright>2018 - 2020 Tengiz Tutisani</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick</PackageProjectUrl>
     <PackageTags>BDD, Gherkin, Xunit, Testing, Behavior Driven Development</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/ttutisani/Xunit.Gherkin.Quick</RepositoryUrl>
-    <Version>3.5.1</Version>
-    <PackageReleaseNotes>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/versions/3.5.0.md</PackageReleaseNotes>
+    <Version>4.0.0</Version>
+    <PackageReleaseNotes>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/versions/4.0.0.md</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
