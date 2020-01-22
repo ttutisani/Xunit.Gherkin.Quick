@@ -1,10 +1,6 @@
-﻿using Gherkin;
-using Gherkin.Ast;
-using System;
+﻿using Gherkin.Ast;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -24,8 +20,7 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
-            var feature = GetGherkinDocumentByType(testMethod.TestClass.Class.ToRuntimeType())
-                .Feature;
+            var feature = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
 
             foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
             {
@@ -50,36 +45,6 @@ namespace Xunit.Gherkin.Quick
 
                         rowIndex++;
                     }
-                }
-            }
-        }
-
-        private static GherkinDocument GetGherkinDocumentByType(Type classType)
-        {
-            var fileName = classType.FullName;
-            fileName = fileName.Substring(fileName.LastIndexOf('.') + 1) + ".feature";
-
-            if (!File.Exists(fileName))
-            {
-                var path = (classType.GetTypeInfo().GetCustomAttributes(typeof(FeatureFileAttribute))
-                    .FirstOrDefault() as FeatureFileAttribute)
-                    ?.Path;
-
-                if (path == null || !File.Exists(path))
-                {
-                    throw new TypeLoadException($"Cannot find feature file `{fileName}` in the output root directory. If it's somewhere else, use {nameof(FeatureFileAttribute)} to specify file path.");
-                }
-
-                fileName = path;
-            }
-
-            var parser = new Parser();
-            using (var gherkinFile = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using (var gherkinReader = new StreamReader(gherkinFile))
-                {
-                    var gherkinDocument = parser.Parse(gherkinReader);
-                    return gherkinDocument;
                 }
             }
         }

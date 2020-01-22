@@ -39,25 +39,6 @@ namespace Xunit.Gherkin.Quick
             return new StepMethod(stepMethodInfoClone, matchingPattern.Kind, matchingPattern.Pattern, gherkinScenarioStep.Text);
         }
 
-        private static ScenarioStepPattern GetMatchingPattern(StepMethodInfo stepMethodInfo, Step gherkinScenarioStep)
-        {
-            var gherkinStepText = gherkinScenarioStep.Text.Trim();
-
-            foreach (var pattern in stepMethodInfo.ScenarioStepPatterns)
-            {
-                if (!pattern.Kind.ToString().Equals(gherkinScenarioStep.Keyword.Trim(), StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var match = Regex.Match(gherkinStepText, pattern.Pattern);
-                if (!match.Success || !match.Value.Equals(gherkinStepText))
-                    continue;
-
-                return pattern;
-            }
-
-            return null;
-        }
-
         public async Task ExecuteAsync()
         {
             await _stepMethodInfo.ExecuteAsync();

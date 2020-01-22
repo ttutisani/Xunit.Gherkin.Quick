@@ -11,22 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GivenWhenThenTests\EnsureOrderOfSteps.feature" />
-    <None Remove="GivenWhenThenTests\SimpleParameterTypes.feature" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="GivenWhenThenTests\EnsureOrderOfSteps.feature">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-    </Content>
-    <Content Include="GivenWhenThenTests\SimpleParameterTypes.feature">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.1" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
@@ -39,28 +23,37 @@
 
   <ItemGroup>
     <None Update="Addition\AddNumbersTo5.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Addition\MathWithInfinity.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Addition\Async\AddTwoNumbersAsync.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Addition\AddTwoNumbers.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="BeforeAfterHooks\BeforeAfter.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Discounts\Discounts.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GivenWhenThenTests\EnsureOrderOfSteps.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GivenWhenThenTests\SimpleParameterTypes.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="StarNotation\StarNotation.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestOutput\OutputMessages.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Texts\TextBuilder.feature">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

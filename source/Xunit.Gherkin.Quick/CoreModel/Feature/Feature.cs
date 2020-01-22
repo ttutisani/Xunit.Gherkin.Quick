@@ -9,17 +9,15 @@ namespace Xunit.Gherkin.Quick
     /// <see cref="GivenAttribute"/>, <see cref="WhenAttribute"/>, 
     /// <see cref="ThenAttribute"/>, <see cref="AndAttribute"/>, 
     /// and <see cref="ButAttribute"/>.
-    /// Derived classes should also specify the feature text file by using
+    /// Derived classes can also specify the feature text file by using
     /// <see cref="FeatureFileAttribute"/>.
     /// </summary>
-    public abstract class Feature
+    public abstract class Feature : FeatureBase
     {
-        internal ITestOutputHelper InternalOutput { get; set; }
-
         [Scenario]
         internal async Task Scenario(string scenarioName)
         {
-            var scenarioExecutor = new ScenarioExecutor(new FeatureFileRepository());
+            var scenarioExecutor = new ScenarioExecutor(new FeatureFileRepository("*.feature"));
             await scenarioExecutor.ExecuteScenarioAsync(this, scenarioName);
         }
 
@@ -29,7 +27,7 @@ namespace Xunit.Gherkin.Quick
             string exampleName, 
             int exampleIndex)
         {
-            var scenarioOutlineExecutor = new ScenarioOutlineExecutor(new FeatureFileRepository());
+            var scenarioOutlineExecutor = new ScenarioOutlineExecutor(new FeatureFileRepository("*.feature"));
             await scenarioOutlineExecutor.ExecuteScenarioOutlineAsync(this, scenarioOutlineName, exampleName, exampleIndex);
         }
     }

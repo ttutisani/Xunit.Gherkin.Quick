@@ -20,12 +20,11 @@ namespace Xunit.Gherkin.Quick
         /// </param>
         public FeatureFileAttribute(string path)
         {
-            Path = path ?? throw new ArgumentNullException(nameof(path));
+            Path = !string.IsNullOrWhiteSpace(path) 
+                ? path 
+                : throw new ArgumentNullException(nameof(path));
         }
 
-        /// <summary>
-        /// Gets path to feature file.
-        /// </summary>
-        public string Path { get; }
+        internal string Path { get; }
     }
 }

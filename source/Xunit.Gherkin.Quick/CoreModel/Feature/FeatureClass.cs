@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -30,11 +29,7 @@ namespace Xunit.Gherkin.Quick
                 throw new ArgumentNullException(nameof(featureInstance));
 
             Type featureType = featureInstance.GetType();
-
-            var featureFileAttribute = featureType
-                .GetTypeInfo()
-                .GetCustomAttribute<FeatureFileAttribute>();
-            var featureFilePath = featureFileAttribute?.Path ?? $"{featureType.Name}.feature";
+            var featureFilePath = FeatureClassInfo.FromFeatureClassType(featureType).FeatureFilePath;
 
             var stepMethods = featureType.GetTypeInfo().GetMethods()
                 .Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))

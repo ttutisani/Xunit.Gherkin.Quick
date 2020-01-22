@@ -1,11 +1,23 @@
 ﻿using Gherkin;
 using Gherkin.Ast;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureFileRepository : IFeatureFileRepository
     {
+        private readonly string _featureFileSearchPattern;
+
+        public FeatureFileRepository(string featureFileSearchPattern)
+        {
+            _featureFileSearchPattern = !string.IsNullOrWhiteSpace(featureFileSearchPattern)
+                ? featureFileSearchPattern 
+                : throw new ArgumentNullException(nameof(featureFileSearchPattern));
+        }
+
         public FeatureFile GetByFilePath(string filePath)
         {
             var gherkinDocument = ParseGherkinDocument(filePath);
@@ -23,6 +35,15 @@ namespace Xunit.Gherkin.Quick
                     return gherkinDocument;
                 }
             }
+        }
+
+        public List<string> GetFeatureFilePaths()
+        {
+            var featureFilePaths = Directory.GetFiles("./", _featureFileSearchPattern, SearchOption.AllDirectories)
+                .Select(p => p.Replace('\\', '/'))
+                .ToList();
+
+            return featureFilePaths;
         }
     }
 }

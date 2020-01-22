@@ -48,9 +48,11 @@ Scenario: Add two numbers
 
 This is a BDD style feature written in [Gherkin language](https://docs.cucumber.io/gherkin/reference/).
 
-**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to *Copy Always* or *Copy if Newer*. See [Copying feature files](/docs/copying-feature-files.md) for more options.
+**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to *Copy Always* or *Copy if Newer*. See [Copying Feature Files](/docs/copying-feature-files.md) for more options.
 
 Now it's time to implement the code to run scenarios of this feature.
+
+**Note**: at this point, the new feature file's scenarios will not be discovered by the test runner either via Visual Studio or via the command line execution. By default, you need to have a corresponding feature class in your project which refers to this new feature file. If you want to instead see every new feature file's scenarios right after they are added without the necessity to have the corresponding feature class, please see [Handling Not-Implemented Feature Files](/docs/handle-not-implemented-feature-files.md).
 
 ### Implement Feature Scenario
 
@@ -140,6 +142,7 @@ Specifically:
 
 ## See Also
 
+- [Handling Not-Implemented Feature Files](/docs/handle-not-implemented-feature-files.md)
 - [Step Attributes (Given, When, Then, And, But) usage instructions](/docs/step-attributes.md)
 - [DataTable Argument usage instructions](/docs/datatable-argument.md)
 - [DocString (multi-line text) Argument usage instructions](/docs/docstring-argument.md)
