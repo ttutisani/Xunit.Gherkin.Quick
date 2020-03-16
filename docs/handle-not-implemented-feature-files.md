@@ -27,7 +27,7 @@ Feature: Math with Infinity
 	As a regular human
 	I want to add two numbers using Calculator
 
-@addition @ignore
+@ignore
 Scenario: Add a number to infinity
 	Given I chose INFINITY as first number
 	And I chose 15 as second number
@@ -40,7 +40,7 @@ Scenario Outline: Infinity math with examples
 	When I press add
 	Then the result should be <sum> on the screen
 
-	@addition @ignore
+	@ignore
 	Examples:
 		| a        | b        | sum      |
 		| 0        | INFINITY | INFINITY |
