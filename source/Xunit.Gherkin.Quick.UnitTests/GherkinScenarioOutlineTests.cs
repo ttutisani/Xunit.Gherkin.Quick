@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gherkin.Ast;
+using System;
 using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -173,6 +174,77 @@ namespace UnitTests
                 Assert.NotSame(other, step);
                 Assert.Equal(keyword, step.Keyword);
                 Assert.Equal(text, step.Text);
+            }
+        }
+
+        [Fact]
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_DataTable_In_Step()
+        {
+            //arrange.
+            var sut = new Gherkin.Ast.ScenarioOutline(
+                null,
+                null,
+                null,
+                "outline123",
+                null,
+                new Gherkin.Ast.Step[]
+                {
+                    new Gherkin.Ast.Step(null, "Given", "I pass a datatable with tokens", new DataTable(new []
+                    {
+                        new TableRow(null, new[] { new TableCell(null, "Column1"), new TableCell(null, "Column2") }),
+                        new TableRow(null, new[] { new TableCell(null, "<a>"), new TableCell(null, "data with <b> in the middle") }),
+                        new TableRow(null, new[] { new TableCell(null, "<b>"), new TableCell(null, "<a>") })
+                    })),
+                    new Gherkin.Ast.Step(null, "When", "I apply a sample row", null),
+                    new Gherkin.Ast.Step(null, "Then", "the data table should be populated", null),
+                },
+                new Gherkin.Ast.Examples[]
+                {
+                    new Gherkin.Ast.Examples(
+                        null,
+                        null,
+                        null,
+                        "existing example",
+                        null,
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "a"),
+                            new Gherkin.Ast.TableCell(null, "b"),
+                        }),
+                        new Gherkin.Ast.TableRow[]
+                        {
+                            new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                            {
+                                new Gherkin.Ast.TableCell(null, "1"),
+                                new Gherkin.Ast.TableCell(null, "2")
+                            })
+                        })
+                });
+
+            //act.
+            var scenario = sut.ApplyExampleRow("existing example", 0);
+
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.Equal(sut.Name, scenario.Name);
+            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
+            Assert.Equal(3, scenario.Steps.Count());
+
+            var scenarioSteps = scenario.Steps.ToList();
+
+            Assert.IsType<DataTable>(scenarioSteps[0].Argument);
+            var dataTable = (DataTable)scenarioSteps[0].Argument;
+            var rows = dataTable.Rows.ToList();
+
+            ValidateRow(rows[0], "Column1", "Column2");
+            ValidateRow(rows[1], "1", "data with 2 in the middle");
+            ValidateRow(rows[2], "2", "1");
+
+            void ValidateRow(TableRow row, string expectedColumn0Value, string expectedColumn1Value)
+            {
+                var cells = row.Cells.ToArray();
+                Assert.Equal(cells[0].Value, expectedColumn0Value);
+                Assert.Equal(cells[1].Value, expectedColumn1Value);
             }
         }
     }
