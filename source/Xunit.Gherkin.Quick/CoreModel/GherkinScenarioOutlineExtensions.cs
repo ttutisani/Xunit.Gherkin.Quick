@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DataTable = Gherkin.Ast.DataTable;
+using TableRow = Gherkin.Ast.TableRow;
+using TableCell = Gherkin.Ast.TableCell;
+
 
 namespace Xunit.Gherkin.Quick
 {
@@ -46,23 +50,49 @@ namespace Xunit.Gherkin.Quick
 
         private static global::Gherkin.Ast.Step DigestExampleValuesIntoStep(global::Gherkin.Ast.ScenarioOutline @this, string exampleName, int exampleRowIndex, Dictionary<string, string> rowValues, global::Gherkin.Ast.Step outlineStep)
         {
-            var stepText = _placeholderRegex.Replace(outlineStep.Text,
-                                match =>
-                                {
-                                    var placeholderKey = match.Groups[1].Value;
-                                    if (!rowValues.ContainsKey(placeholderKey))
-                                        throw new InvalidOperationException($"Examples table did not provide value for `{placeholderKey}`. Scenario outline: `{@this.Name}`. Examples: `{exampleName}`. Row index: {exampleRowIndex}.");
+            string matchEvaluator(Match match)
+            {
+                var placeholderKey = match.Groups[1].Value;
+                if (!rowValues.ContainsKey(placeholderKey))
+                    throw new InvalidOperationException($"Examples table did not provide value for `{placeholderKey}`. Scenario outline: `{@this.Name}`. Examples: `{exampleName}`. Row index: {exampleRowIndex}.");
 
-                                    var placeholderValue = rowValues[placeholderKey];
+                var placeholderValue = rowValues[placeholderKey];
 
-                                    return placeholderValue;
-                                });
+                return placeholderValue;
+            }
+
+            var stepText = _placeholderRegex.Replace(outlineStep.Text, matchEvaluator);
+
+            var stepArgument = outlineStep.Argument;
+
+            if (stepArgument is DataTable)
+            {
+                var processedHeaderRow = false;
+
+                var digestedRows = new List<TableRow>();
+                
+                foreach(var row in ((DataTable)stepArgument).Rows)
+                {
+                    if (!processedHeaderRow)
+                    {
+                        digestedRows.Add(row);
+                        processedHeaderRow = true;
+                    }
+                    else
+                    {
+                        var digestedCells = row.Cells.Select(r => new TableCell(r.Location, _placeholderRegex.Replace(r.Value, matchEvaluator)));
+                        digestedRows.Add(new TableRow(row.Location, digestedCells.ToArray()));
+                    }
+                }
+
+                stepArgument = new DataTable(digestedRows.ToArray());
+            }
 
             var scenarioStep = new global::Gherkin.Ast.Step(
                 outlineStep.Location,
                 outlineStep.Keyword,
                 stepText,
-                outlineStep.Argument);
+                stepArgument);
             return scenarioStep;
         }
 
