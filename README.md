@@ -24,7 +24,7 @@ Install-Package Xunit.Gherkin.Quick
 dotnet add package Xunit.Gherkin.Quick
 ```
 
-That should be it, but if you need more info about installation or the nuget package, click here: https://www.nuget.org/packages/Xunit.Gherkin.Quick/
+These steps should take care of the installation, but if you need more info about setup or the nuget package, click here: https://www.nuget.org/packages/Xunit.Gherkin.Quick/
 
 ### Create Gherkin feature file
 
