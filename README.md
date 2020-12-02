@@ -30,6 +30,8 @@ These steps should take care of the installation, but if you need more info abou
 
 Create a new text file. Name it as `AddTwoNumbers.feature`.
 
+**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to *Copy Always* or *Copy if Newer*. See [Copying Feature Files](/docs/copying-feature-files.md) for more options.
+
 _NOTE: In practice, you can name your files in any way you want, and .feature extension is not necessary either._
 
 Copy the below code and paste it into your feature file:
@@ -47,8 +49,6 @@ Scenario: Add two numbers
 ```
 
 This is a BDD style feature written in [Gherkin language](https://docs.cucumber.io/gherkin/reference/).
-
-**Important**: change feature file properties to ensure it gets copied into output directory. Set the value of `Copy to Output Directory` to *Copy Always* or *Copy if Newer*. See [Copying Feature Files](/docs/copying-feature-files.md) for more options.
 
 Now it's time to implement the code to run scenarios of this feature.
 
