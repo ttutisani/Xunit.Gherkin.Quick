@@ -22,6 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ReuseStepsAcrossFeatures\Concatenation.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReuseStepsAcrossFeatures\InverseConcatenation.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ScenarioBackground\AddNumbersTo5.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
