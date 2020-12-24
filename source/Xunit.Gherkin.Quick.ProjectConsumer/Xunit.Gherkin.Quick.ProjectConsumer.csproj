@@ -22,16 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Addition\AddNumbersTo5.feature">
+    <None Update="ScenarioBackground\AddNumbersTo5.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Addition\MathWithInfinity.feature">
+    <None Update="HandlingNotImplementedFeatures\MathWithInfinity.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Addition\Async\AddTwoNumbersAsync.feature">
+    <None Update="Async\AddTwoNumbersAsync.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Addition\AddTwoNumbers.feature">
+    <None Update="Addition_ForMultipleUseCases\AddTwoNumbers.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="BeforeAfterHooks\BeforeAfter.feature">
@@ -55,7 +55,7 @@
     <None Update="TestOutput\OutputMessages.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Texts\TextBuilder.feature">
+    <None Update="DocString\TextBuilder.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

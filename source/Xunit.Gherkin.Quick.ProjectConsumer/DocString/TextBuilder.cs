@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Texts
 {
-    [FeatureFile("./Texts/TextBuilder.feature")]
+    [FeatureFile("./DocString/TextBuilder.feature")]
     public sealed class TextBuilder : Feature
     {
         private StringBuilder _textBuilder;
