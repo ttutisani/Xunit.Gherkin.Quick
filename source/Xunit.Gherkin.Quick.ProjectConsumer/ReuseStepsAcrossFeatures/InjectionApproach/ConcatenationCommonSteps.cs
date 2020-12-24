@@ -22,7 +22,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.Injection
 
         public string ConcatenationRsult { get; private set; }
 
-        //hack: this will not need to exist in real tests.
+        //HACK: this will not need to exist in real tests.
         public void SetConcatenationResult(string result)
         {
             ConcatenationRsult = result;

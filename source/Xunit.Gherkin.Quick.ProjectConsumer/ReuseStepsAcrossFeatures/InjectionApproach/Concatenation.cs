@@ -23,7 +23,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.Injection
         [When(@"I ask to concatenate")]
         public void When_I_ask_to_concatenate()
         {
-            //Hack: must call an application to calculate result.
+            //HACK: must call an application to calculate result.
             _steps.SetConcatenationResult($"{_steps.FirstName} {_steps.LastName}");
         }
 
