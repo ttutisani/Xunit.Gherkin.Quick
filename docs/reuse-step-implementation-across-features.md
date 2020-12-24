@@ -2,7 +2,7 @@
 
 Let us assume that we need to implement two Gherkin features that sound almost identical. You might want to avoid code duplication and reuse the implementation across feature classes in such a situation.
 
-Below are the two features with identical Gherkin text.
+Below are the two features with almost identical Gherkin text, except for the "When" step.
 
 Feature one:
 
