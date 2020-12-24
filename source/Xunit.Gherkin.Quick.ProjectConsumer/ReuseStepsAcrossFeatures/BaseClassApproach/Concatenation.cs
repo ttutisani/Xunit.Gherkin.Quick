@@ -10,7 +10,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.BaseClass
         [When(@"I ask to concatenate")]
         public void When_I_ask_to_concatenate()
         {
-            //Hack: must call an application to calculate result.
+            //HACK: must call an application to calculate result.
             base.SetConcatenationResult($"{base.FirstName} {base.LastName}");
         }
     }
