@@ -24,6 +24,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.BaseClass
 
         private string _concatenationRsult;
 
+        //hack: this will not need to exist in real tests.
         protected void SetConcatenationResult(string result)
         {
             _concatenationRsult = result;
