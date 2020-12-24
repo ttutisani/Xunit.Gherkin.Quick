@@ -38,8 +38,8 @@ As you can see, the two scenarios that we need to implement have identical steps
 
 In Xunit.Gherkin.Quick, there are two options for achieving this objective:
 
-a) Inheriting from a common base class, or 
-b) Injecting a class with common code in it.
+- Inheriting from a common base class, or 
+- Injecting a class with common code in it.
 
 ## Option 1: Inheriting from Common Base Class
 
