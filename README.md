@@ -153,6 +153,7 @@ Specifically:
 - [Ignoring Scenario, Scenario Outline, Examples, or Feature](/docs/ignore-scenario.md)
 - [Star Notation Support - How to Skip Keywords in Scenario Steps](/docs/star-notation.md)
 - [Shared Step Method With Multiple Step Attributes](/docs/shared-step-method.md)
+- [Reusing step implementation across features](/docs/reuse-step-implementation-across-features.md)
 - [Before and After Scenario Execution Hooks](/docs/before-after-scenario-hooks.md)
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
