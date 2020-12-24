@@ -37,9 +37,6 @@
     <None Update="BeforeAfterHooks\BeforeAfter.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Discounts\Discounts.feature">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="GivenWhenThenTests\EnsureOrderOfSteps.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
