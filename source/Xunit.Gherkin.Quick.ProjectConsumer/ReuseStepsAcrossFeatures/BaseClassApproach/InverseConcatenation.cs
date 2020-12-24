@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures
+namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.BaseClassApproach
 {
     [FeatureFile("./ReuseStepsAcrossFeatures/InverseConcatenation.feature")]
     public sealed class InverseConcatenation : ConcatenationBase
@@ -10,6 +10,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures
         [When(@"I ask to inverse concatenate")]
         public void When_I_ask_to_inverse_concatenate()
         {
+            //Hack: must call an application to calculate result.
             base.SetConcatenationResult($"{base.LastName}, {base.FirstName}");
         }
     }

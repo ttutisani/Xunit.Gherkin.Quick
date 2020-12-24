@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures
+namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.BaseClassApproach
 {
     public abstract class ConcatenationBase : Feature
     {
