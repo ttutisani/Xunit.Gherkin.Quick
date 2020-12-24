@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures
+namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.InjectionApproach
 {
     [FeatureFile("./ReuseStepsAcrossFeatures/Concatenation.feature")]
     public sealed class Concatenation : Feature, IClassFixture<ConcatenationCommonSteps>
