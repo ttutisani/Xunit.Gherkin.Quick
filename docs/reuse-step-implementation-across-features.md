@@ -36,7 +36,10 @@ Scenario: Name with Last First
 
 As you can see, the two scenarios that we need to implement have identical steps, except the "When" part. Since all other steps sound similar, we could share their implementation code too.
 
-In Xunit.Gherkin.Quick, there are two options for achieving this objective: inheriting from a common base class or injecting a class with common code in it.
+In Xunit.Gherkin.Quick, there are two options for achieving this objective:
+
+a) Inheriting from a common base class, or 
+b) Injecting a class with common code in it.
 
 ## Option 1: Inheriting from Common Base Class
 
