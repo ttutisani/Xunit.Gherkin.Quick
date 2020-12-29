@@ -96,7 +96,7 @@ public sealed class AddTwoNumbers : Feature
 
 Notice a couple of things:
 
-- `FeatureFile` attribute for the class refers to the feature file location (**relative to the output folder, not relative to the class file**). You don't need to apply this attribute if you keep your feature files in the root directory of your project, because that's where it will be located by default. Buf if you keep it under a sub-folder (which I do), then make sure to specify the file location (either relative or absolute) using this attribute.
+- `FeatureFile` attribute for the class refers to the feature file location (**relative to the project root, not relative to the class file**). You don't need to apply this attribute if you keep your feature files in the root directory of your project, because that's where it will be located by default. Buf if you keep it under a sub-folder (which I do), then make sure to specify the file location (either relative or absolute) using this attribute.
 
 - `Given`, `When` and `Then` attributes specify scenario step text which they need to match. If you want to extract value from the text, you need to use parentheses. Behind the scenes this is done using [.NET Regex syntax](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference). Regex group values are passed as argument values. You can also use `And` and `But` attributes, which work similarly.
 
