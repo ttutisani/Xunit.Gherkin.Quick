@@ -150,7 +150,7 @@ Specifically:
 - [cathalmchale](https://github.com/cathalmchale)
 - [ahmadnazir](https://github.com/ahmadnazir)
 
-## See Also
+## Documentation and Reference
 
 - [Handling Not-Implemented Feature Files](/docs/handle-not-implemented-feature-files.md)
 - [Step Attributes (Given, When, Then, And, But) usage instructions](/docs/step-attributes.md)
@@ -170,6 +170,9 @@ Specifically:
 - [Copying feature files](/docs/copying-feature-files.md)
 - [Feature file character encoding](/docs/encoding-feature-files.md)
 - [Domain Model (for contributors)](/contribution/domain-model.md)
+
+## See Also
+
 - [Versions](/versions)
 - [Who uses Xunit.Gherkin.Quick and why?](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues/75)
 - [Xunit.Gherkin.Quick on StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick)
