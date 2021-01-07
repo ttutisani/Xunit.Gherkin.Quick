@@ -3,14 +3,24 @@
 # Xunit.Gherkin.Quick
 Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets .NET Standard, can be used from both .NET and .NET Core test projects). It parses Gherkin language and executes Xunit tests corresponding to scenarios.
 
+## Project Sponsors
+
+Showcase your company's logo here by sponsoring this project!
+
+Do you like Xunit.Gherkin.Quick? Many engineers love it, and it can be even better! Support us by becoming a sponsor, and we will pay back with more dedication, exciting features, and improved support (if you need one). So far, this project runs on a bere enthusiasm, and we do our best to continue development.
+
+If you want to become a sponsor, you can find a sponsoring link on this page, and [contact us](https://www.nuget.org/packages/Xunit.Gherkin.Quick/4.0.0/ContactOwners) to provide your logo and details.
+
+Thank you!
+
 ## Getting Started
 We'll quickly setup our project, write our first BDD test, and then run it.
 
-### Xunit test project
+#### Xunit test project
 
 Create a new or open existing Xunit test project. `Xunit.Gherkin.Quick` needs to be used with Xunit.
 
-### Install nuget package
+#### Install nuget package
 
 Package name to search for through GUI: `Xunit.Gherkin.Quick`
 
@@ -26,7 +36,7 @@ dotnet add package Xunit.Gherkin.Quick
 
 These steps should take care of the installation, but if you need more info about setup or the nuget package, click here: https://www.nuget.org/packages/Xunit.Gherkin.Quick/
 
-### Create Gherkin feature file
+#### Create Gherkin feature file
 
 Create a new text file. Name it as `AddTwoNumbers.feature`.
 
@@ -54,7 +64,7 @@ Now it's time to implement the code to run scenarios of this feature.
 
 **Note**: at this point, the new feature file's scenarios will not be discovered by the test runner either via Visual Studio or via the command line execution. By default, you need to have a corresponding feature class in your project which refers to this new feature file. If you want to instead see every new feature file's scenarios right after they are added without the necessity to have the corresponding feature class, please see [Handling Not-Implemented Feature Files](/docs/handle-not-implemented-feature-files.md).
 
-### Implement Feature Scenario
+#### Implement Feature Scenario
 
 Implementing a scenario simply means writing methods in the `Feature`-derived class. Goal is to ensure that each scenario step above will match a method by using regex syntax. If we miss a step and it does not match a method, we will receive an error when we try to run the scenario test.
 
@@ -102,7 +112,7 @@ Notice a couple of things:
 
 - Scenario step method can be `async`, or can be a regular method, just as shown in the example above.
 
-### Run Scenario
+#### Run Scenario
 
 Build BDD tests project.
 
@@ -114,7 +124,7 @@ Unit test name in this case will be "AddTwoNumbers :: Add two numbers", which is
 
 ![Screenshot of scenario test run](scenario-test-run-screenshot.png)
 
-### Add More Scenarios
+#### Add More Scenarios
 
 If the feature has multiple scenarios, add them to the same feature file. They will show up as additional tests in the test explorer. And they will need additional methods in the same feature class for execution.
 
