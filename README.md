@@ -7,7 +7,7 @@ Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets
 
 Showcase your company's logo here by sponsoring this project!
 
-Do you like Xunit.Gherkin.Quick? Many engineers love it, and it can be even better! Support us by becoming a sponsor, and we will pay back with more dedication, exciting features, and improved support (if you need one). So far, this project runs on a bere enthusiasm, and we do our best to continue development.
+Do you like Xunit.Gherkin.Quick? Many engineers love it, and it can be even better! Support us by becoming a sponsor, and we will pay back with more dedication, exciting features, and improved support (if you need one). So far, this project runs on a bare enthusiasm, and we do our best to continue development.
 
 If you want to become a sponsor, you can find a sponsoring link on this page, and [contact us](https://www.nuget.org/packages/Xunit.Gherkin.Quick/4.0.0/ContactOwners) to provide your logo and details.
 
