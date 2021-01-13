@@ -1,4 +1,6 @@
-Nuget: [![Xunit.Gherkin.Quick on Nuget](https://img.shields.io/nuget/v/Xunit.Gherkin.Quick.svg?style=flat-square)](https://www.nuget.org/packages/Xunit.Gherkin.Quick/) | Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/d8twk1y4k55s2f53/branch/master?svg=true)](https://ci.appveyor.com/project/ttutisani/xunit-gherkin-quick/branch/master)
+Nuget: [![Xunit.Gherkin.Quick on Nuget](https://img.shields.io/nuget/v/Xunit.Gherkin.Quick.svg?style=flat-square)](https://www.nuget.org/packages/Xunit.Gherkin.Quick/) [![Xunit.Gherkin.Quick Downloads on Nuget](https://img.shields.io/nuget/dt/Xunit.Gherkin.Quick.svg)](https://www.nuget.org/packages/Xunit.Gherkin.Quick/)
+
+Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/d8twk1y4k55s2f53/branch/master?svg=true)](https://ci.appveyor.com/project/ttutisani/xunit-gherkin-quick/branch/master)
 
 ------
 
