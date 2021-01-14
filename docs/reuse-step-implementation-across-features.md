@@ -21,7 +21,7 @@ Scenario: Name with First Last
 
 Feature two:
 
-```
+```Gherkin
 Feature: Concatenation
 	As a text fan
 	I want to experiment with concatenation
