@@ -82,7 +82,7 @@ public abstract class ConcatenationBase : Feature
 
 We can now start implementing the originally shown two features via their designated feature classes. Since we inherit from the above base class, most of the work is already done thanks to the inheritance (child classes inherit all members of a base class).
 
-The derived classes need to implement the "when" step that is different between the features. Below is a sample implementation of both feature classes.
+The derived classes need to implement only the "when" step that is different between the features. Below is a sample implementation of both feature classes.
 
 Feature one:
 
