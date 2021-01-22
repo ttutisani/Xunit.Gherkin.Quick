@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -12,8 +13,8 @@ namespace UnitTests
         {
             //arrange.
             var target = new ClassWithMethod();
-            var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
-            var other = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
+            var sut = MethodInfoWrapper.FromMethodInfo(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
+            var other = MethodInfoWrapper.FromMethodInfo(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
 
             //act.
             var same = sut.IsSameAs(other) && other.IsSameAs(sut);
@@ -27,7 +28,7 @@ namespace UnitTests
         {
             //arrange.
             var target = new ClassWithMethod();
-            var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
+            var sut = MethodInfoWrapper.FromMethodInfo(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
 
             //act.
             var name = sut.GetMethodName();
@@ -41,7 +42,7 @@ namespace UnitTests
         {
             //arrange.
             var target = new ClassWithMethod();
-            var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
+            var sut = MethodInfoWrapper.FromMethodInfo(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCall)), target);
 
             //act.
             await sut.InvokeMethodAsync(null);
@@ -55,7 +56,7 @@ namespace UnitTests
         {
             //arrange.
             var target = new ClassWithMethod();
-            var sut = new MethodInfoWrapper(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCallAsync)), target);
+            var sut = MethodInfoWrapper.FromMethodInfo(target.GetType().GetMethod(nameof(ClassWithMethod.MethodToCallAsync)), target);
 
             //act.
             await sut.InvokeMethodAsync(null);
@@ -80,6 +81,26 @@ namespace UnitTests
                     Thread.Sleep(100); //intentional delay - to imitate truly async operation.
                     Called = true;
                 });
+            }
+        }
+
+        [Fact]
+        public void FromMethodInfo_DoesNotAllow_AsyncVoid_Steps()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithAsyncVoidStep();
+            var methodInfoWithAsyncVoid = typeof(FeatureWithAsyncVoidStep).GetMethod(nameof(FeatureWithAsyncVoidStep.StepWithAsyncVoid));
+
+            //act / assert.
+            Assert.Throws<InvalidOperationException>(() => MethodInfoWrapper.FromMethodInfo(methodInfoWithAsyncVoid, featureInstance));
+        }
+
+        private sealed class FeatureWithAsyncVoidStep : Feature
+        {
+            [Given("Any step text")]
+            public async void StepWithAsyncVoid()
+            {
+                await Task.CompletedTask;
             }
         }
     }

@@ -369,6 +369,26 @@ in it";
         }
 
         [Fact]
+        public void FromMethodInfo_DoesNotAllow_AsyncAvoid_Steps()
+        {
+            //arrange.
+            var featureInstance = new FeatureWithAsyncVoidStep();
+            var methodInfo = typeof(FeatureWithAsyncVoidStep).GetMethod(nameof(FeatureWithAsyncVoidStep.StepWithAsyncVoid));
+
+            //act / assert.
+            Assert.Throws<InvalidOperationException>(() => StepMethodInfo.FromMethodInfo(methodInfo, featureInstance));
+        }
+
+        private sealed class FeatureWithAsyncVoidStep : Feature
+        {
+            [Given("Any step text")]
+            public async void StepWithAsyncVoid()
+            {
+                await Task.CompletedTask;
+            }
+        }
+
+        [Fact]
         public void GetMethodName_Returns_Wrapped_Method_Name()
         {
             //arrange.

@@ -57,7 +57,7 @@ namespace Xunit.Gherkin.Quick
             return new StepMethodInfo(
                 ScenarioStepPattern.ListFromStepAttributes(stepDefinitionAttribute),
                 StepMethodArgument.ListFromMethodInfo(methodInfo),
-                new MethodInfoWrapper(methodInfo, featureInstance));
+                MethodInfoWrapper.FromMethodInfo(methodInfo, featureInstance));
         }
 
         public bool IsSameAs(StepMethodInfo other)
