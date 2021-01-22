@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -44,6 +45,24 @@ namespace UnitTests
         private sealed class FeatureWithFilePath : Feature
         {
             public const string PathFor_FeatureWithFilePath = "some file path const 123";
+        }
+
+        [Fact]
+        public void FromFeatureInstance_DoesNotAllow_AsyncVoid_Steps()
+        {
+            var featureInstance = new FeatureWithAsyncVoidStep();
+
+            //act / assert.
+            Assert.Throws<InvalidOperationException>(() => FeatureClass.FromFeatureInstance(featureInstance));
+        }
+
+        private sealed class FeatureWithAsyncVoidStep : Feature
+        {
+            [Given("Any step text")]
+            public async void StepWithAsyncVoid()
+            {
+                await Task.CompletedTask;
+            }
         }
 
         [Fact]

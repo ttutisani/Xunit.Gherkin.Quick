@@ -20,7 +20,7 @@
 <XPD:OBJ name="DiagramView" type="UMLClassDiagramView" guid="/56oiJMtVEO/mR7ss8L8vwAA">
 <XPD:REF name="Model">mcr9R//xiEOQgIXcsWmLUAAA</XPD:REF>
 <XPD:REF name="Diagram">mcr9R//xiEOQgIXcsWmLUAAA</XPD:REF>
-<XPD:ATTR name="#OwnedViews" type="integer">32</XPD:ATTR>
+<XPD:ATTR name="#OwnedViews" type="integer">34</XPD:ATTR>
 <XPD:OBJ name="OwnedViews[0]" type="UMLClassView" guid="Quzuc+JQa0OX1IKgCcoH9gAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
@@ -1155,6 +1155,31 @@ without passing owning object instance.
 <XPD:ATTR name="Distance" type="real">15</XPD:ATTR>
 <XPD:REF name="Model">omzJLwiCtkq6MyPurSI1cQAA</XPD:REF>
 </XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedViews[32]" type="UMLNoteView" guid="3ScQOsU5MUGKuZrtPS6UggAA">
+<XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
+<XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
+<XPD:ATTR name="Left" type="integer">1472</XPD:ATTR>
+<XPD:ATTR name="Top" type="integer">556</XPD:ATTR>
+<XPD:ATTR name="Width" type="integer">295</XPD:ATTR>
+<XPD:ATTR name="Height" type="integer">143</XPD:ATTR>
+<XPD:ATTR name="Text" type="string">This class is a compile-time step method info.
+However, after it digests the argument info
+(via DigestScenarioStepValues method),
+it becomes the runtime entity that can be executed.
+Without digesting the values, it cannot be executed.
+
+Two roles of this class explain why both the FeatureClass
+(i.e., compile time) and StepMethod (i.e., run-time)
+reference it.
+</XPD:ATTR>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedViews[33]" type="UMLNoteLinkView" guid="ngOz2iSp0UKAZxSKBo9MXQAA">
+<XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
+<XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">1627,467;1623,556</XPD:ATTR>
+<XPD:REF name="Head">3ScQOsU5MUGKuZrtPS6UggAA</XPD:REF>
+<XPD:REF name="Tail">/ZdbEbpgpkOlLS46JAUFWwAA</XPD:REF>
 </XPD:OBJ>
 </XPD:OBJ>
 </XPD:OBJ>

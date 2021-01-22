@@ -640,5 +640,26 @@ namespace UnitTests
                 CallStack.Add(new KeyValuePair<string, object[]>(nameof(I_Have_Some_Cukes), null));
             }
         }
+
+        [Fact]
+        public async Task ExecuteScenario_DoesNotAllow_AsyncVoid_Steps()
+        {
+            //arrange.
+            var feature = new FeatureWithAsyncVoidStep();
+            var output = new Mock<ITestOutputHelper>();
+            feature.InternalOutput = output.Object;
+
+            //act / assert.
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _sut.ExecuteScenarioAsync(feature, "S"));
+        }
+
+        private sealed class FeatureWithAsyncVoidStep : Feature
+        {
+            [Given("Any step text")]
+            public async void StepWithAsyncVoid()
+            {
+                await Task.CompletedTask;
+            }
+        }
     }
 }
