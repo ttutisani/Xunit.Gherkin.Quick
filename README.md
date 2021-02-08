@@ -16,6 +16,9 @@ NOTE: If you want to become a sponsor, you can find a sponsoring link on this pa
 Thank you for consideration, and enjoy the framework!
 
 ## Getting Started
+
+*Prefer video format?* Watch how to get started with [BDD and Xunit.Gherkin.Quick on Youtube](https://youtu.be/RBcJYt2g_gE).
+
 We'll quickly setup our project, write our first BDD test, and then run it.
 
 #### Xunit test project
