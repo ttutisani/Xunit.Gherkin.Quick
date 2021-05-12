@@ -27,7 +27,7 @@ Scenario Outline: Add two numbers with examples
 		| 9999 | 1 | 10000 |
 ```
 
-In the example below, just to demonstrate what all you can do, we have split the examples into separate tables, each having a name (optional - first one does not have a name).
+In the example above, just to demonstrate what all you can do, we have split the examples into separate tables, each having a name (optional - first one does not have a name).
 
 When you define such scenario outline, it will turn into 6 different tests after compilation (2 example rows for each table).
 
