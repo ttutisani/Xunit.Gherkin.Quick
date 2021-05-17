@@ -32,12 +32,13 @@ Here are commonly seen use cases that need to be handled carefully, accounting R
 | Given Coffee costs $5.00 today | Given(@"Coffee costs \\$([\d\\.]+) today") | decimal | 5.00 |
 | Given Coffee costs $5.00 today | Given(@"Coffee costs $([\d\\.]+) today") | any type | error: will not match dollar sign |
 | Given Coffee costs $5.00 today | Given(@"Coffee costs ([\d\\.]+) today") | any type | error: will not match dollar sign |
+| Given My Brothers' names are Kevin, Lucas, Paul | Given(@"My Brothers' names are ((?:\w+,\s*)+\w+)") | string | Kevin, Lucas, Paul|
 
 ## Special characters within scenario steps
 
 Some texts will use BDD notation in the form:
 
-```
+```Gherkin
 Scenario: Adding two tuples
   Given a1 <- tuple(3, -2, 5, 1)
     And a2 <- tuple(-2, 3, 1, 0)
@@ -48,7 +49,7 @@ For the most part the *feature* files are plain text and this syntax will be acc
 
 Consider keeping the notation simple and avoid all special characters e.g.:
 
-```
+```Gherkin
 Scenario: Adding two tuples
   Given a1 equals tuple 3 -2 5 1
     And a2 equals tuple -2 3 1 0
