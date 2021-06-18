@@ -7,7 +7,7 @@ Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/d8twk
 # Xunit.Gherkin.Quick
 Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets .NET Standard, can be used from both .NET and .NET Core test projects). It parses Gherkin language and executes Xunit tests corresponding to scenarios.
 
-Key difference of Xunit.Gherkin.Quick from other BDD frameworks are:
+Key differences of Xunit.Gherkin.Quick from other BDD frameworks are:
 
 - You write your expectations in a human-readable Gherkin language, not in code. This approach allows separation of concerns and responsibilities between requirement and code writing.
 - Xunit.Gherkin.Quick is a lightweight framework. No auto-generated code that you fear to change; no Visual Studio dependency where the auto-generation works. With Xunit.Gherkin.Quick, you don't even need an IDE - one could write feature text files in a notepad, and code in any dev plugin; then run tests via .NET Core CLI.
