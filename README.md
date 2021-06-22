@@ -12,7 +12,7 @@ Key differences of Xunit.Gherkin.Quick from other BDD frameworks are:
 - You write your expectations in a human-readable Gherkin language, not in code. This approach allows separation of concerns and responsibilities between requirement and code writing.
 - Xunit.Gherkin.Quick is a lightweight framework. No auto-generated code that you fear to change; no Visual Studio dependency where the auto-generation works. With Xunit.Gherkin.Quick, you don't even need an IDE - one could write feature text files in a notepad, and code in any dev plugin; then run tests via .NET Core CLI.
 - Supports full spectrum of Gherkin language idioms such as Given/When/Then/And/But/* keywords, Scenario Outlines, Scenario Backgrounds, and native Gherkin argument types (DocString, DataTable).
-- All supported features are fully documented. Scroll down to the Documentation and Referencese section after going through the Getting Started topic on this page.
+- All supported features are fully documented. Scroll down to the Documentation and Reference section after going through the Getting Started topic on this page.
 
 Enjoy coding!
 
