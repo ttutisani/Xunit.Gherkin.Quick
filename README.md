@@ -1,3 +1,17 @@
+- [Xunit.Gherkin.Quick](#xunitgherkinquick)
+  - [Project Sponsors](#project-sponsors)
+  - [Getting Started](#getting-started)
+      - [Xunit Test Project](#xunit-test-project)
+      - [Install Nuget Package](#install-nuget-package)
+      - [Create Gherkin Feature File](#create-gherkin-feature-file)
+      - [Implement Feature Scenario](#implement-feature-scenario)
+      - [Run Scenario](#run-scenario)
+      - [Add More Scenarios](#add-more-scenarios)
+  - [Got Stuck?](#got-stuck)
+  - [Special Thanks](#special-thanks)
+  - [Documentation and Reference](#documentation-and-reference)
+  - [See Also](#see-also)
+
 Nuget: [![Xunit.Gherkin.Quick on Nuget](https://img.shields.io/nuget/v/Xunit.Gherkin.Quick.svg?style=flat-square)](https://www.nuget.org/packages/Xunit.Gherkin.Quick/) [![Xunit.Gherkin.Quick Downloads on Nuget](https://img.shields.io/nuget/dt/Xunit.Gherkin.Quick.svg)](https://www.nuget.org/packages/Xunit.Gherkin.Quick/)
 
 Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/d8twk1y4k55s2f53/branch/master?svg=true)](https://ci.appveyor.com/project/ttutisani/xunit-gherkin-quick/branch/master)
@@ -144,7 +158,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 ## Got Stuck?
 
-Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) if your problem was already resolved. Also try [searching StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick).
+Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) if your problem was already resolved. Check out the [Samples](https://github.com/Enough7/Xunit.Gherkin.Quick/tree/master/samples) as well. Also try [searching StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick).
 
 Feel free to post your question/problem either into our [issues repository](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues), or into [StackOverflow](https://stackoverflow.com).
 
