@@ -158,7 +158,7 @@ If the feature has multiple scenarios, add them to the same feature file. They w
 
 ## Got Stuck?
 
-Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) if your problem was already resolved. Check out the [Samples](https://github.com/Enough7/Xunit.Gherkin.Quick/tree/master/samples) as well. Also try [searching StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick).
+Look into our [issues](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues) if your problem was already resolved. Check out the [Samples](https://github.com/ttutisani/Xunit.Gherkin.Quick/tree/master/samples) as well. Also try [searching StackOverflow](https://stackoverflow.com/search?q=xunit.gherkin.quick).
 
 Feel free to post your question/problem either into our [issues repository](https://github.com/ttutisani/Xunit.Gherkin.Quick/issues), or into [StackOverflow](https://stackoverflow.com).
 
