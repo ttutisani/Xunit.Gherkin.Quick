@@ -16,6 +16,21 @@ Key differences of Xunit.Gherkin.Quick from other BDD frameworks are:
 
 Enjoy coding!
 
+**Table of Contents**
+- [Xunit.Gherkin.Quick](#xunitgherkinquick)
+  - [Project Sponsors](#project-sponsors)
+  - [Getting Started](#getting-started)
+      - [Xunit Test Project](#xunit-test-project)
+      - [Install Nuget Package](#install-nuget-package)
+      - [Create Gherkin Feature File](#create-gherkin-feature-file)
+      - [Implement Feature Scenario](#implement-feature-scenario)
+      - [Run Scenario](#run-scenario)
+      - [Add More Scenarios](#add-more-scenarios)
+  - [Got Stuck?](#got-stuck)
+  - [Special Thanks](#special-thanks)
+  - [Documentation and Reference](#documentation-and-reference)
+  - [See Also](#see-also)
+
 ## Project Sponsors
 
 Showcase your company's logo here by sponsoring this project!
