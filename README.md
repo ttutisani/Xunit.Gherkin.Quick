@@ -33,11 +33,11 @@ Enjoy coding!
 
 ## Project Sponsors
 
-Showcase your company's logo here by sponsoring this project!
+**Why sponsor?** Some organizations might want to have premium support while using the framework; others might want to prioritize implementing certain new capabilities (if they fit within the framework's vision and roadmap). Without sponsoring, it is hard to commit my spare time to the new features, especially that now I am working on multiple other things too. However, the framework is fully functioning if you choose to use it though.
 
-If you want to become a sponsor, you can find a sponsoring link on this page, and [contact us](https://www.tutisani.com/contact/) to provide your logo and details.
-
-Thank you for consideration, and enjoy the framework!
+```
+This section will showcase the sponsors' logos, if they wish to do so.
+```
 
 ## Getting Started
 
