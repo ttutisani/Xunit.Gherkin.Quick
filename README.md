@@ -33,7 +33,7 @@ Enjoy coding!
 
 ## Project Sponsors
 
-**Why sponsor?** Some organizations might want to have premium support while using the framework; others might want to prioritize implementing certain new capabilities (if they fit within the framework's vision and roadmap). Without sponsoring, it is hard to commit my spare time to the new features, especially that now I am working on multiple other things too. However, the framework is fully functioning if you choose to use it though.
+**Why sponsor?** Some organizations might want to have premium support while using the framework; others might want to prioritize implementing certain new capabilities (if they fit within the framework's vision and roadmap). If you wish to be a sponsor, please find the sponsoring link on this page. Feel free to contact me for more details.
 
 ```
 This section will showcase the sponsors' logos, if they wish to do so.
