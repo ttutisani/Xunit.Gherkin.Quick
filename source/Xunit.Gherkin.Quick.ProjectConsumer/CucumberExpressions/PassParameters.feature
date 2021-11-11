@@ -4,49 +4,54 @@
 
 
 Scenario: Pass positive integer to step function
-  When I choose the integer value 10
-  Then the triple value is 30
+  When I pass the integer value 10 using cucumber expression
+  Then the received integer value is 10 using regex
 
 
 Scenario: Pass negative integer to step function
-  When I choose the integer value -22
-  Then the triple value is -66
+  When I pass the integer value -22 using cucumber expression
+  Then the received integer value is -22 using regex
 
 
 Scenario: Pass integer zero to step function
-  When I choose the integer value 0
-  Then the triple value is 0
+  When I pass the integer value 0 using cucumber expression
+  Then the received integer value is 0 using regex
 
 
 Scenario: Pass positive float to step function
-  When I choose the float value 10.25
-  Then 10.75 more is 21.00
+  When I pass the float value 10.25 using cucumber expression
+  Then the received float value is 10.25 using regex
 
 
 Scenario: Pass negative float to step function
-  When I choose the float value -20.25
-  Then 10.75 more is -9.50
+  When I pass the float value -20.25 using cucumber expression
+  Then the received float value is -20.25 using regex
 
 
 Scenario: Pass float zero to step function
-  When I choose the float value 0.0
-  Then 10.75 more is 10.75
+  When I pass the float value 0 using cucumber expression
+  Then the received float value is 0 using regex
+
+
+Scenario: Pass float zero dot zero to step function
+  When I pass the float value 0.0 using cucumber expression
+  Then the received float value is 0.0 using regex
 
 
 Scenario: Pass word to step function
-  Given the first word is Max
-  When I choose the second word Motor
-  Then the concatenation of them is MaxMotor
+  When I pass the word Max using cucumber expression
+  Then the received word is Max using regex
 
 
 Scenario: Pass string to step function
-  When I choose the string "A and B and C"
-  Then the lower case string is "a and b and c"
+  When I pass the string "11 and A B C" using cucumber expression
+  Then the received string is "11 and A B C" using regex
 
 
 Scenario: Pass empty string to step function
-  When I choose the string ""
-  Then the lower case string is ""
+  When I pass the string "" using cucumber expression
+  Then the received string is "" using regex
+
 
 Scenario: Pass anything to step function
   When I say Quasimodo the Grand

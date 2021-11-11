@@ -6,12 +6,12 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class ScenarioStepPattern
     {
-        private readonly string _pattern;
+        private readonly string _originalPattern;
 
         /// <summary>
         /// Original pattern as supplied from step attributes.
         /// </summary>
-        public string Pattern { get { return _pattern; } }
+        public string OriginalPattern { get { return _originalPattern; } }
 
         private readonly string _regexPattern;
         /// <summary>
@@ -21,16 +21,18 @@ namespace Xunit.Gherkin.Quick
 
         public PatternKind Kind { get; }
 
-        public ScenarioStepPattern(string pattern, PatternKind stepMethodKind)
+        public ScenarioStepPattern(string pattern, string regexPattern, PatternKind stepMethodKind)
         {
-            _pattern = !string.IsNullOrWhiteSpace(pattern) 
+            _originalPattern = !string.IsNullOrWhiteSpace(pattern) 
                 ? pattern 
                 : throw new ArgumentNullException(nameof(pattern));
-            _regexPattern = ConvertSpecialPatternsToRegex(_pattern);
+            _regexPattern = !string.IsNullOrWhiteSpace(regexPattern)
+                ? regexPattern
+                : throw new ArgumentNullException(nameof(regexPattern));
             Kind = stepMethodKind;
         }
 
-        private string ConvertSpecialPatternsToRegex(string pattern)
+        private static string ConvertSpecialPatternsToRegex(string pattern)
         {
             string p = pattern.Replace("{word}", @"(\w+)");
             p = p.Replace("{int}", @"([+-]?\d+)");
@@ -44,7 +46,8 @@ namespace Xunit.Gherkin.Quick
         {
             return baseStepDefinitionAttributes.Select(attribute => 
                 new ScenarioStepPattern(
-                    attribute.Pattern, 
+                    attribute.Pattern,
+                    ConvertSpecialPatternsToRegex(attribute.Pattern),
                     PatternKindExtensions.ToPatternKind(attribute)))
                 .ToList();
         }

@@ -16,16 +16,16 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
 
         int IntegerValue;
 
-        [When(@"I choose the integer value {int}")]
+        [When(@"I pass the integer value {int} using cucumber expression")]
         public void SetInteger(int i)
         {
             IntegerValue = i;
         }
 
-        [Then(@"the triple value is {int}")]
-        public void CheckTriple(int t)
+        [Then(@"the received integer value is ([+-]?\d+) using regex")]
+        public void CheckInteger(int t)
         {
-            Assert.Equal(t, IntegerValue * 3);
+            Assert.Equal(t, IntegerValue);
         }
 
         #endregion
@@ -35,16 +35,16 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
 
         float FloatValue;
 
-        [When(@"I choose the float value {float}")]
+        [When(@"I pass the float value {float} using cucumber expression")]
         public void SetFloat(float f)
         {
             FloatValue = f;
         }
 
-        [Then(@"10.75 more is {float}")]
-        public void AddToFloat(float expected)
+        [Then(@"the received float value is ([+-]?([0-9]*[.])?[0-9]+) using regex")]
+        public void CheckFloat(float expected)
         {
-            Assert.Equal(expected, FloatValue + 10.75);
+            Assert.Equal(expected, FloatValue);
         }
 
         #endregion
@@ -52,25 +52,18 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
 
         #region Word
 
-        string FirstWord;
-        string SecondWord;
+        string WordValue;
 
-        [Given(@"the first word is {word}")]
-        public void SetFirstWord(string word)
+        [When(@"I pass the word {word} using cucumber expression")]
+        public void SetWord(string word)
         {
-            FirstWord = word;
+            WordValue = word;
         }
 
-        [When(@"I choose the second word (\w+)")]
-        public void SetSecondWord(string word)
+        [Then(@"the received word is (\w+) using regex")]
+        public void CheckWord(string expectedOutput)
         {
-            SecondWord = word;
-        }
-
-        [Then(@"the concatenation of them is (\w+)")]
-        public void IsConcatenated(string expectedOutput)
-        {
-            Assert.Equal(expectedOutput, FirstWord + SecondWord);
+            Assert.Equal(expectedOutput, WordValue);
         }
 
         #endregion
@@ -80,16 +73,16 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
 
         string StringValue;
 
-        [When(@"I choose the string {string}")]
+        [When(@"I pass the string {string} using cucumber expression")]
         public void SetString(string s)
         {
             StringValue = s;
         }
 
-        [Then(@"the lower case string is {string}")]
-        public void IsLowerCase(string expected)
+        [Then(@"the received string is ""([^""]*)"" using regex")]
+        public void CheckString(string expected)
         {
-            Assert.Equal(expected, StringValue.ToLower());
+            Assert.Equal(expected, StringValue);
         }
 
         #endregion
