@@ -29,7 +29,7 @@ namespace UnitTests
             Assert.Single(sut.ScenarioStepPatterns);
 
             Assert.Equal(PatternKind.When, sut.ScenarioStepPatterns[0].Kind);
-            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.ScenarioStepPatterns[0].Pattern);
+            Assert.Equal(FeatureForCtorTest.WhenStepText, sut.ScenarioStepPatterns[0].OriginalPattern);
         }
 
         private sealed class FeatureForCtorTest : Feature
@@ -348,7 +348,7 @@ in it";
 
                 Assert.NotNull(thePattern);
                 Assert.Equal(patternKind, thePattern.Kind);
-                Assert.Equal(pattern, thePattern.Pattern);
+                Assert.Equal(pattern, thePattern.OriginalPattern);
             }
         }
 
@@ -431,7 +431,7 @@ in it";
             //assert.
             Assert.NotNull(match);
             Assert.Equal(PatternKind.When, match.Kind);
-            Assert.Equal("this matches", match.Pattern);
+            Assert.Equal("this matches", match.OriginalPattern);
         }
 
         [Fact]

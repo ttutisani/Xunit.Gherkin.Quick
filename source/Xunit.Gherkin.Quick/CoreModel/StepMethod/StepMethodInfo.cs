@@ -92,7 +92,7 @@ namespace Xunit.Gherkin.Quick
             if (matchingPattern == null)
                 throw new InvalidOperationException($"This step (`{_methodInfoWrapper.GetMethodName()}`) cannot handle scenario step `{gherkinScenarioStep.Keyword.Trim()} {gherkinStepText}`.");
 
-            var argumentValuesFromStep = Regex.Match(gherkinStepText, matchingPattern.Pattern).Groups.Cast<Group>()
+            var argumentValuesFromStep = Regex.Match(gherkinStepText, matchingPattern.RegexPattern).Groups.Cast<Group>()
                 .Skip(1)
                 .Select(g => g.Value)
                 .ToArray();
@@ -114,7 +114,7 @@ namespace Xunit.Gherkin.Quick
                 if (!pattern.Kind.Matches(gherkinScenarioStep.Keyword.Trim()))
                     continue;
 
-                var match = Regex.Match(gherkinStepText, pattern.Pattern);
+                var match = Regex.Match(gherkinStepText, pattern.RegexPattern);
                 if (!match.Success || !match.Value.Equals(gherkinStepText))
                     continue;
 

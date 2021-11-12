@@ -55,7 +55,7 @@ namespace UnitTests
             //assert.
             Assert.NotNull(sut);
             Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].Kind, sut.Kind);
-            Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].Pattern, sut.Pattern);
+            Assert.Equal(stepMethodInfo.ScenarioStepPatterns[1].OriginalPattern, sut.Pattern);
             Assert.Equal("something 123 else", sut.StepText);
         }
 

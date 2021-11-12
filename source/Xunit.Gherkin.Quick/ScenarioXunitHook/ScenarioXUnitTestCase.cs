@@ -30,7 +30,7 @@ namespace Xunit.Gherkin.Quick
             
             : base(
                   messageSink, 
-                  TestMethodDisplay.Method, 
+                  TestMethodDisplay.Method,
                   testMethod, 
                   testMethodArguments)
         {

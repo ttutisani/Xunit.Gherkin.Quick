@@ -36,7 +36,7 @@ namespace Xunit.Gherkin.Quick
 
             var stepMethodInfoClone = stepMethodInfo.Clone();
             stepMethodInfoClone.DigestScenarioStepValues(gherkinScenarioStep);
-            return new StepMethod(stepMethodInfoClone, matchingPattern.Kind, matchingPattern.Pattern, gherkinScenarioStep.Text);
+            return new StepMethod(stepMethodInfoClone, matchingPattern.Kind, matchingPattern.OriginalPattern, gherkinScenarioStep.Text);
         }
 
         public async Task ExecuteAsync()
