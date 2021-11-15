@@ -43,13 +43,33 @@ Scenario: Pass word to step function
   Then the received word is Max using regex
 
 
-Scenario: Pass string to step function
+Scenario: Pass double quoted string to step function
   When I pass the string "11 and A B C" using cucumber expression
   Then the received string is "11 and A B C" using regex
 
 
+Scenario: Pass double quoted string with single quotes to step function
+  When I pass the string "11 and 'A' or 'B' or 'C'" using cucumber expression
+  Then the received string is "11 and 'A' or 'B' or 'C'" using regex
+
+
 Scenario: Pass empty string to step function
   When I pass the string "" using cucumber expression
+  Then the received string is "" using regex
+
+
+Scenario: Pass single quoted string to step function
+  When I pass the string '11 and A B C' using cucumber expression
+  Then the received string is "11 and A B C" using regex
+
+
+Scenario: Pass single quoted string with double quotes to step function
+  When I pass the string '11 and "A" and "B" and "C"' using cucumber expression
+  Then the received string is '11 and "A" and "B" and "C"' using single quotes regex
+
+
+Scenario: Pass single quoted empty string to step function
+  When I pass the string '' using cucumber expression
   Then the received string is "" using regex
 
 
