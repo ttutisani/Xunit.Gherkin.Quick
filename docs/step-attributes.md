@@ -4,7 +4,7 @@ You apply step attribute to a method which should handle the step execution as a
 
 Purpose of a step attribute is to provide text that matches the step text. Optionally it can extract values out of the step text and pass those values into the parameters of the method.
 
-All this is done using [.NET Regex syntax](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference), so make sure that you account for rules governing Regex language if you have complex matching use cases.
+All this is done using [.NET Regex syntax](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) with additional support for [cucumber expressions](https://github.com/cucumber/cucumber-expressions#readme), so make sure that you account for rules governing Regex language if you have complex matching use cases.
 
 For example:
 ```C#
@@ -13,6 +13,14 @@ public void I_chose_first_number(int firstNumber)
 ```
 
 This code will match a step text if it looks like this: `Given I chose 12 as first number`. That's because in Regex, `(\d+)` will match any number of consecutive digits, such as `12`.
+
+If you only require simple patterns like integers, words or strings, you can use cucumber expressions instead of the more complex regular expressions. With cucumber expressions, the above example can be rewritten to:
+```C#
+[Given(@"I chose {int} as first number")]
+public void I_chose_first_number(int firstNumber)
+```
+
+Besides simplicity, cucumber expressions have the added benefit of being a formal specification other tools can look for. For instance by providing placeholders for code autocompletion in Visual Studio Code, as implemented by the plugin [VSCode Cucumber (Gherkin) Language Support](https://github.com/alexkrechik/VSCucumberAutoComplete).
 
 Here are commonly seen use cases that need to be handled carefully, accounting Regex syntax rules:
 
@@ -33,6 +41,17 @@ Here are commonly seen use cases that need to be handled carefully, accounting R
 | Given Coffee costs $5.00 today | Given(@"Coffee costs $([\d\\.]+) today") | any type | error: will not match dollar sign |
 | Given Coffee costs $5.00 today | Given(@"Coffee costs ([\d\\.]+) today") | any type | error: will not match dollar sign |
 | Given My Brothers' names are Kevin, Lucas, Paul | Given(@"My Brothers' names are ((?:\w+,\s*)+\w+)") | string | Kevin, Lucas, Paul|
+
+## Cucumber expressions
+Xunit.Gherkin.Quick supports the following cucumber expressions:
+
+| Expression | Purpose | Corresponding regular expression |
+| ---------- | ------- | -------------------------------- |
+| {int} | Integer numbers | `[+-]?\d+` |
+| {float} | Floating point numbers | `[+-]?([0-9]\*[.])?[0-9]+` |
+| {word} | Single word without whitespace | `\w+` |
+| {string} | Quoted strings | `("[^"]*")\|('[^']*')` |
+| {} | Anything | `.*` |
 
 ## Special characters within scenario steps
 
