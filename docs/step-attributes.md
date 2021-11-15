@@ -14,13 +14,7 @@ public void I_chose_first_number(int firstNumber)
 
 This code will match a step text if it looks like this: `Given I chose 12 as first number`. That's because in Regex, `(\d+)` will match any number of consecutive digits, such as `12`.
 
-If you only require simple patterns like integers, words or strings, you can use cucumber expressions instead of the more complex regular expressions. With cucumber expressions, the above example can be rewritten to:
-```C#
-[Given(@"I chose {int} as first number")]
-public void I_chose_first_number(int firstNumber)
-```
-
-Besides simplicity, cucumber expressions have the added benefit of being a formal specification other tools can look for. For instance by providing placeholders for code autocompletion in Visual Studio Code, as implemented by the plugin [VSCode Cucumber (Gherkin) Language Support](https://github.com/alexkrechik/VSCucumberAutoComplete).
+**Hint**: If you only require simple patterns like integers, words or strings, you can use cucumber expressions (see the next section below).
 
 Here are commonly seen use cases that need to be handled carefully, accounting Regex syntax rules:
 
@@ -43,6 +37,15 @@ Here are commonly seen use cases that need to be handled carefully, accounting R
 | Given My Brothers' names are Kevin, Lucas, Paul | Given(@"My Brothers' names are ((?:\w+,\s*)+\w+)") | string | Kevin, Lucas, Paul|
 
 ## Cucumber expressions
+
+If you only require simple patterns like integers, words or strings, you can use cucumber expressions, which is a simple alternative for the more complex regex expressions. With cucumber expressions, the above example can be rewritten to:
+```C#
+[Given(@"I chose {int} as first number")]
+public void I_chose_first_number(int firstNumber)
+```
+
+Besides simplicity, cucumber expressions have the added benefit of being a formal specification other tools can look for. For instance by providing placeholders for code autocompletion in Visual Studio Code, as implemented by the plugin [VSCucumberAutoComplete](https://github.com/alexkrechik/VSCucumberAutoComplete).
+
 Xunit.Gherkin.Quick supports the following cucumber expressions:
 
 | Expression | Purpose | Corresponding regular expression |
