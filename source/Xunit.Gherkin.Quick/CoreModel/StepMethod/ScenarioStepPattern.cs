@@ -34,10 +34,10 @@ namespace Xunit.Gherkin.Quick
 
         private static string ConvertSpecialPatternsToRegex(string pattern)
         {
-            string p = pattern.Replace("{word}", @"(\w+)");
-            p = p.Replace("{int}", @"([+-]?\d+)");
+            string p = pattern.Replace("{int}", @"([+-]?\d+)");
             p = p.Replace("{float}", @"([+-]?([0-9]*[.])?[0-9]+)");
-            p = p.Replace("{string}", @"""([^""]*)""");
+            p = p.Replace("{word}", @"(\w+)");
+            p = p.Replace("{string}", @"(?:""|')([^\1]*)(?:""|')");
             p = p.Replace("{}", @"(.*)");
             return p;
         }
