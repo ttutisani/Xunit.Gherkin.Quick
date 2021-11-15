@@ -85,6 +85,12 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
             Assert.Equal(expected, StringValue);
         }
 
+        [Then(@"the received string is '([^']*)' using single quotes regex")]
+        public void CheckStringSingleQuote(string expected)
+        {
+            Assert.Equal(expected, StringValue);
+        }
+
         #endregion
 
 
@@ -96,7 +102,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
             StringValue = s;
         }
 
-        [Then(@"it is the same as {string}")]
+        [Then(@"it is the same as ""([^""]*)""")]
         public void IsRepeated(string s)
         {
             Assert.Equal(s, StringValue);
