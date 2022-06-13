@@ -25,6 +25,9 @@
     <None Update="CucumberExpressions\PassParameters.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="GivenWhenThenTests\InAnotherLanguage.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ReuseStepsAcrossFeatures\Concatenation.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
