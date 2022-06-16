@@ -51,9 +51,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[] 
+                new Gherkin.Ast.Scenario[] 
                 {
-                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
+                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null, System.Array.Empty<global::Gherkin.Ast.Examples>())
                 });
 
             //act.
@@ -99,9 +99,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
+                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null, System.Array.Empty<global::Gherkin.Ast.Examples>())
                 });
 
             //act.
@@ -132,9 +132,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
+                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null, System.Array.Empty<global::Gherkin.Ast.Examples>())
                 });
 
             //act.
@@ -165,9 +165,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null)
+                    new Gherkin.Ast.Scenario(scenarioTags, null, null, scenarioName, null, null, System.Array.Empty<global::Gherkin.Ast.Examples>())
                 });
 
             //act.
@@ -234,9 +234,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Scenario(outlineTags, null, null, scenarioOutlineName, null, null,
                     new Gherkin.Ast.Examples[]
                     {
                         new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
@@ -296,9 +296,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Scenario(outlineTags, null, null, scenarioOutlineName, null, null,
                     new Gherkin.Ast.Examples[]
                     {
                         new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
@@ -342,9 +342,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Scenario(outlineTags, null, null, scenarioOutlineName, null, null,
                     new Gherkin.Ast.Examples[]
                     {
                         new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
@@ -388,9 +388,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Scenario(outlineTags, null, null, scenarioOutlineName, null, null,
                     new Gherkin.Ast.Examples[]
                     {
                         new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)
@@ -434,9 +434,9 @@ namespace UnitTests
 
             var feature = new Gherkin.Ast.Feature(
                 featureTags, null, null, null, null, null,
-                new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.ScenarioOutline(outlineTags, null, null, scenarioOutlineName, null, null,
+                    new Gherkin.Ast.Scenario(outlineTags, null, null, scenarioOutlineName, null, null,
                     new Gherkin.Ast.Examples[]
                     {
                         new Gherkin.Ast.Examples(examplesTags, null, null, examplesName, null, null, null)

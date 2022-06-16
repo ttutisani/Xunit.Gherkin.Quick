@@ -53,7 +53,7 @@ namespace Xunit.Gherkin.Quick
             if (string.IsNullOrWhiteSpace(scenarioOutlineName))
                 throw new ArgumentNullException(nameof(scenarioOutlineName));
             
-            var scenarioOutline = feature.Children.OfType<global::Gherkin.Ast.ScenarioOutline>()
+            var scenarioOutline = feature.Children.OfType<global::Gherkin.Ast.Scenario>()
                 .FirstOrDefault(o => o.Name == scenarioOutlineName);
 
             if (scenarioOutline == null)

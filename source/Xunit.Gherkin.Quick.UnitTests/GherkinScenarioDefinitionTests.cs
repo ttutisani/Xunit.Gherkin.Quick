@@ -40,7 +40,7 @@ namespace UnitTests
             var location = new Gherkin.Ast.Location(1, 1);
             var steps = new Gherkin.Ast.Step[] { new Gherkin.Ast.Step(null, null, "step", null) };
 
-            return new Gherkin.Ast.Scenario(tags, location, "keyword", "name", "description", steps);            
+            return new Gherkin.Ast.Scenario(tags, location, "keyword", "name", "description", steps, System.Array.Empty<global::Gherkin.Ast.Examples>());            
         }
     }
 }

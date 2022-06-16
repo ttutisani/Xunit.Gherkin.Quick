@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <PackageId>Xunit.Gherkin.Quick</PackageId>
     <Title>Xunit.Gherkin.Quick</Title>
@@ -19,10 +19,11 @@
     <PackageReleaseNotes>https://github.com/ttutisani/Xunit.Gherkin.Quick/blob/master/versions/4.2.0.md</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="gherkin" Version="5.0.0" />
+    <PackageReference Include="gherkin" Version="23.0.1" />
     <PackageReference Include="xunit" Version="2.3.1" />
   </ItemGroup>
 

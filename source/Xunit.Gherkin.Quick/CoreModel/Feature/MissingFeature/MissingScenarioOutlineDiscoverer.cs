@@ -28,7 +28,7 @@ namespace Xunit.Gherkin.Quick
 
             foreach (var feature in features)
             {
-                foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
+                foreach (var scenarioOutline in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
                 {
                     foreach (var example in scenarioOutline.Examples)
                     {

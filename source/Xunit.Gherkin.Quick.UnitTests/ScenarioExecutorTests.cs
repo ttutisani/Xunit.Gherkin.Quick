@@ -105,7 +105,7 @@ namespace UnitTests
             Gherkin.Ast.StepArgument stepArgument = null)
         {
             return new Gherkin.Ast.GherkinDocument(
-                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[] 
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.Scenario[] 
                 {
                     new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0], 
@@ -121,7 +121,8 @@ namespace UnitTests
                                 s.Substring(0, spaceIndex).Trim(), 
                                 s.Substring(spaceIndex).Trim(), 
                                 stepArgument);
-                        }).ToArray())
+                        }).ToArray()
+                        , System.Array.Empty<global::Gherkin.Ast.Examples>())
                 }),
                 new Gherkin.Ast.Comment[0]);
         }

@@ -22,7 +22,7 @@ namespace Xunit.Gherkin.Quick
         {
             var feature = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
 
-            foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
+            foreach (var scenarioOutline in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
             {
                 foreach (var example in scenarioOutline.Examples)
                 {

@@ -15,12 +15,14 @@ namespace Xunit.Gherkin.Quick
             var stepsWithBackground = background.Steps.Concat(@this.Steps).ToArray();
 
             return new global::Gherkin.Ast.Scenario(
-                @this.Tags.ToArray(), 
-                @this.Location, 
-                @this.Keyword, 
-                @this.Name, 
-                @this.Description, 
-                stepsWithBackground);
+                @this.Tags.ToArray(),
+                @this.Location,
+                @this.Keyword,
+                @this.Name,
+                @this.Description,
+                stepsWithBackground,
+                Array.Empty<global::Gherkin.Ast.Examples>()
+            );
         }       
     }
 }

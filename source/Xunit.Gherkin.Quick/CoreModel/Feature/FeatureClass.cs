@@ -48,7 +48,7 @@ namespace Xunit.Gherkin.Quick
 			return new Scenario(steps);
 		}
 
-		private List<StepMethod> ExtractSteps(global::Gherkin.Ast.ScenarioDefinition gherkinScenario)
+		private List<StepMethod> ExtractSteps(global::Gherkin.Ast.StepsContainer gherkinScenario)
         {
             if (gherkinScenario == null)
                 throw new ArgumentNullException(nameof(gherkinScenario));

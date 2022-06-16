@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Gherkin.Ast;
 using DataTable = Gherkin.Ast.DataTable;
 using TableRow = Gherkin.Ast.TableRow;
 using TableCell = Gherkin.Ast.TableCell;
@@ -14,7 +15,7 @@ namespace Xunit.Gherkin.Quick
         private static readonly Regex _placeholderRegex = new Regex(@"<([^>]+)>");
 
         public static global::Gherkin.Ast.Scenario ApplyExampleRow(
-            this global::Gherkin.Ast.ScenarioOutline @this,
+            this global::Gherkin.Ast.Scenario @this,
             string exampleName,
             int exampleRowIndex)
         {
@@ -45,10 +46,12 @@ namespace Xunit.Gherkin.Quick
                 @this.Keyword,
                 @this.Name,
                 @this.Description,
-                scenarioSteps.ToArray());
+                scenarioSteps.ToArray(),
+                Array.Empty<Examples>()
+            );
         }
 
-        private static global::Gherkin.Ast.Step DigestExampleValuesIntoStep(global::Gherkin.Ast.ScenarioOutline @this, string exampleName, int exampleRowIndex, Dictionary<string, string> rowValues, global::Gherkin.Ast.Step outlineStep)
+        private static global::Gherkin.Ast.Step DigestExampleValuesIntoStep(global::Gherkin.Ast.StepsContainer @this, string exampleName, int exampleRowIndex, Dictionary<string, string> rowValues, global::Gherkin.Ast.Step outlineStep)
         {
             string matchEvaluator(Match match)
             {
@@ -109,7 +112,7 @@ namespace Xunit.Gherkin.Quick
             return rowValues;
         }
 
-        private static List<global::Gherkin.Ast.TableCell> GetExampleRow(global::Gherkin.Ast.ScenarioOutline @this, int exampleRowIndex, global::Gherkin.Ast.Examples examples)
+        private static List<global::Gherkin.Ast.TableCell> GetExampleRow(global::Gherkin.Ast.StepsContainer @this, int exampleRowIndex, global::Gherkin.Ast.Examples examples)
         {
             var exampleRows = examples.TableBody.ToList();
             if (!(exampleRowIndex < exampleRows.Count))

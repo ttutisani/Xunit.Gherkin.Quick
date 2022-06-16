@@ -17,7 +17,7 @@ namespace UnitTests
             )
         {
             //arrange.
-            var sut = new Gherkin.Ast.ScenarioOutline(
+            var sut = new Gherkin.Ast.Scenario(
                 null,
                 null,
                 null,
@@ -47,7 +47,7 @@ namespace UnitTests
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario()
         {
             //arrange.
-            var sut = new Gherkin.Ast.ScenarioOutline(
+            var sut = new Gherkin.Ast.Scenario(
                 null,
                 null,
                 null,
@@ -115,7 +115,7 @@ namespace UnitTests
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Multiple_Placeholders_Per_Step()
         {
             //arrange.
-            var sut = new Gherkin.Ast.ScenarioOutline(
+            var sut = new Gherkin.Ast.Scenario(
                 null,
                 null,
                 null,
@@ -181,7 +181,7 @@ namespace UnitTests
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_DataTable_In_Step()
         {
             //arrange.
-            var sut = new Gherkin.Ast.ScenarioOutline(
+            var sut = new Gherkin.Ast.Scenario(
                 null,
                 null,
                 null,
