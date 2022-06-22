@@ -23,6 +23,9 @@ namespace Xunit.Gherkin.Quick
 
             foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
             {
+                if (scenario.Examples.Any())
+                    continue;
+
                 var tags = feature.GetScenarioTags(scenario.Name);
                 bool skip = feature.IsScenarioIgnored(scenario.Name);
 
