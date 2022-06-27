@@ -1,4 +1,7 @@
-﻿using Gherkin.Ast;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Gherkin.Ast;
 using System.Linq;
 
 using Scenario = global::Gherkin.Ast.Scenario;
@@ -9,11 +12,15 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureFile
     {
+        
         public GherkinDocument GherkinDocument { get; }
 
         public FeatureFile(GherkinDocument gherkinDocument)
         {
             GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
+
+            if (StepMethodInfo.Dialects.Any(d => d.Language == GherkinDocument.Feature.Language) is false)
+                StepMethodInfo.Dialects.Add(StepMethodInfo.GherkingDialectProvider.GetDialect(GherkinDocument.Feature.Language, GherkinDocument.Feature.Location));
         }
 
         public global::Gherkin.Ast.Scenario GetScenario(string scenarioName)

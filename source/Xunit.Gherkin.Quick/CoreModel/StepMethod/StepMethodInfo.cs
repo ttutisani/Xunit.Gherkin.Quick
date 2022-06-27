@@ -11,6 +11,19 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethodInfo
     {
+        internal static global::Gherkin.GherkinDialectProvider GherkingDialectProvider { get;  } = new();
+
+        internal static List<global::Gherkin.GherkinDialect> Dialects { get; } = new[] {GherkingDialectProvider.DefaultDialect}.ToList();
+
+        internal static bool PatternKindAndKeywordMatch(PatternKind pattern, string keyword) => pattern switch
+        {
+            PatternKind.Given => Dialects.Any(d => d.GivenStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
+            PatternKind.And => Dialects.Any(d => d.AndStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
+            PatternKind.When => Dialects.Any(d => d.WhenStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
+            PatternKind.Then => Dialects.Any(d => d.ThenStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
+            PatternKind.But => Dialects.Any(d => d.ButStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase))
+        };
+
         public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get; }
 
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
@@ -171,11 +184,7 @@ namespace Xunit.Gherkin.Quick
         }
 
         public static bool Matches(this PatternKind patternKind, string keyword)
-        {
-            if (keyword == "*")
-                return true;
+            => StepMethodInfo.PatternKindAndKeywordMatch(patternKind, keyword);
 
-            return patternKind.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase);
-        }
     }
 }
