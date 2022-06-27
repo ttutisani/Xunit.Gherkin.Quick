@@ -101,7 +101,7 @@ namespace UnitTests
                     new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario",
                         scenario,
                         null,
                         new Gherkin.Ast.Step[]{ }
@@ -135,7 +135,7 @@ namespace UnitTests
                     new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario Outline",
                         scenario,
                         null,
                         new Gherkin.Ast.Step[]{ },

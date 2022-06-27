@@ -110,7 +110,7 @@ namespace UnitTests
                     new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0], 
                         null, 
-                        null, 
+                        "Scenario", 
                         scenario, 
                         null, 
                         steps.Select(s => 

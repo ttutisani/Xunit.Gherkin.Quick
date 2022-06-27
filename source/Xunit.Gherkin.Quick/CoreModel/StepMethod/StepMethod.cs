@@ -11,11 +11,11 @@ namespace Xunit.Gherkin.Quick
 
         public string StepText { get; }
 
-        public PatternKind Kind { get; }
+        public GherkinDialect.KeywordFor Kind { get; }
 
         public string Pattern { get; }
 
-        private StepMethod(StepMethodInfo stepMethodInfo, PatternKind kind, string pattern, string stepText)
+        private StepMethod(StepMethodInfo stepMethodInfo, GherkinDialect.KeywordFor kind, string pattern, string stepText)
         {
             _stepMethodInfo = stepMethodInfo ?? throw new ArgumentNullException(nameof(stepMethodInfo));
             Kind = kind;

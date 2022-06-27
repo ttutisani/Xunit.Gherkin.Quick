@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Xunit.Gherkin.Quick
 {
-    internal static class GherkinFeatureExtensions
+    internal static partial class GherkinFeatureExtensions
     {
         public static List<string> GetScenarioTags(
             this global::Gherkin.Ast.Feature feature,
@@ -16,10 +16,7 @@ namespace Xunit.Gherkin.Quick
             if (string.IsNullOrWhiteSpace(scenarioName))
                 throw new ArgumentNullException(nameof(scenarioName));
 
-            var scenario = feature
-                .Children
-                .OfType<global::Gherkin.Ast.Scenario>()
-                .FirstOrDefault(s => s.Name == scenarioName);
+            var scenario = feature.Scenarios().FirstOrDefault(s => s.Name == scenarioName);
 
             if (scenario == null)
                 throw new InvalidOperationException($"Cannot find scenario `{scenarioName}` under feature `{feature.Name}`.");
@@ -53,8 +50,7 @@ namespace Xunit.Gherkin.Quick
             if (string.IsNullOrWhiteSpace(scenarioOutlineName))
                 throw new ArgumentNullException(nameof(scenarioOutlineName));
             
-            var scenarioOutline = feature.Children.OfType<global::Gherkin.Ast.Scenario>()
-                .FirstOrDefault(o => o.Name == scenarioOutlineName);
+            var scenarioOutline = feature.Outlines().FirstOrDefault(o => o.Name == scenarioOutlineName);
 
             if (scenarioOutline == null)
                 throw new InvalidOperationException($"Cannot find scenario outline `{scenarioOutlineName}` under feature `{feature.Name}`.");

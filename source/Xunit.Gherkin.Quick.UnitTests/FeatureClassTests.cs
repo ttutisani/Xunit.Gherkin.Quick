@@ -100,7 +100,7 @@ namespace UnitTests
                 new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario",
                         scenario,
                         null,
                         steps.Select(s =>
@@ -332,7 +332,7 @@ namespace UnitTests
             var scenario = sut.ExtractScenario(CreateGherkinDocument("scenario 123", new string[]
             {
                 "Given something else"
-            }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First());
+            }).Feature.Scenarios().First());
 
             //assert.
             Assert.NotNull(scenario);

@@ -11,19 +11,6 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class StepMethodInfo
     {
-        internal static global::Gherkin.GherkinDialectProvider GherkingDialectProvider { get;  } = new();
-
-        internal static List<global::Gherkin.GherkinDialect> Dialects { get; } = new[] {GherkingDialectProvider.DefaultDialect}.ToList();
-
-        internal static bool PatternKindAndKeywordMatch(PatternKind pattern, string keyword) => pattern switch
-        {
-            PatternKind.Given => Dialects.Any(d => d.GivenStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
-            PatternKind.And => Dialects.Any(d => d.AndStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
-            PatternKind.When => Dialects.Any(d => d.WhenStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
-            PatternKind.Then => Dialects.Any(d => d.ThenStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase)),
-            PatternKind.But => Dialects.Any(d => d.ButStepKeywords.Select(k => k.Trim()).Contains(keyword, StringComparer.OrdinalIgnoreCase))
-        };
-
         public ReadOnlyCollection<ScenarioStepPattern> ScenarioStepPatterns { get; }
 
         private readonly ReadOnlyCollection<StepMethodArgument> _arguments;
@@ -145,18 +132,9 @@ namespace Xunit.Gherkin.Quick
         }
     }
 
-    internal enum PatternKind
-    {
-        Given,
-        When,
-        Then,
-        And,
-        But
-    }
-
     internal static class PatternKindExtensions
     {
-        public static PatternKind ToPatternKind(BaseStepDefinitionAttribute @this)
+        public static GherkinDialect.KeywordFor ToPatternKind(BaseStepDefinitionAttribute @this)
         {
             if (@this == null)
                 throw new ArgumentNullException(nameof(@this));
@@ -164,27 +142,27 @@ namespace Xunit.Gherkin.Quick
             switch (@this)
             {
                 case GivenAttribute _:
-                    return PatternKind.Given;
+                    return GherkinDialect.KeywordFor.Given;
 
                 case WhenAttribute _:
-                    return PatternKind.When;
+                    return GherkinDialect.KeywordFor.When;
 
                 case ThenAttribute _:
-                    return PatternKind.Then;
+                    return GherkinDialect.KeywordFor.Then;
 
                 case AndAttribute _:
-                    return PatternKind.And;
+                    return GherkinDialect.KeywordFor.And;
 
                 case ButAttribute _:
-                    return PatternKind.But;
+                    return GherkinDialect.KeywordFor.But;
 
                 default:
                     throw new NotSupportedException($"Cannot convert into step method kind: Attribute type {@this.GetType()} is not supported.");
             }
         }
 
-        public static bool Matches(this PatternKind patternKind, string keyword)
-            => StepMethodInfo.PatternKindAndKeywordMatch(patternKind, keyword);
+        public static bool Matches(this GherkinDialect.KeywordFor patternKind, string keyword)
+            => patternKind.CouldBe(keyword);
 
     }
 }

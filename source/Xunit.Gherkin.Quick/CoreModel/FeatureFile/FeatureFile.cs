@@ -19,17 +19,14 @@ namespace Xunit.Gherkin.Quick
         {
             GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
 
-            if (StepMethodInfo.Dialects.Any(d => d.Language == (GherkinDocument.Feature?.Language ?? StepMethodInfo.GherkingDialectProvider.DefaultDialect.Language)) is false)
-                StepMethodInfo.Dialects.Add(StepMethodInfo.GherkingDialectProvider.GetDialect(GherkinDocument.Feature.Language, GherkinDocument.Feature.Location));
+            GherkinDialect.Register(
+                GherkinDocument.Feature?.Language,
+                GherkinDocument.Feature?.Location
+            );
         }
 
         public global::Gherkin.Ast.Scenario GetScenario(string scenarioName)
-        {
-
-            return GherkinDocument.Feature.Children.FirstOrDefault(c => (c as global::Gherkin.Ast.Scenario)?.Name == scenarioName) as global::Gherkin.Ast.Scenario;
-
-            //return GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName) as global::Gherkin.Ast.Scenario;
-        }
+            => GherkinDocument.Feature.Scenarios().Where(s => s.Name == scenarioName).FirstOrDefault();
 
 		public global::Gherkin.Ast.Background GetBackground()
 		{
@@ -37,10 +34,7 @@ namespace Xunit.Gherkin.Quick
 		}
 
         internal global::Gherkin.Ast.Scenario GetScenarioOutline(string scenarioOutlineName)
-        {
+            => GherkinDocument.Feature.Outlines().Where(s => s.Name == scenarioOutlineName).FirstOrDefault();
 
-            return GherkinDocument.Feature.Children.FirstOrDefault(c => (c as global::Gherkin.Ast.Scenario)?.Name == scenarioOutlineName) as global::Gherkin.Ast.Scenario;
-            //return GherkinDocument.Feature.Children.FirstOrDefault(s => (s as StepsContainer)?.Name == scenarioOutlineName) as global::Gherkin.Ast.StepsContainer;
-        }
     }
 }

@@ -31,7 +31,7 @@ namespace UnitTests
         {
             var stepBuilder = new GherkinStepBuilder();
             buildSteps(stepBuilder);
-            _definitions.Add(new Scenario(tags, null, null, name, null, stepBuilder.Steps, Array.Empty<Examples>()));
+            _definitions.Add(new Scenario(tags, null, "Scenario", name, null, stepBuilder.Steps, Array.Empty<Examples>()));
             return this;
         }
 
@@ -43,7 +43,7 @@ namespace UnitTests
             var examplesBuilder = new ExamplesBuilder();
             buildExamples(examplesBuilder);
 
-            _definitions.Add(new global::Gherkin.Ast.Scenario(new Tag[0], null, null, name, null, stepBuilder.Steps, examplesBuilder.Examples));
+            _definitions.Add(new global::Gherkin.Ast.Scenario(new Tag[0], null, "Scenario Outline", name, null, stepBuilder.Steps, examplesBuilder.Examples));
             return this;
         }
 
