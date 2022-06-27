@@ -19,7 +19,7 @@ namespace Xunit.Gherkin.Quick
         {
             GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
 
-            if (StepMethodInfo.Dialects.Any(d => d.Language == GherkinDocument.Feature.Language) is false)
+            if (StepMethodInfo.Dialects.Any(d => d.Language == (GherkinDocument.Feature.Language ?? StepMethodInfo.GherkingDialectProvider.DefaultDialect.Language)) is false)
                 StepMethodInfo.Dialects.Add(StepMethodInfo.GherkingDialectProvider.GetDialect(GherkinDocument.Feature.Language, GherkinDocument.Feature.Location));
         }
 
