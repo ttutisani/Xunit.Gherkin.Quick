@@ -1,8 +1,11 @@
 ﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     [FeatureFile("./Addition_ForMultipleUseCases/AddTwoNumbers.feature")]
-    public sealed partial class AddTwoNumbers : Feature
+    public partial class AddTwoNumbers : Feature
     {
+        [FeatureFile("./Addition_ForMultipleUseCases/AddTwoNumbers.em.feature")]
+        public class Emoji : AddTwoNumbers { }
+        
         private readonly Calculator _calculator = new Calculator();
 
         [Given(@"I chose (-?\d+) as first number")]

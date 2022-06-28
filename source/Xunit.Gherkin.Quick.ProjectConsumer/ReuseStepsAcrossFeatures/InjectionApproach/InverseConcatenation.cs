@@ -5,8 +5,16 @@ using System.Text;
 namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.InjectionApproach
 {
     [FeatureFile("./ReuseStepsAcrossFeatures/InverseConcatenation.feature")]
-    public sealed class InverseConcatenation : Feature, IClassFixture<ConcatenationCommonSteps>
+    public class InverseConcatenation : Feature, IClassFixture<ConcatenationCommonSteps>
     {
+
+        [FeatureFile("./ReuseStepsAcrossFeatures/InverseConcatenation.feature")]
+        public class Emoji : InverseConcatenation { 
+
+            public Emoji(ConcatenationCommonSteps steps) : base(steps) { }
+
+        }
+
         private readonly ConcatenationCommonSteps _steps;
 
         public InverseConcatenation(ConcatenationCommonSteps steps)

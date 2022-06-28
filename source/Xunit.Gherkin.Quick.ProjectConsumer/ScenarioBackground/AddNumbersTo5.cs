@@ -1,8 +1,12 @@
 ﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     [FeatureFile("./ScenarioBackground/AddNumbersTo5.feature")]
-    public sealed class AddNumbersTo5 : Feature
+    public class AddNumbersTo5 : Feature
     {
+
+        [FeatureFile("./ScenarioBackground/AddNumbersTo5.feature")]
+        public class Emoji : AddNumbersTo5 { }
+
         private readonly Calculator _calculator = new Calculator();
 
         [Given(@"I chose (-?\d+) as first number")]

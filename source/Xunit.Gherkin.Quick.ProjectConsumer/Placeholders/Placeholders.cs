@@ -4,8 +4,11 @@ using System.Linq;
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
 {
     [FeatureFile("./Placeholders/Placeholders.feature")]
-    public sealed class Placeholder : Feature
+    public class Placeholder : Feature
     {
+        [FeatureFile("./Placeholders/Placeholders.em.feature")]
+        public class Emoji : Placeholder { }
+
         private DataTable _data;
 
         [Given("I have supplied a DataTable with")]

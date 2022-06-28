@@ -3,8 +3,15 @@
 namespace Xunit.Gherkin.Quick.ProjectConsumer.TestOutput
 {
     [FeatureFile(@"./TestOutput/OutputMessages.feature")]
-    public sealed class OutputMessages : Feature
+    public class OutputMessages : Feature
     {
+        [FeatureFile(@"./TestOutput/OutputMessages.em.feature")]
+        public class Emoji : OutputMessages { 
+
+            public Emoji(ITestOutputHelper helper) : base(helper) { }
+
+        }
+
         private readonly ITestOutputHelper _testOutputHelper;
 
         public OutputMessages(ITestOutputHelper testOutputHelper)

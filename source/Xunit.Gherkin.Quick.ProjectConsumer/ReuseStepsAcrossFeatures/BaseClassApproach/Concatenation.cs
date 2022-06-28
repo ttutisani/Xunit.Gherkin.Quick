@@ -5,8 +5,11 @@ using System.Text;
 namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.BaseClassApproach
 {
     [FeatureFile("./ReuseStepsAcrossFeatures/Concatenation.feature")]
-    public sealed class Concatenation : ConcatenationBase
+    public class Concatenation : ConcatenationBase
     {
+        [FeatureFile("./ReuseStepsAcrossFeatures/Concatenation.em.feature")]
+        public class Emoji : Concatenation { }
+
         [When(@"I ask to concatenate")]
         public void When_I_ask_to_concatenate()
         {

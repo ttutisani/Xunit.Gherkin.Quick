@@ -3,8 +3,11 @@
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition.Async
 {
     [FeatureFile("./Async/AddTwoNumbersAsync.feature")]
-    public sealed class AddTwoNumbersAsync : Feature
+    public class AddTwoNumbersAsync : Feature
     {
+        [FeatureFile("./Async/AddTwoNumbersAsync.em.feature")]
+        public class Emoji : AddTwoNumbersAsync { }
+
         private readonly AsyncCalculator _calculator = new AsyncCalculator();
 
         [Given(@"I chose (\d+) as first number")]

@@ -4,8 +4,16 @@ using Xunit.Abstractions;
 namespace Xunit.Gherkin.Quick.ProjectConsumer.BeforeAfterHooks
 {
     [FeatureFile("./BeforeAfterHooks/BeforeAfter.feature")]
-    public sealed class BeforeAfter : Feature, IDisposable
+    public class BeforeAfter : Feature, IDisposable
     {
+        [FeatureFile("./BeforeAfterHooks/BeforeAfter.em.feature")]
+        public class Emoji : BeforeAfter
+        {
+
+            public Emoji(ITestOutputHelper helper) : base(helper){ }
+
+        }
+
         private readonly ITestOutputHelper _testOutputHelper;
 
         public BeforeAfter(ITestOutputHelper testOutputHelper)

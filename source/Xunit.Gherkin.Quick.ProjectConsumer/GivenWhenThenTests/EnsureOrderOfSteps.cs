@@ -1,8 +1,12 @@
 namespace Xunit.Gherkin.Quick.ProjectConsumer
 {
+
     [FeatureFile("./GivenWhenThenTests/EnsureOrderOfSteps.feature")]
-    public sealed class EnsureOrderOfSteps : Feature
+    public class EnsureOrderOfSteps : Feature
     {
+        [FeatureFile("./GivenWhenThenTests/EnsureOrderOfSteps.em.feature")]
+        public class Emoji : EnsureOrderOfSteps { }
+
         private int _order = 0;
 
         [Given(@"Sample text for Given")]
