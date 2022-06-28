@@ -1,17 +1,20 @@
 ﻿using Xunit.Abstractions;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile(@"./TestOutput/OutputMessages.em.feature")]
+    public class OutputMessages : TestOutput.OutputMessages { 
+
+        public OutputMessages(ITestOutputHelper helper) : base(helper) { }
+
+    }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.TestOutput
 {
     [FeatureFile(@"./TestOutput/OutputMessages.feature")]
     public class OutputMessages : Feature
     {
-        [FeatureFile(@"./TestOutput/OutputMessages.em.feature")]
-        public class Emoji : OutputMessages { 
-
-            public Emoji(ITestOutputHelper helper) : base(helper) { }
-
-        }
-
         private readonly ITestOutputHelper _testOutputHelper;
 
         public OutputMessages(ITestOutputHelper testOutputHelper)

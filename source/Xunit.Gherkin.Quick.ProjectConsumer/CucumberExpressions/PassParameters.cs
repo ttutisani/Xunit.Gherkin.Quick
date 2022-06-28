@@ -1,14 +1,16 @@
 ﻿using System.Threading;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./CucumberExpressions/PassParameters.em.feature")]
+    public class PassParameters : CucumberExpressions.PassParameters { }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
 {
     [FeatureFile("./CucumberExpressions/PassParameters.feature")]
     public class PassParameters : Feature
     {
-
-        [FeatureFile("./CucumberExpressions/PassParameters.em.feature")]
-        public class Emoji : PassParameters { }
-        
         public PassParameters()
         {
             // Needed to ensure floats always use "." for decimal points.

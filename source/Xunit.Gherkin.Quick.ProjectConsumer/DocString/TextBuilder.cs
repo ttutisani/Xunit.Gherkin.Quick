@@ -1,10 +1,16 @@
 ﻿using Gherkin.Ast;
 using System.Text;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./DocString/TextBuilder.em.feature")]
+    public class TextBuilder : Texts.TextBuilder { }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Texts
 {
     [FeatureFile("./DocString/TextBuilder.feature")]
-    public sealed class TextBuilder : Feature
+    public class TextBuilder : Feature
     {
         private StringBuilder _textBuilder;
 

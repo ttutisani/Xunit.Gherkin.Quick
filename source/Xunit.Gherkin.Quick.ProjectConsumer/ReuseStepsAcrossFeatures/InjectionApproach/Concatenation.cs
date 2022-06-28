@@ -2,18 +2,30 @@
 using System.Collections.Generic;
 using System.Text;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+
+    using Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.InjectionApproach;
+
+    public partial class ReuseStepsAcrossFeatures
+    {
+        public partial class InjectionApproach
+        {
+            [FeatureFile("./ReuseStepsAcrossFeatures/Concatenation.em.feature")]
+            public class Concatenation : ProjectConsumer.ReuseStepsAcrossFeatures.InjectionApproach.Concatenation { 
+
+                public Concatenation(ConcatenationCommonSteps steps) : base(steps) { }
+
+            }
+        }
+    }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.ReuseStepsAcrossFeatures.InjectionApproach
 {
     [FeatureFile("./ReuseStepsAcrossFeatures/Concatenation.feature")]
     public class Concatenation : Feature, IClassFixture<ConcatenationCommonSteps>
     {
-        [FeatureFile("./ReuseStepsAcrossFeatures/Concatenation.em.feature")]
-        public class Emoji : Concatenation { 
-
-            public Emoji(ConcatenationCommonSteps steps) : base(steps) { }
-
-        }
-
         private readonly ConcatenationCommonSteps _steps;
 
         public Concatenation(ConcatenationCommonSteps steps)

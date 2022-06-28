@@ -1,19 +1,22 @@
 ﻿using System;
 using Xunit.Abstractions;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./BeforeAfterHooks/BeforeAfter.em.feature")]
+    public class BeforeAfter : BeforeAfterHooks.BeforeAfter
+    {
+
+        public BeforeAfter(ITestOutputHelper helper) : base(helper){ }
+
+    }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.BeforeAfterHooks
 {
     [FeatureFile("./BeforeAfterHooks/BeforeAfter.feature")]
     public class BeforeAfter : Feature, IDisposable
     {
-        [FeatureFile("./BeforeAfterHooks/BeforeAfter.em.feature")]
-        public class Emoji : BeforeAfter
-        {
-
-            public Emoji(ITestOutputHelper helper) : base(helper){ }
-
-        }
-
         private readonly ITestOutputHelper _testOutputHelper;
 
         public BeforeAfter(ITestOutputHelper testOutputHelper)
