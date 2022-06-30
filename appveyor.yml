@@ -1,0 +1,16 @@
+
+
+version: 1.0.{build}
+
+build_script:
+- cmd: >-
+    dotnet build --configuration Release source\Xunit.Gherkin.Quick.sln
+    dotnet pack --nologo --no-build --configuration Release source\Xunit.Gherkin.Quick.sln
+
+test_script:
+- cmd: >-
+    dotnet test --nologo --no-restore --configuration Release source\Xunit.Gherkin.Quick.UnitTests\Xunit.Gherkin.Quick.UnitTests.csproj
+    dotnet test --nologo  --no-restore --configuration Release source\Xunit.Gherkin.Quick.ProjectConsumer\Xunit.Gherkin.Quick.ProjectConsumer.csproj
+
+
+
