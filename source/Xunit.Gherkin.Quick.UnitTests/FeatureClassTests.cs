@@ -95,7 +95,7 @@ namespace UnitTests
             string[] backgroundSteps = null)
         {
 
-            var definitions = new List<global::Gherkin.Ast.Scenario>
+            var definitions = new List<global::Gherkin.Ast.StepsContainer>
             {
                 new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
@@ -115,24 +115,24 @@ namespace UnitTests
                         Array.Empty<global::Gherkin.Ast.Examples>())
             };
 
-            //if(backgroundSteps != null)
-            //{
-            //    definitions.Add(
-            //        new Gherkin.Ast.Background(
-            //            null,
-            //            null,
-            //            "background",
-            //            null,
-            //            backgroundSteps.Select(s =>
-            //            {
-            //                var spaceIndex = s.IndexOf(' ');
-            //                return new Gherkin.Ast.Step(
-            //                    null,
-            //                    s.Substring(0, spaceIndex).Trim(),
-            //                    s.Substring(spaceIndex).Trim(),
-            //                    stepArgument);
-            //            }).ToArray()));
-            //}
+            if (backgroundSteps != null)
+            {
+                definitions.Add(
+                    new Gherkin.Ast.Background(
+                        null,
+                        null,
+                        "background",
+                        null,
+                        backgroundSteps.Select(s =>
+                        {
+                            var spaceIndex = s.IndexOf(' ');
+                            return new Gherkin.Ast.Step(
+                                null,
+                                s.Substring(0, spaceIndex).Trim(),
+                                s.Substring(spaceIndex).Trim(),
+                                stepArgument);
+                        }).ToArray()));
+            }
 
             return new Gherkin.Ast.GherkinDocument(
                 new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, definitions.ToArray()),
