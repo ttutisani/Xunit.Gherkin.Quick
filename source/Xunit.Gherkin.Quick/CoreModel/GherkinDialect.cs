@@ -9,12 +9,17 @@ namespace Xunit.Gherkin.Quick
     using Gherkin = global::Gherkin;
     using Ast = global::Gherkin.Ast;
 
-    internal static partial class GherkinDialect
+    internal static class GherkinDialect
     {
-        private static Gherkin.GherkinDialectProvider GherkingDialectProvider { get;  } = new();
 
-        private static Dictionary<string, Gherkin.GherkinDialect> Dialects { get; } = new() 
-            {{ GherkingDialectProvider.DefaultDialect.Language, GherkingDialectProvider.DefaultDialect }};
+        static GherkinDialect()
+        {
+            GherkingDialectProvider = new();
+            Dialects = new() {{GherkingDialectProvider.DefaultDialect.Language, GherkingDialectProvider.DefaultDialect}};
+        }
+
+        private static readonly Gherkin.GherkinDialectProvider GherkingDialectProvider;
+        private static readonly Dictionary<string, Gherkin.GherkinDialect> Dialects;
 
         public static void Register(string? language, Gherkin.Ast.Location? location)
         {
@@ -26,12 +31,14 @@ namespace Xunit.Gherkin.Quick
 
         }
 
-        private static IEnumerable<string> Keywords(this IEnumerable<Gherkin.GherkinDialect> @this, Func<Gherkin.GherkinDialect, string[]> keywords)
-            => Enumerable.Distinct(
-                @this.SelectMany(
-                    dialect => Enumerable.Concat(
-                        from k in keywords(dialect) select k,
-                        from k in keywords(dialect) select k.Trim()
+        private static List<string> Keywords(this IEnumerable<Gherkin.GherkinDialect> @this, Func<Gherkin.GherkinDialect, string[]> keywords)
+            => new(
+                Enumerable.Distinct(
+                    @this.SelectMany(
+                        dialect => Enumerable.Concat(
+                            from k in keywords(dialect) select k,
+                            from k in keywords(dialect) select k.Trim()
+                        )
                     )
                 )
             );
@@ -58,7 +65,8 @@ namespace Xunit.Gherkin.Quick
                 KeywordFor.When => Dialects.Values.Keywords(d => d.WhenStepKeywords).Contains(keyword),
                 KeywordFor.Then => Dialects.Values.Keywords(d => d.ThenStepKeywords).Contains(keyword),
                 KeywordFor.And => Dialects.Values.Keywords(d => d.AndStepKeywords).Contains(keyword),
-                KeywordFor.But => Dialects.Values.Keywords(d => d.ButStepKeywords).Contains(keyword)
+                KeywordFor.But => Dialects.Values.Keywords(d => d.ButStepKeywords).Contains(keyword),
+                _ => throw new NotSupportedException($"No keyword for the value {(int)@for} exists in {nameof(KeywordFor)}")
             };
 
         public static bool IsScenario(this Ast.Scenario @this)

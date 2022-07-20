@@ -15,5 +15,6 @@ namespace Xunit.Gherkin.Quick
 
         public static IEnumerable<Ast.Scenario> Outlines(this Ast.Feature @this) 
             => @this.Children.OfType<Ast.Scenario>().Where(s => s.IsOutline());
+
     }
 }

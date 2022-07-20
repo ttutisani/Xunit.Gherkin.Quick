@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using Gherkin.Ast;
 using System.Linq;
 
-using Scenario = global::Gherkin.Ast.Scenario;
-using Background = global::Gherkin.Ast.Background;
-using StepsContainer = Gherkin.Ast.StepsContainer;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -26,15 +23,13 @@ namespace Xunit.Gherkin.Quick
         }
 
         public global::Gherkin.Ast.Scenario GetScenario(string scenarioName)
-            => GherkinDocument.Feature.Scenarios().Where(s => s.Name == scenarioName).FirstOrDefault();
-
-		public global::Gherkin.Ast.Background GetBackground()
-		{
-			return GherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Background>().SingleOrDefault();
-		}
+            => GherkinDocument.Feature.Scenarios().FirstOrDefault(s => s.Name == scenarioName);
+        
+        public Background GetBackground()
+            => GherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Background>().SingleOrDefault();
 
         internal global::Gherkin.Ast.Scenario GetScenarioOutline(string scenarioOutlineName)
-            => GherkinDocument.Feature.Outlines().Where(s => s.Name == scenarioOutlineName).FirstOrDefault();
+            => GherkinDocument.Feature.Outlines().FirstOrDefault(s => s.Name == scenarioOutlineName);
 
     }
 }
