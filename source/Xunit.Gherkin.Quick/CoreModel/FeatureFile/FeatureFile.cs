@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Linq;
 using Gherkin.Ast;
-using System.Linq;
-
 
 namespace Xunit.Gherkin.Quick
 {
@@ -19,7 +15,7 @@ namespace Xunit.Gherkin.Quick
             => GherkinDocument.Feature.Scenarios().FirstOrDefault(s => s.Name == scenarioName);
         
         public Background GetBackground()
-            => GherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Background>().SingleOrDefault();
+            => GherkinDocument.Feature.Children.OfType<Background>().SingleOrDefault();
 
         internal global::Gherkin.Ast.Scenario GetScenarioOutline(string scenarioOutlineName)
             => GherkinDocument.Feature.Outlines().FirstOrDefault(s => s.Name == scenarioOutlineName);
