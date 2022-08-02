@@ -28,7 +28,7 @@ namespace UnitTests
             Assert.NotNull(sut.ScenarioStepPatterns);
             Assert.Single(sut.ScenarioStepPatterns);
 
-            Assert.Equal(PatternKind.When, sut.ScenarioStepPatterns[0].Kind);
+            Assert.Equal(GherkinDialect.KeywordFor.When, sut.ScenarioStepPatterns[0].Kind);
             Assert.Equal(FeatureForCtorTest.WhenStepText, sut.ScenarioStepPatterns[0].OriginalPattern);
         }
 
@@ -331,18 +331,18 @@ in it";
             Assert.NotNull(sut);
             Assert.Equal(10, sut.ScenarioStepPatterns.Count);
 
-            AssertPattern(0, PatternKind.Given, "something");
-            AssertPattern(1, PatternKind.Given, "something else");
-            AssertPattern(2, PatternKind.And, "something");
-            AssertPattern(3, PatternKind.And, "something else");
-            AssertPattern(4, PatternKind.When, "something");
-            AssertPattern(5, PatternKind.When, "something else");
-            AssertPattern(6, PatternKind.And, "something");
-            AssertPattern(7, PatternKind.And, "something else");
-            AssertPattern(8, PatternKind.But, "something");
-            AssertPattern(9, PatternKind.But, "something else");
+            AssertPattern(0, GherkinDialect.KeywordFor.Given, "something");
+            AssertPattern(1, GherkinDialect.KeywordFor.Given, "something else");
+            AssertPattern(2, GherkinDialect.KeywordFor.And, "something");
+            AssertPattern(3, GherkinDialect.KeywordFor.And, "something else");
+            AssertPattern(4, GherkinDialect.KeywordFor.When, "something");
+            AssertPattern(5, GherkinDialect.KeywordFor.When, "something else");
+            AssertPattern(6, GherkinDialect.KeywordFor.And, "something");
+            AssertPattern(7, GherkinDialect.KeywordFor.And, "something else");
+            AssertPattern(8, GherkinDialect.KeywordFor.But, "something");
+            AssertPattern(9, GherkinDialect.KeywordFor.But, "something else");
 
-            void AssertPattern(int index, PatternKind patternKind, string pattern)
+            void AssertPattern(int index, GherkinDialect.KeywordFor patternKind, string pattern)
             {
                 var thePattern = sut.ScenarioStepPatterns[index];
 
@@ -430,7 +430,7 @@ in it";
 
             //assert.
             Assert.NotNull(match);
-            Assert.Equal(PatternKind.When, match.Kind);
+            Assert.Equal(GherkinDialect.KeywordFor.When, match.Kind);
             Assert.Equal("this matches", match.OriginalPattern);
         }
 

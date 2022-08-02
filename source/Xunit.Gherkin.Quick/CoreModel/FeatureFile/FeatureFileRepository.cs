@@ -20,7 +20,7 @@ namespace Xunit.Gherkin.Quick
 
         public FeatureFile GetByFilePath(string filePath)
         {
-            var gherkinDocument = ParseGherkinDocument(filePath);
+            var gherkinDocument = ParseGherkinDocument(filePath).RegisterLanguage();
             return new FeatureFile(gherkinDocument);
         }
 

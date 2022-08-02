@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Xunit.Abstractions;
+
 using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
@@ -31,7 +32,7 @@ namespace Xunit.Gherkin.Quick
 
             foreach (var feature in features)
             {
-                foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+                foreach (var scenario in feature.Scenarios())
                 {
                     var tags = feature.GetScenarioTags(scenario.Name);
                     bool skip = feature.IsScenarioIgnored(scenario.Name);

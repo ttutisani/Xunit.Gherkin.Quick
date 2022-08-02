@@ -1,11 +1,19 @@
 ﻿using Gherkin.Ast;
 using System.Linq;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./Placeholders/Placeholders.em.feature")]
+    public class Placeholder : Placeholders.Placeholder { }
+
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
 {
     [FeatureFile("./Placeholders/Placeholders.feature")]
-    public sealed class Placeholder : Feature
+    public class Placeholder : Feature
     {
+        
         private DataTable _data;
 
         [Given("I have supplied a DataTable with")]

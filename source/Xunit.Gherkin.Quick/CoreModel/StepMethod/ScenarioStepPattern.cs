@@ -19,9 +19,9 @@ namespace Xunit.Gherkin.Quick
         /// </summary>
         public string RegexPattern { get { return _regexPattern; } }
 
-        public PatternKind Kind { get; }
+        public GherkinDialect.KeywordFor Kind { get; }
 
-        public ScenarioStepPattern(string pattern, string regexPattern, PatternKind stepMethodKind)
+        public ScenarioStepPattern(string pattern, string regexPattern, GherkinDialect.KeywordFor stepMethodKind)
         {
             _originalPattern = !string.IsNullOrWhiteSpace(pattern) 
                 ? pattern 

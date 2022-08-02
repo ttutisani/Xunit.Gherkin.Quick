@@ -1,5 +1,11 @@
 ﻿using System.Threading;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./CucumberExpressions/PassParameters.em.feature")]
+    public class PassParameters : CucumberExpressions.PassParameters { }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer.CucumberExpressions
 {
     [FeatureFile("./CucumberExpressions/PassParameters.feature")]

@@ -1,30 +1,24 @@
-﻿using Gherkin.Ast;
-using System.Linq;
+﻿using System.Linq;
+using Gherkin.Ast;
 
 namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureFile
     {
+        
         public GherkinDocument GherkinDocument { get; }
 
         public FeatureFile(GherkinDocument gherkinDocument)
-        {
-            GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
-        }
+            => GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
 
         public global::Gherkin.Ast.Scenario GetScenario(string scenarioName)
-        {
-            return GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioName) as global::Gherkin.Ast.Scenario;
-        }
+            => GherkinDocument.Feature.Scenarios().FirstOrDefault(s => s.Name == scenarioName);
+        
+        public Background GetBackground()
+            => GherkinDocument.Feature.Children.OfType<Background>().SingleOrDefault();
 
-		public global::Gherkin.Ast.Background GetBackground()
-		{
-			return GherkinDocument.Feature.Children.OfType<global::Gherkin.Ast.Background>().SingleOrDefault();
-		}
+        internal global::Gherkin.Ast.Scenario GetScenarioOutline(string scenarioOutlineName)
+            => GherkinDocument.Feature.Outlines().FirstOrDefault(s => s.Name == scenarioOutlineName);
 
-        internal ScenarioOutline GetScenarioOutline(string scenarioOutlineName)
-        {
-            return GherkinDocument.Feature.Children.FirstOrDefault(s => s.Name == scenarioOutlineName) as global::Gherkin.Ast.ScenarioOutline;
-        }
     }
 }

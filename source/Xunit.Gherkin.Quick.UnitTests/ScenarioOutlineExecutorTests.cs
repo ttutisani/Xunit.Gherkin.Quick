@@ -493,12 +493,12 @@ namespace UnitTests
                 Gherkin.Ast.StepArgument stepArgument = null)
             {
                 return new Gherkin.Ast.GherkinDocument(
-                    new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                    new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.Scenario[]
                     {
-                    new Gherkin.Ast.ScenarioOutline(
+                    new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario Outline",
                         outlineName,
                         null,
                         new Gherkin.Ast.Step[]
@@ -637,12 +637,12 @@ namespace UnitTests
                 Gherkin.Ast.StepArgument stepArgument = null)
             {
                 return new Gherkin.Ast.GherkinDocument(
-                    new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                    new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.Scenario[]
                     {
-                    new Gherkin.Ast.ScenarioOutline(
+                    new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario Outline",
                         outlineName,
                         null,
                         new Gherkin.Ast.Step[]

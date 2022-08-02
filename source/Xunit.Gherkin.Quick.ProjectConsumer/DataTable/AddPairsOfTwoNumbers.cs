@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
-    public sealed partial class AddTwoNumbers
+    public partial class AddTwoNumbers
     {
         [Given(@"following table of (\d+) inputs and outputs:")]
         public void Following_table_of_inputs_and_outputs(int inputCount, DataTable dataTable)

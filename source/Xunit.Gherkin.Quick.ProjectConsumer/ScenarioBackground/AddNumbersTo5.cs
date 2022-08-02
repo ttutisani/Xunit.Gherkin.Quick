@@ -1,7 +1,14 @@
-﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
+﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./ScenarioBackground/AddNumbersTo5.em.feature")]
+    public class AddNumbersTo5 : Addition.AddNumbersTo5 { }
+
+}
+
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Addition
 {
     [FeatureFile("./ScenarioBackground/AddNumbersTo5.feature")]
-    public sealed class AddNumbersTo5 : Feature
+    public class AddNumbersTo5 : Feature
     {
         private readonly Calculator _calculator = new Calculator();
 

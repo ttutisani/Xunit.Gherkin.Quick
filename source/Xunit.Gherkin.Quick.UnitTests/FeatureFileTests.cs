@@ -96,15 +96,16 @@ namespace UnitTests
             Gherkin.Ast.StepArgument stepArgument = null)
         {
             return new Gherkin.Ast.GherkinDocument(
-                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.Scenario[]
                 {
                     new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario",
                         scenario,
                         null,
-                        new Gherkin.Ast.Step[]{ })
+                        new Gherkin.Ast.Step[]{ }
+                        , System.Array.Empty<global::Gherkin.Ast.Examples>())
                 }),
                 new Gherkin.Ast.Comment[0]);
         }
@@ -112,7 +113,7 @@ namespace UnitTests
         private static Gherkin.Ast.GherkinDocument CreateGherkinDocumentWithBackground()
         {
             return new Gherkin.Ast.GherkinDocument(
-                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.Background[]
                 {
                     new Gherkin.Ast.Background(
                         null,
@@ -129,12 +130,12 @@ namespace UnitTests
             Gherkin.Ast.StepArgument stepArgument = null)
         {
             return new Gherkin.Ast.GherkinDocument(
-                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.ScenarioDefinition[]
+                new Gherkin.Ast.Feature(new Gherkin.Ast.Tag[0], null, null, null, null, null, new Gherkin.Ast.Scenario[]
                 {
-                    new Gherkin.Ast.ScenarioOutline(
+                    new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario Outline",
                         scenario,
                         null,
                         new Gherkin.Ast.Step[]{ },

@@ -2,10 +2,16 @@
 using System.Globalization;
 using System.Threading;
 
+namespace Xunit.Gherkin.Quick.ProjectConsumer.Emoji
+{
+    [FeatureFile("./GivenWhenThenTests/SimpleParameterTypes.em.feature")]
+    public class SimpleParameterTypes : ProjectConsumer.SimpleParameterTypes { }
+}
+
 namespace Xunit.Gherkin.Quick.ProjectConsumer
 {
     [FeatureFile("./GivenWhenThenTests/SimpleParameterTypes.feature")]
-    public sealed class SimpleParameterTypes : Feature
+    public class SimpleParameterTypes : Feature
     {
         public SimpleParameterTypes()
         {

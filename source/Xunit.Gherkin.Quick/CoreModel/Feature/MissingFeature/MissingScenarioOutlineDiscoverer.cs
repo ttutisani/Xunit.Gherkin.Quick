@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Xunit.Abstractions;
+
 using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
@@ -28,7 +29,7 @@ namespace Xunit.Gherkin.Quick
 
             foreach (var feature in features)
             {
-                foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
+                foreach (var scenarioOutline in feature.Outlines())
                 {
                     foreach (var example in scenarioOutline.Examples)
                     {

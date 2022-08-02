@@ -14,27 +14,27 @@ namespace UnitTests
                     new object[]
                     {
                         new GivenAttribute("123"),
-                        PatternKind.Given
+                        GherkinDialect.KeywordFor.Given
                     },
                     new object[]
                     {
                         new WhenAttribute("123"),
-                        PatternKind.When
+                        GherkinDialect.KeywordFor.When
                     },
                     new object[]
                     {
                         new ThenAttribute("123"),
-                        PatternKind.Then
+                        GherkinDialect.KeywordFor.Then
                     },
                     new object[]
                     {
                         new AndAttribute("123"),
-                        PatternKind.And
+                        GherkinDialect.KeywordFor.And
                     },
                     new object[]
                     {
                         new ButAttribute("123"),
-                        PatternKind.But
+                        GherkinDialect.KeywordFor.But
                     }
                 };
             }
@@ -44,7 +44,7 @@ namespace UnitTests
         [MemberData(nameof(AllStepDefinitionAttributes))]
         internal void ToStepMethodKind_Converts_based_on_Attribute_type(
             BaseStepDefinitionAttribute attribute,
-            PatternKind kind
+            GherkinDialect.KeywordFor kind
             )
         {
             //act.
@@ -55,25 +55,25 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(PatternKind.Given, "Given", true)]
-        [InlineData(PatternKind.Given, "And", false)]
-        [InlineData(PatternKind.Given, "*", true)]
-        [InlineData(PatternKind.When, "When", true)]
-        [InlineData(PatternKind.When, "Given", false)]
-        [InlineData(PatternKind.When, "*", true)]
-        [InlineData(PatternKind.Then, "Then", true)]
-        [InlineData(PatternKind.Then, "But", false)]
-        [InlineData(PatternKind.Then, "*", true)]
-        [InlineData(PatternKind.And, "And", true)]
-        [InlineData(PatternKind.And, "Given", false)]
-        [InlineData(PatternKind.And, "*", true)]
+        [InlineData(GherkinDialect.KeywordFor.Given, "Given", true)]
+        [InlineData(GherkinDialect.KeywordFor.Given, "And", false)]
+        [InlineData(GherkinDialect.KeywordFor.Given, "*", true)]
+        [InlineData(GherkinDialect.KeywordFor.When, "When", true)]
+        [InlineData(GherkinDialect.KeywordFor.When, "Given", false)]
+        [InlineData(GherkinDialect.KeywordFor.When, "*", true)]
+        [InlineData(GherkinDialect.KeywordFor.Then, "Then", true)]
+        [InlineData(GherkinDialect.KeywordFor.Then, "But", false)]
+        [InlineData(GherkinDialect.KeywordFor.Then, "*", true)]
+        [InlineData(GherkinDialect.KeywordFor.And, "And", true)]
+        [InlineData(GherkinDialect.KeywordFor.And, "Given", false)]
+        [InlineData(GherkinDialect.KeywordFor.And, "*", true)]
         internal void Match_Is_Comparing_With_String_Keyword(
-            PatternKind patternKind,
+            GherkinDialect.KeywordFor patternKind,
             string keyword,
             bool expectedMatch)
         {
             //act.
-            var actualMatch = patternKind.Matches(keyword);
+            var actualMatch = patternKind.CouldBe(keyword);
 
             //assert.
             Assert.Equal(expectedMatch, actualMatch);

@@ -95,12 +95,12 @@ namespace UnitTests
             string[] backgroundSteps = null)
         {
 
-            var definitions = new List<global::Gherkin.Ast.ScenarioDefinition>
+            var definitions = new List<global::Gherkin.Ast.StepsContainer>
             {
                 new Gherkin.Ast.Scenario(
                         new Gherkin.Ast.Tag[0],
                         null,
-                        null,
+                        "Scenario",
                         scenario,
                         null,
                         steps.Select(s =>
@@ -111,10 +111,11 @@ namespace UnitTests
                                 s.Substring(0, spaceIndex).Trim(),
                                 s.Substring(spaceIndex).Trim(),
                                 stepArgument);
-                        }).ToArray())
+                        }).ToArray(),
+                        Array.Empty<global::Gherkin.Ast.Examples>())
             };
 
-            if(backgroundSteps != null)
+            if (backgroundSteps != null)
             {
                 definitions.Add(
                     new Gherkin.Ast.Background(
@@ -331,7 +332,7 @@ namespace UnitTests
             var scenario = sut.ExtractScenario(CreateGherkinDocument("scenario 123", new string[]
             {
                 "Given something else"
-            }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First());
+            }).Feature.Scenarios().First());
 
             //assert.
             Assert.NotNull(scenario);
