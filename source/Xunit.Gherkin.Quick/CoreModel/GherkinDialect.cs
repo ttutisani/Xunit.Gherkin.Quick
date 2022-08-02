@@ -21,9 +21,8 @@ namespace Xunit.Gherkin.Quick
         private static readonly Gherkin.GherkinDialectProvider GherkingDialectProvider;
         private static readonly Dictionary<string, Gherkin.GherkinDialect> Dialects;
 
-        public static void Register(string? language, Gherkin.Ast.Location? location)
+        public static void Register(string language, Gherkin.Ast.Location? location)
         {
-            if (language is null || location is null) return;
 
             if (Dialects.Keys.Contains(language)) return;
             
@@ -74,6 +73,16 @@ namespace Xunit.Gherkin.Quick
 
         public static bool IsOutline(this Ast.Scenario @this)
             => KeywordFor.Outline.CouldBe(@this.Keyword);
+
+        public static Ast.GherkinDocument RegisterLanguage(this Ast.GherkinDocument @this)
+        {
+            var language = @this.Feature?.Language ?? GherkingDialectProvider.DefaultDialect.Language;
+            var location = @this.Feature?.Location;
+
+            Register(language, location);
+
+            return @this;
+        }
 
     }
 }

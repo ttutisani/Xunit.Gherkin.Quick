@@ -13,14 +13,7 @@ namespace Xunit.Gherkin.Quick
         public GherkinDocument GherkinDocument { get; }
 
         public FeatureFile(GherkinDocument gherkinDocument)
-        {
-            GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
-
-            GherkinDialect.Register(
-                GherkinDocument.Feature?.Language,
-                GherkinDocument.Feature?.Location
-            );
-        }
+            => GherkinDocument = gherkinDocument ?? throw new System.ArgumentNullException(nameof(gherkinDocument));
 
         public global::Gherkin.Ast.Scenario GetScenario(string scenarioName)
             => GherkinDocument.Feature.Scenarios().FirstOrDefault(s => s.Name == scenarioName);
