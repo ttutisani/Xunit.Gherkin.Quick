@@ -24,7 +24,7 @@ namespace UnitTests
         public async Task ExecuteScenarioOutlineAsync_Requires_FeatureInstance()
         {
             //act / assert.
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioOutlineAsync(null, "scenario name", "example name", 0));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioOutlineAsync(null, "scenario name", "example name", 0, ""));
         }
 
         [Theory]
@@ -40,10 +40,11 @@ namespace UnitTests
             Type expectedExceptionType)
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var featureInstance = new FeatureForNullArgumentTests();
 
             //act / assert.
-            await Assert.ThrowsAsync(expectedExceptionType, async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex));
+            await Assert.ThrowsAsync(expectedExceptionType, async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex, featureFilePath));
         }
 
         private sealed class FeatureForNullArgumentTests : Feature
@@ -73,7 +74,7 @@ namespace UnitTests
 			var output = new Mock<ITestOutputHelper>();
 			featureInstance.InternalOutput = output.Object;
 		
-			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0);
+			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0, "");
 
             _featureFileRepository.Verify();
 			Assert.Equal(5, featureInstance.CallStack.Count);
@@ -97,6 +98,7 @@ namespace UnitTests
             )
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", $"{a}", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
@@ -112,7 +114,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex);
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -276,6 +278,7 @@ namespace UnitTests
             )
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", $"{a}", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
@@ -291,7 +294,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, outlineName, exampleName, exampleRowIndex));
+            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, outlineName, exampleName, exampleRowIndex, featureFilePath));
             Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
 
             //assert.
@@ -415,6 +418,7 @@ namespace UnitTests
             int exampleRowIndex)
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
@@ -446,7 +450,7 @@ namespace UnitTests
                     .Verifiable();
 
             //act.
-            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex);
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -594,6 +598,7 @@ namespace UnitTests
             int exampleRowIndex)
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDocStringScenarioStep();
             var output = new Mock<ITestOutputHelper>();
@@ -611,7 +616,7 @@ namespace UnitTests
                     .Verifiable();
 
             //act.
-            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex);
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();

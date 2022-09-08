@@ -24,7 +24,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Requires_FeatureInstance()
         {
             //act / assert.
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(null, "valid scenario name"));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(null, "valid scenario name", "valid route"));
         }
 
         [Theory]
@@ -35,10 +35,11 @@ namespace UnitTests
         public async Task ExecuteScenario_Requires_ScenarioName(string scenarioName)
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var featureInstance = new UselessFeature();
 
             //act / assert.
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath));
         }
 
         private sealed class UselessFeature : Feature { }		
@@ -47,6 +48,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_All_Scenario_Steps()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
@@ -69,7 +71,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -215,6 +217,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Successful_Scenario_Steps_And_Skips_The_Rest()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
@@ -237,7 +240,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
+            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath));
             Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
 
             //assert.
@@ -367,12 +370,13 @@ namespace UnitTests
 				.Returns(new FeatureFile(gherkinDocument))
 				.Verifiable();
 
+            var featurePath = "";
 			var featureInstance = new FeatureWithBackgroundSteps();
 			var output = new Mock<ITestOutputHelper>();
 			featureInstance.InternalOutput = output.Object;
 
 			//act.
-			await _sut.ExecuteScenarioAsync(featureInstance, "test scenario");
+			await _sut.ExecuteScenarioAsync(featureInstance, "test scenario", featurePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -416,6 +420,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
@@ -451,7 +456,7 @@ namespace UnitTests
                 .Verifiable();
             
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -498,6 +503,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var featureInstance = new FeatureWithDocStringScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
@@ -515,7 +521,7 @@ namespace UnitTests
                 .Verifiable();
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -541,6 +547,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Scenario_With_Shared_StepMethod()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";            
             const string scenarioName = "scenario 123";
 
             var featureInstance = new FeatureWithSharedStepMethod();
@@ -560,7 +567,7 @@ namespace UnitTests
                 })));
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             Assert.Equal(7, featureInstance.CallStack.Count);
@@ -608,6 +615,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Scenario_With_Star_Notation()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var gherkinFeature = new GherkinFeatureBuilder()
                 .WithScenario("S", steps => steps.Star("I have some cukes", null))
                 .Build();
@@ -621,7 +629,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, "S");
+            await _sut.ExecuteScenarioAsync(featureInstance, "S", featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -645,12 +653,13 @@ namespace UnitTests
         public async Task ExecuteScenario_DoesNotAllow_AsyncVoid_Steps()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var feature = new FeatureWithAsyncVoidStep();
             var output = new Mock<ITestOutputHelper>();
             feature.InternalOutput = output.Object;
 
             //act / assert.
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _sut.ExecuteScenarioAsync(feature, "S"));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _sut.ExecuteScenarioAsync(feature, "S", featureFilePath));
         }
 
         private sealed class FeatureWithAsyncVoidStep : Feature
