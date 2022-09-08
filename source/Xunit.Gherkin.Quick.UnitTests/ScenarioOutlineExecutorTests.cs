@@ -65,8 +65,8 @@ namespace UnitTests
 						.WithExampleHeadings("a", "b", "sum")
 						.WithExamples("", db => db.WithData("1", "2", "3")))
 				.Build();
-			
-			_featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+			var featureFilePath = $"{nameof(FeatureWithScenarioSteps)}.feature";
+			_featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
 				.Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(feature, new Gherkin.Ast.Comment[0])))
 				.Verifiable();
 
@@ -74,7 +74,7 @@ namespace UnitTests
 			var output = new Mock<ITestOutputHelper>();
 			featureInstance.InternalOutput = output.Object;
 		
-			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0, "");
+			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0, featureFilePath);
 
             _featureFileRepository.Verify();
 			Assert.Equal(5, featureInstance.CallStack.Count);
@@ -98,14 +98,14 @@ namespace UnitTests
             )
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", $"{a}", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps.ScenarioStep4Text.Replace(@"(\d+)", $"{sum}", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps)}.feature";
 
             var scenarioOutlineName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioOutlineName)))
                 .Verifiable();
 
@@ -278,14 +278,14 @@ namespace UnitTests
             )
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", $"{a}", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", $"{sum}", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature";
 
             var outlineName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(outlineName)))
                 .Verifiable();
 
@@ -418,13 +418,13 @@ namespace UnitTests
             int exampleRowIndex)
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
+            var featureFilePath = $"{nameof(FeatureWithDataTableScenarioStep)}.feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(FeatureWithDataTableScenarioStep.CreateGherkinDocument(scenarioName,
                     new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
                     {
@@ -598,7 +598,6 @@ namespace UnitTests
             int exampleRowIndex)
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDocStringScenarioStep();
             var output = new Mock<ITestOutputHelper>();
@@ -610,7 +609,8 @@ namespace UnitTests
 "---" + Environment.NewLine +
 "in it";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDocStringScenarioStep)}.feature"))
+            var featureFilePath = $"{nameof(FeatureWithDocStringScenarioStep)}.feature";
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(FeatureWithDocStringScenarioStep.CreateGherkinDocument(scenarioName,
                     new Gherkin.Ast.DocString(null, null, docStringContent))))
                     .Verifiable();

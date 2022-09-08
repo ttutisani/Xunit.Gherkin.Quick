@@ -48,14 +48,14 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_All_Scenario_Steps()
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps)}.feature";
 
             var scenarioName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] 
                     {
@@ -217,14 +217,14 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Successful_Scenario_Steps_And_Skips_The_Rest()
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var step1Text = "Given " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep1Text.Replace(@"(\d+)", "12", StringComparison.InvariantCultureIgnoreCase);
             var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature";
 
             var scenarioName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] 
                     {
@@ -366,11 +366,12 @@ namespace UnitTests
 
 			var gherkinDocument = new Gherkin.Ast.GherkinDocument(gherkinFeaure, new Gherkin.Ast.Comment[0]);
 
-			_featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithBackgroundSteps)}.feature"))
+            var featurePath = $"{nameof(FeatureWithBackgroundSteps)}.feature";
+
+			_featureFileRepository.Setup(r => r.GetByFilePath(featurePath))
 				.Returns(new FeatureFile(gherkinDocument))
 				.Verifiable();
 
-            var featurePath = "";
 			var featureInstance = new FeatureWithBackgroundSteps();
 			var output = new Mock<ITestOutputHelper>();
 			featureInstance.InternalOutput = output.Object;
@@ -420,13 +421,13 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_ScenarioStep_With_DataTable()
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var scenarioName = "scenario123";
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
+            var featureFilePath = $"{nameof(FeatureWithDataTableScenarioStep)}.feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] 
                     {
@@ -503,7 +504,6 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_ScenarioStep_With_DocString()
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var featureInstance = new FeatureWithDocStringScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
@@ -513,8 +513,9 @@ namespace UnitTests
 "---" + Environment.NewLine +
 "in it";
             var scenarioName = "scenario 1231121";
+            var featureFilePath = nameof(FeatureWithDocStringScenarioStep) + ".feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
                     new Gherkin.Ast.DocString(null, null, docStringContent))))
@@ -547,14 +548,14 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Scenario_With_Shared_StepMethod()
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";            
             const string scenarioName = "scenario 123";
 
             var featureInstance = new FeatureWithSharedStepMethod();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
+            var featureFilePath = nameof(FeatureWithSharedStepMethod) + ".feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithSharedStepMethod)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName, new string[]
                 {
                     "Given I chose 1 as first number",
@@ -615,12 +616,12 @@ namespace UnitTests
         public async Task ExecuteScenario_Executes_Scenario_With_Star_Notation()
         {
             //arrange.
-            var featureFilePath = "/some/valid/path";
             var gherkinFeature = new GherkinFeatureBuilder()
                 .WithScenario("S", steps => steps.Star("I have some cukes", null))
                 .Build();
-
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithStarNotation)}.feature"))
+            var featureFilePath = $"{nameof(FeatureWithStarNotation)}.feature";
+            
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
                 .Verifiable();
 
