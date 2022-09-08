@@ -57,13 +57,13 @@ namespace UnitTests
                 .Verifiable();
 
             //act.
-            var feature = _sut.Discover(featureClassType);
+            var feature = _sut.Discover(featureClassType).GetEnumerator().Current;
 
             //assert.
             _featureFileRepository.Verify();
 
-            Assert.NotNull(feature);
-            Assert.Same(gherkinFeature, feature);
+            Assert.NotNull(feature.Item2);
+            Assert.Same(gherkinFeature, feature.Item2);
         }
 
         private sealed class MyFeature : Feature
