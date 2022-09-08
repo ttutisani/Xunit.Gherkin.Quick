@@ -7,8 +7,14 @@ namespace Xunit.Gherkin.Quick
     {
         public string FeatureFilePath { get; }
 
-        private FeatureClassInfo(string featureFilePath)
+        public string FileNameSearchPattern { get; }
+
+        private FeatureClassInfo(string featureFilePath, string fileNameSearchPattern)
         {
+            FileNameSearchPattern = !string.IsNullOrWhiteSpace(fileNameSearchPattern)
+                ? fileNameSearchPattern 
+                : throw new System.ArgumentNullException(nameof(fileNameSearchPattern));
+
             FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath)
                 ? featureFilePath
                 : throw new ArgumentNullException(nameof(featureFilePath));
@@ -21,7 +27,12 @@ namespace Xunit.Gherkin.Quick
                 .GetCustomAttribute<FeatureFileAttribute>();
             var featureFilePath = featureFileAttribute?.Path ?? $"{featureClassType.Name}.feature";
 
-            return new FeatureClassInfo(featureFilePath);
+            var featureFileNameSearchPatternAttribute = featureClassType
+                .GetTypeInfo()
+                .GetCustomAttribute<FeatureFileSearchPatternAttribute>();
+            var featureFileNameSearchPattern = featureFileNameSearchPatternAttribute?.Pattern ?? $"{featureClassType.Name}*.feature";
+
+            return new FeatureClassInfo(featureFilePath, featureFileNameSearchPattern);
         }
     }
 }

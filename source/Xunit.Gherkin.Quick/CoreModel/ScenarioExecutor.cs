@@ -12,7 +12,7 @@ namespace Xunit.Gherkin.Quick
             _featureFileRepository = featureFileRepository ?? throw new ArgumentNullException(nameof(featureFileRepository));
         }
 
-        public async Task ExecuteScenarioAsync(Feature featureInstance, string scenarioName)
+        public async Task ExecuteScenarioAsync(Feature featureInstance, string scenarioName, string featurePath)
         {
             if (featureInstance == null)
                 throw new ArgumentNullException(nameof(featureInstance));
@@ -21,7 +21,7 @@ namespace Xunit.Gherkin.Quick
                 throw new ArgumentNullException(nameof(scenarioName));
 
             var featureClass = FeatureClass.FromFeatureInstance(featureInstance);
-            var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
+            var featureFile = _featureFileRepository.GetByFilePath(featurePath);
             
             var gherkinScenario = featureFile.GetScenario(scenarioName);                
 

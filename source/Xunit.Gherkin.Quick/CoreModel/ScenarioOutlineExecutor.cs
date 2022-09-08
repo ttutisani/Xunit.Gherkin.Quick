@@ -16,7 +16,8 @@ namespace Xunit.Gherkin.Quick
             Feature featureInstance, 
             string scenarioOutlineName, 
             string exampleName, 
-            int exampleRowIndex)
+            int exampleRowIndex,
+            string featurePath)
         {
             if (featureInstance == null)
                 throw new ArgumentNullException(nameof(featureInstance));
@@ -28,7 +29,7 @@ namespace Xunit.Gherkin.Quick
                 throw new ArgumentException($"`{nameof(exampleRowIndex)}` must be positive", nameof(exampleRowIndex));
 
             var featureClass = FeatureClass.FromFeatureInstance(featureInstance);
-            var featureFile = _featureFileRepository.GetByFilePath(featureClass.FeatureFilePath);
+            var featureFile = _featureFileRepository.GetByFilePath(featurePath);
 
             var gherkinScenarioOutline = featureFile.GetScenarioOutline(scenarioOutlineName);
             if (gherkinScenarioOutline == null)

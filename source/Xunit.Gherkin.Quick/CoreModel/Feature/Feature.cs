@@ -15,20 +15,21 @@ namespace Xunit.Gherkin.Quick
     public abstract class Feature : FeatureBase
     {
         [Scenario]
-        internal async Task Scenario(string scenarioName)
+        internal async Task Scenario(string scenarioName, string featurePath)
         {
             var scenarioExecutor = new ScenarioExecutor(new FeatureFileRepository("*.feature"));
-            await scenarioExecutor.ExecuteScenarioAsync(this, scenarioName);
+            await scenarioExecutor.ExecuteScenarioAsync(this, scenarioName, featurePath);
         }
 
         [ScenarioOutline]
         internal async Task ScenarioOutline(
             string scenarioOutlineName, 
             string exampleName, 
-            int exampleIndex)
+            int exampleIndex,
+            string featurePath)
         {
             var scenarioOutlineExecutor = new ScenarioOutlineExecutor(new FeatureFileRepository("*.feature"));
-            await scenarioOutlineExecutor.ExecuteScenarioOutlineAsync(this, scenarioOutlineName, exampleName, exampleIndex);
+            await scenarioOutlineExecutor.ExecuteScenarioOutlineAsync(this, scenarioOutlineName, exampleName, exampleIndex, featurePath);
         }
     }
 }
