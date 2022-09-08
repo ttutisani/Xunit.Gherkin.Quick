@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 namespace Xunit.Gherkin.Quick
@@ -24,7 +25,8 @@ namespace Xunit.Gherkin.Quick
             var repo = new FeatureFileRepository(fileNameSearchPattern);
             
             var allFiles = repo.GetFeatureFilePaths();
-            if (!allFiles.Contains(fileName)) {
+
+            if (File.Exists(fileName) && !allFiles.Contains(fileName)) {
                 allFiles.Add(fileName);
             }
 
