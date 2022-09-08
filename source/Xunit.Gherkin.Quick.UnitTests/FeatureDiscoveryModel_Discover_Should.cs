@@ -1,5 +1,6 @@
 ﻿using Moq;
 using System;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -57,7 +58,7 @@ namespace UnitTests
                 .Verifiable();
 
             //act.
-            var feature = _sut.Discover(featureClassType).GetEnumerator().Current;
+            var feature = _sut.Discover(featureClassType).First();
 
             //assert.
             _featureFileRepository.Verify();
