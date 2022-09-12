@@ -19,7 +19,10 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            var features = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
+            var featureClass = testMethod.TestClass.Class.ToRuntimeType();
+            var featureClassInfo = FeatureClassInfo.FromFeatureClassType(featureClass);
+
+            var features = new FeatureDiscoveryModel(new FeatureFileRepository(featureClassInfo.FileNameSearchPattern)).Discover(featureClass);
             foreach (var feature in features)
             {
                 foreach (var scenario in feature.Item2.Children.OfType<global::Gherkin.Ast.Scenario>())

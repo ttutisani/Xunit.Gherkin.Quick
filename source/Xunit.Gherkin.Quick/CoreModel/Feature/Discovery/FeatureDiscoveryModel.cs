@@ -23,14 +23,14 @@ namespace Xunit.Gherkin.Quick
             var fileName = featureClassInfo.FeatureFilePath;
             var featureFile = _featureFileRepository.GetByFilePath(fileName);
 
-            var repo = new FeatureFileRepository(fileNameSearchPattern);
+            var repo = _featureFileRepository; //new FeatureFileRepository(fileNameSearchPattern);
             
             var allFiles = repo.GetFeatureFilePaths();
 
             var newFeatures = allFiles
                 .FindAll(f => ! f.Equals(fileName)) // if pattern contains filename, this one is filtered
                 .Select(f => Tuple.Create<string,global::Gherkin.Ast.Feature>(f, _featureFileRepository.GetByFilePath(f).GherkinDocument.Feature))
-                .ToList();
+                .ToList() ?? new System.Collections.Generic.List<Tuple<string,global::Gherkin.Ast.Feature>>();
 
             if (featureFile != null) {
                 var feature = featureFile.GherkinDocument.Feature;
@@ -40,6 +40,7 @@ namespace Xunit.Gherkin.Quick
             if (newFeatures.Count == 0) {
                 throw new System.IO.FileNotFoundException($"No features founds for ${fileName} o ${fileNameSearchPattern}");
             }
+
             return newFeatures;
         }
     }
