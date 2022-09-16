@@ -23,9 +23,15 @@ namespace Xunit.Gherkin.Quick
             var referencedFiles = _featureClassInfoRepository.GetFeatureClassesInfo()
                 .Select(fc => fc.FeatureFilePath)
                 .ToList();
-
-            var newFiles = allFiles.Where(f => !referencedFiles.Contains(f))
+                
+            var referencedFilesByPattern = _featureClassInfoRepository.GetFeatureClassesInfo()
+                .SelectMany(fc => new FeatureFileRepository(fc.FileNameSearchPattern).GetFeatureFilePaths())
                 .ToList();
+
+            var newFiles = allFiles
+                .Where(f => !referencedFilesByPattern.Contains(f))
+                .Where(f => !referencedFiles.Contains(f))
+                .ToList();            
 
             var newFeatures = newFiles.Select(f => _featureFileRepository.GetByFilePath(f))
                 .Select(ff => ff.GherkinDocument.Feature)

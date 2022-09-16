@@ -43,6 +43,9 @@
     <None Update="Addition_ForMultipleUseCases\AddTwoNumbers.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Addition_ForMultipleUseCases\AddTwoNumbersExtra.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="BeforeAfterHooks\BeforeAfter.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
