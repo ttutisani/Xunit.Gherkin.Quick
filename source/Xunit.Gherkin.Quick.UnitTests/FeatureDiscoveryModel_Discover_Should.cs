@@ -1,5 +1,6 @@
 ﻿using Moq;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -35,7 +36,7 @@ namespace UnitTests
             string fileName)
         {
             //arrange.
-            _featureFileRepository.Setup(r => r.GetByFilePath(fileName))
+            _featureFileRepository.Setup(r => r.GetByFilePath(Path.GetFullPath(fileName)))
                 .Returns<FeatureFile>(null)
                 .Verifiable();
 
@@ -57,18 +58,19 @@ namespace UnitTests
             var gherkinFeature = new GherkinFeatureBuilder().WithScenario("scenario1", steps =>
                 steps.Given("step 1", null))
                 .Build();
-            _featureFileRepository.Setup(r => r.GetByFilePath(fileName))
+            _featureFileRepository.Setup(r => r.GetByFilePath(Path.GetFullPath(fileName)))
                 .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
                 .Verifiable();
 
             //act.
-            var feature = _sut.Discover(featureClassType).First();
+            var features = _sut.Discover(featureClassType);
+            var feature = features.First();
 
             //assert.
             _featureFileRepository.Verify();
-
+            
             Assert.NotNull(feature.Item2);
-            Assert.Same(gherkinFeature, feature.Item2);
+            Assert.Same( gherkinFeature , feature.Item2);
         }
 
         [Theory]
@@ -89,7 +91,7 @@ namespace UnitTests
                         steps.Given("step 1", null))
                         .Build();
 
-                    _featureFileRepository.Setup(r => r.GetByFilePath(file))
+                    _featureFileRepository.Setup(r => r.GetByFilePath(Path.GetFullPath(file)))
                         .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
                         .Verifiable();
                     ++i;
@@ -105,7 +107,7 @@ namespace UnitTests
             i = 0;
             features.ToList().ForEach(feature => {
                 Assert.NotNull(feature.Item2);
-                Assert.Equal(files[i], feature.Item1);
+                Assert.Equal(Path.GetFullPath(files[i]), feature.Item1);
                 // let's check scenarios are correct
                 Assert.Equal($"First scenario from Feature File {i+1}", feature.Item2.Children.First().Name);
                 ++i;
