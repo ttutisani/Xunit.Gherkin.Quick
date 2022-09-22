@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureClassInfo
     {
         public string FeatureFilePath { get; }
+        private Regex _matcher;
+        public bool IsPattern { get { return FeatureFilePath.Contains("*"); } }
 
-        public string FileNameSearchPattern { get; }
-
-        private FeatureClassInfo(string featureFilePath, string fileNameSearchPattern)
+        private FeatureClassInfo(string featureFilePath)
         {
-            FileNameSearchPattern = !string.IsNullOrWhiteSpace(fileNameSearchPattern)
-                ? fileNameSearchPattern 
-                : throw new System.ArgumentNullException(nameof(fileNameSearchPattern));
-
             FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath)
                 ? featureFilePath
                 : throw new ArgumentNullException(nameof(featureFilePath));
+
+            if (this.IsPattern) {
+                var regex = FeatureFilePath.Replace("*", @"(\w|\/\s)*");
+                this._matcher = new Regex(regex,
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            }
+
+
         }
 
         public static FeatureClassInfo FromFeatureClassType(Type featureClassType)
@@ -27,12 +32,13 @@ namespace Xunit.Gherkin.Quick
                 .GetCustomAttribute<FeatureFileAttribute>();
             var featureFilePath = featureFileAttribute?.Path ?? $"{featureClassType.Name}.feature";
 
-            var featureFileNameSearchPatternAttribute = featureClassType
-                .GetTypeInfo()
-                .GetCustomAttribute<FeatureFileSearchPatternAttribute>();
-            var featureFileNameSearchPattern = featureFileNameSearchPatternAttribute?.Pattern ?? $"{featureClassType.Name}*.feature";
+            return new FeatureClassInfo(featureFilePath);
+        }
 
-            return new FeatureClassInfo(featureFilePath, featureFileNameSearchPattern);
+        public bool MatchesFilePathPattern(string file) {
+            if (IsPattern) 
+                return _matcher.IsMatch(file);
+            return FeatureFilePath.Equals(file);
         }
     }
 }

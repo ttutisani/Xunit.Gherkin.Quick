@@ -9,7 +9,6 @@ namespace Xunit.Gherkin.Quick
     internal sealed class FeatureClass
     {
         public string FeatureFilePath { get; }
-        public string FileNameSearchPattern { get; }
 
         private readonly ReadOnlyCollection<StepMethodInfo> _stepMethods;
 

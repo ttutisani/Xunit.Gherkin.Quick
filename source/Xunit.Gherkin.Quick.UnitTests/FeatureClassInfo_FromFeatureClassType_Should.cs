@@ -14,28 +14,27 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(MyFeature), "MyFeature*.feature")]
-        [InlineData(typeof(MyFeatureWithPattern), "someother.pattern")]
-        [InlineData(typeof(MyFeatureWithFileNameAndPattern), "someother.pattern")]
+        [InlineData(typeof(MyFeature), false)]
+        [InlineData(typeof(MyFeatureWithPattern), true)]
+        [InlineData(typeof(MyFeatureWithFileNameAndPattern), true)]
         public void Construct_InfoClass_With_Search_Pattern(
             Type classType,
-            string pattern)
+            bool isPattern)
         {
             //act.
             var sut = FeatureClassInfo.FromFeatureClassType(classType);
 
             //assert.
             Assert.NotNull(sut);
-            Assert.Equal(pattern, sut.FileNameSearchPattern);
+            Assert.Equal(isPattern, sut.IsPattern);
         }
 
         private sealed class MyFeature : Feature { }
 
-        [FeatureFileSearchPattern("someother.pattern")]
+        [FeatureFile("someother*.pattern")]
         private sealed class MyFeatureWithPattern : Feature { }
 
-        [FeatureFile("some.file")]
-        [FeatureFileSearchPattern("someother.pattern")]
+        [FeatureFile("some*.file")]
         private sealed class MyFeatureWithFileNameAndPattern : Feature { }
     }
 }

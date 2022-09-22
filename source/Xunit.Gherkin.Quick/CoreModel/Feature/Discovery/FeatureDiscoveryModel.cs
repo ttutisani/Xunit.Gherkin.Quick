@@ -6,6 +6,16 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureDiscoveryModel
     {
+        internal sealed class FeatureFile {
+            public string Path { get; }
+            public global::Gherkin.Ast.Feature Feature { get; }
+
+            internal FeatureFile(string path ,global::Gherkin.Ast.Feature feature) {
+                this.Path = path;
+                this.Feature = feature;                
+            }
+        }
+
         private readonly IFeatureFileRepository _featureFileRepository;
 
         public FeatureDiscoveryModel(IFeatureFileRepository featureFileRepository)
@@ -13,28 +23,35 @@ namespace Xunit.Gherkin.Quick
             _featureFileRepository = featureFileRepository ?? throw new ArgumentNullException(nameof(featureFileRepository));
         }
 
-        public IEnumerable<Tuple<string,global::Gherkin.Ast.Feature>> Discover(Type featureClassType)
+        public List<FeatureFile> Discover(Type featureClassType)
         {
             if (featureClassType == null)
                 throw new ArgumentNullException(nameof(featureClassType));
 
-            var featureClassInfo = FeatureClassInfo.FromFeatureClassType(featureClassType);
-            var fileNameSearchPattern = featureClassInfo.FileNameSearchPattern;
-            var fileName = featureClassInfo.FeatureFilePath;
-            var featureFile = _featureFileRepository.GetByFilePath(Path.GetFullPath(fileName));
-          
-            var allFiles = _featureFileRepository.GetFeatureFilePaths();
-            if (featureFile != null) 
-                allFiles.Add(fileName);
+            var fileClassInfo = FeatureClassInfo.FromFeatureClassType(featureClassType);
+
+            var featureFilePaths = new List<string>();
                 
-            var newFeatures = allFiles
-                .Select(f => Path.GetFullPath(f))
-                .Distinct()
-                .Select(f => Tuple.Create<string,global::Gherkin.Ast.Feature>(f, _featureFileRepository.GetByFilePath(f).GherkinDocument.Feature))
-                .ToList() ?? new System.Collections.Generic.List<Tuple<string,global::Gherkin.Ast.Feature>>();
+            if (fileClassInfo.IsPattern) {
+                featureFilePaths.AddRange(
+                    _featureFileRepository.GetFeatureFilePaths()
+                    .FindAll(f => fileClassInfo.MatchesFilePathPattern(f))
+                );
+            } else {
+                var fileName = fileClassInfo.FeatureFilePath;
+                var featureFile = _featureFileRepository.GetByFilePath(fileName);
+                if (featureFile == null)
+                    throw new System.IO.FileNotFoundException("Feature file not found.", fileName);
+
+                featureFilePaths.Add(fileName);
+            }
+
+            var newFeatures = featureFilePaths
+                .Select(f => new FeatureFile(f, _featureFileRepository.GetByFilePath(f).GherkinDocument.Feature))
+                .ToList() ?? new List<FeatureFile>();
 
             if (newFeatures.Count == 0) {
-                throw new System.IO.FileNotFoundException($"No features found for ${fileName} or ${fileNameSearchPattern}");
+                throw new System.IO.FileNotFoundException($"No features found for pattern ${fileClassInfo.FeatureFilePath}");
             }
 
             return newFeatures;
