@@ -30,31 +30,28 @@ namespace Xunit.Gherkin.Quick
 
             var fileClassInfo = FeatureClassInfo.FromFeatureClassType(featureClassType);
 
-            var featureFilePaths = new List<string>();
+            var featurePathsAndFiles = new Dictionary<string,Gherkin.Quick.FeatureFile>();
                 
             if (fileClassInfo.IsPattern) {
-                featureFilePaths.AddRange(
-                    _featureFileRepository.GetFeatureFilePaths()
+                _featureFileRepository
+                    .GetFeatureFilePaths()
                     .FindAll(f => fileClassInfo.MatchesFilePathPattern(f))
-                );
+                    .ForEach( f=> featurePathsAndFiles.Add(f, _featureFileRepository.GetByFilePath(f)));
+                if (featurePathsAndFiles.Count == 0) {
+                    throw new System.IO.FileNotFoundException($"No features found for pattern ${fileClassInfo.FeatureFilePath}");
+                }
             } else {
                 var fileName = fileClassInfo.FeatureFilePath;
                 var featureFile = _featureFileRepository.GetByFilePath(fileName);
                 if (featureFile == null)
                     throw new System.IO.FileNotFoundException("Feature file not found.", fileName);
 
-                featureFilePaths.Add(fileName);
+                featurePathsAndFiles.Add(fileName, featureFile);
             }
 
-            var newFeatures = featureFilePaths
-                .Select(f => new FeatureFile(f, _featureFileRepository.GetByFilePath(f).GherkinDocument.Feature))
-                .ToList() ?? new List<FeatureFile>();
-
-            if (newFeatures.Count == 0) {
-                throw new System.IO.FileNotFoundException($"No features found for pattern ${fileClassInfo.FeatureFilePath}");
-            }
-
-            return newFeatures;
+            return featurePathsAndFiles
+                .Select(f => new FeatureFile(f.Key, f.Value.GherkinDocument.Feature))
+                .ToList();;
         }
     }
 }

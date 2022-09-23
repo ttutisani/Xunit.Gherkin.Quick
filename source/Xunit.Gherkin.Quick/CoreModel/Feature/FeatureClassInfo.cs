@@ -16,7 +16,7 @@ namespace Xunit.Gherkin.Quick
                 ? featureFilePath
                 : throw new ArgumentNullException(nameof(featureFilePath));
 
-            if (FeatureFilePath.Contains("*")) {
+            if (featureFilePath.Contains("*")) {
                 var regex = FeatureFilePath.Replace("*", @"(\w|\/\s)*");
                 this._matcher = new Regex(regex,
                     RegexOptions.Compiled | RegexOptions.IgnoreCase);
