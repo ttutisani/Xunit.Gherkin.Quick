@@ -8,7 +8,7 @@ namespace Xunit.Gherkin.Quick
     {
         public string FeatureFilePath { get; }
         private Regex _matcher;
-        public bool IsPattern { get { return FeatureFilePath.Contains("*"); } }
+        public bool IsPattern { get { return _matcher != null; } }
 
         private FeatureClassInfo(string featureFilePath)
         {
@@ -16,7 +16,7 @@ namespace Xunit.Gherkin.Quick
                 ? featureFilePath
                 : throw new ArgumentNullException(nameof(featureFilePath));
 
-            if (this.IsPattern) {
+            if (FeatureFilePath.Contains("*")) {
                 var regex = FeatureFilePath.Replace("*", @"(\w|\/\s)*");
                 this._matcher = new Regex(regex,
                     RegexOptions.Compiled | RegexOptions.IgnoreCase);
