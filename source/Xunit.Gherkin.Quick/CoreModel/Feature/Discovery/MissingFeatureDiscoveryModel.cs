@@ -20,11 +20,10 @@ namespace Xunit.Gherkin.Quick
         public List<global::Gherkin.Ast.Feature> Discover()
         {
             var allFiles = _featureFileRepository.GetFeatureFilePaths();
-            var referencedFiles = _featureClassInfoRepository.GetFeatureClassesInfo()
-                .Select(fc => fc.FeatureFilePath)
-                .ToList();
+            var fcis = _featureClassInfoRepository.GetFeatureClassesInfo();
 
-            var newFiles = allFiles.Where(f => !referencedFiles.Contains(f))
+            var newFiles = allFiles
+                .Where(f => ! fcis.Any(fci => fci.MatchesFilePathPattern(f)))
                 .ToList();
 
             var newFeatures = newFiles.Select(f => _featureFileRepository.GetByFilePath(f))

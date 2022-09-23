@@ -19,21 +19,24 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            var feature = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
+            var featureFiles = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
 
-            foreach (var scenario in feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+            foreach (var featureFile in featureFiles)
             {
-                var tags = feature.GetScenarioTags(scenario.Name);
-                bool skip = feature.IsScenarioIgnored(scenario.Name);
+                foreach (var scenario in featureFile.Feature.Children.OfType<global::Gherkin.Ast.Scenario>())
+                {
+                    var tags = featureFile.Feature.GetScenarioTags(scenario.Name);
+                    bool skip = featureFile.Feature.IsScenarioIgnored(scenario.Name);
 
-                yield return new ScenarioXunitTestCase(
-                    _messageSink, 
-                    testMethod, 
-                    feature.Name, 
-                    scenario.Name, 
-                    tags,
-                    skip,
-                    new object[] { scenario.Name });
+                    yield return new ScenarioXunitTestCase(
+                        _messageSink, 
+                        testMethod, 
+                        featureFile.Feature.Name, 
+                        scenario.Name, 
+                        tags,
+                        skip,
+                        new object[] { scenario.Name, featureFile.Path });
+                }
             }
         }
 

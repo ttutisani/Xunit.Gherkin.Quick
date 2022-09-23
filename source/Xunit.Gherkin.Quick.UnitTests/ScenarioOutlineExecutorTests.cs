@@ -24,7 +24,7 @@ namespace UnitTests
         public async Task ExecuteScenarioOutlineAsync_Requires_FeatureInstance()
         {
             //act / assert.
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioOutlineAsync(null, "scenario name", "example name", 0));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioOutlineAsync(null, "scenario name", "example name", 0, ""));
         }
 
         [Theory]
@@ -40,10 +40,11 @@ namespace UnitTests
             Type expectedExceptionType)
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var featureInstance = new FeatureForNullArgumentTests();
 
             //act / assert.
-            await Assert.ThrowsAsync(expectedExceptionType, async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex));
+            await Assert.ThrowsAsync(expectedExceptionType, async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex, featureFilePath));
         }
 
         private sealed class FeatureForNullArgumentTests : Feature
@@ -64,8 +65,8 @@ namespace UnitTests
 						.WithExampleHeadings("a", "b", "sum")
 						.WithExamples("", db => db.WithData("1", "2", "3")))
 				.Build();
-			
-			_featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+			var featureFilePath = $"{nameof(FeatureWithScenarioSteps)}.feature";
+			_featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
 				.Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(feature, new Gherkin.Ast.Comment[0])))
 				.Verifiable();
 
@@ -73,7 +74,7 @@ namespace UnitTests
 			var output = new Mock<ITestOutputHelper>();
 			featureInstance.InternalOutput = output.Object;
 		
-			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0);
+			await _sut.ExecuteScenarioOutlineAsync(featureInstance, "test outline", "", 0, featureFilePath);
 
             _featureFileRepository.Verify();
 			Assert.Equal(5, featureInstance.CallStack.Count);
@@ -101,9 +102,10 @@ namespace UnitTests
             var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps.ScenarioStep4Text.Replace(@"(\d+)", $"{sum}", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps)}.feature";
 
             var scenarioOutlineName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioOutlineName)))
                 .Verifiable();
 
@@ -112,7 +114,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex);
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioOutlineName, exampleName, exampleRowIndex, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -280,9 +282,10 @@ namespace UnitTests
             var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", $"{b}", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", $"{sum}", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature";
 
             var outlineName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(outlineName)))
                 .Verifiable();
 
@@ -291,7 +294,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, outlineName, exampleName, exampleRowIndex));
+            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioOutlineAsync(featureInstance, outlineName, exampleName, exampleRowIndex, featureFilePath));
             Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
 
             //assert.
@@ -419,8 +422,9 @@ namespace UnitTests
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
+            var featureFilePath = $"{nameof(FeatureWithDataTableScenarioStep)}.feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(FeatureWithDataTableScenarioStep.CreateGherkinDocument(scenarioName,
                     new Gherkin.Ast.DataTable(new Gherkin.Ast.TableRow[]
                     {
@@ -446,7 +450,7 @@ namespace UnitTests
                     .Verifiable();
 
             //act.
-            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex);
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -605,13 +609,14 @@ namespace UnitTests
 "---" + Environment.NewLine +
 "in it";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDocStringScenarioStep)}.feature"))
+            var featureFilePath = $"{nameof(FeatureWithDocStringScenarioStep)}.feature";
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(FeatureWithDocStringScenarioStep.CreateGherkinDocument(scenarioName,
                     new Gherkin.Ast.DocString(null, null, docStringContent))))
                     .Verifiable();
 
             //act.
-            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex);
+            await _sut.ExecuteScenarioOutlineAsync(featureInstance, scenarioName, exampleName, exampleRowIndex, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();

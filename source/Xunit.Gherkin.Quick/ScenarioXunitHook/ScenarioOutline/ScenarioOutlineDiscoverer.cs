@@ -20,30 +20,33 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
-            var feature = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
+            var featureFiles = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
 
-            foreach (var scenarioOutline in feature.Children.OfType<ScenarioOutline>())
+            foreach (var featureFile in featureFiles)
             {
-                foreach (var example in scenarioOutline.Examples)
+                foreach (var scenarioOutline in featureFile.Feature.Children.OfType<ScenarioOutline>())
                 {
-                    var rowIndex = 0;
-                    foreach (var row in example.TableBody)
+                    foreach (var example in scenarioOutline.Examples)
                     {
-                        var tags = feature.GetExamplesTags(scenarioOutline.Name, example.Name);
-                        var skip = feature.IsExamplesIgnored(scenarioOutline.Name, example.Name);
+                        var rowIndex = 0;
+                        foreach (var row in example.TableBody)
+                        {
+                            var tags = featureFile.Feature.GetExamplesTags(scenarioOutline.Name, example.Name);
+                            var skip = featureFile.Feature.IsExamplesIgnored(scenarioOutline.Name, example.Name);
 
-                        yield return new ScenarioXunitTestCase(
-                            _messageSink, 
-                            testMethod, 
-                            feature.Name,
-                            !string.IsNullOrWhiteSpace(example.Name)
-                                ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
-                                : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
-                            tags,
-                            skip,
-                            new object[] { scenarioOutline.Name, example.Name, rowIndex });
+                            yield return new ScenarioXunitTestCase(
+                                _messageSink, 
+                                testMethod, 
+                                featureFile.Feature.Name,
+                                !string.IsNullOrWhiteSpace(example.Name)
+                                    ? $"{scenarioOutline.Name} :: {example.Name} :: #{rowIndex + 1}"
+                                    : $"{scenarioOutline.Name} :: #{rowIndex + 1}",
+                                tags,
+                                skip,
+                                new object[] { scenarioOutline.Name, example.Name, rowIndex, featureFile.Path });
 
-                        rowIndex++;
+                            rowIndex++;
+                        }
                     }
                 }
             }

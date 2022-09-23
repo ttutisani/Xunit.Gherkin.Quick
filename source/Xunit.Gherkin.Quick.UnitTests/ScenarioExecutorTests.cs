@@ -24,7 +24,7 @@ namespace UnitTests
         public async Task ExecuteScenario_Requires_FeatureInstance()
         {
             //act / assert.
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(null, "valid scenario name"));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(null, "valid scenario name", "valid route"));
         }
 
         [Theory]
@@ -35,10 +35,11 @@ namespace UnitTests
         public async Task ExecuteScenario_Requires_ScenarioName(string scenarioName)
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var featureInstance = new UselessFeature();
 
             //act / assert.
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath));
         }
 
         private sealed class UselessFeature : Feature { }		
@@ -51,9 +52,10 @@ namespace UnitTests
             var step2Text = "And " + FeatureWithScenarioSteps.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps)}.feature";
 
             var scenarioName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] 
                     {
@@ -69,7 +71,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -219,9 +221,10 @@ namespace UnitTests
             var step2Text = "And " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep2Text.Replace(@"(\d+)", "15", StringComparison.InvariantCultureIgnoreCase);
             var step3Text = "When " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep3Text;
             var step4Text = "Then " + FeatureWithScenarioSteps_And_Throwing.ScenarioStep4Text.Replace(@"(\d+)", "27", StringComparison.InvariantCultureIgnoreCase);
+            var featureFilePath = $"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature";
 
             var scenarioName = "scenario 12345";
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithScenarioSteps_And_Throwing)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] 
                     {
@@ -237,7 +240,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName));
+            var exceptiion = await Assert.ThrowsAsync<TargetInvocationException>(async () => await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath));
             Assert.IsType<InvalidOperationException>(exceptiion.InnerException);
 
             //assert.
@@ -363,7 +366,9 @@ namespace UnitTests
 
 			var gherkinDocument = new Gherkin.Ast.GherkinDocument(gherkinFeaure, new Gherkin.Ast.Comment[0]);
 
-			_featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithBackgroundSteps)}.feature"))
+            var featurePath = $"{nameof(FeatureWithBackgroundSteps)}.feature";
+
+			_featureFileRepository.Setup(r => r.GetByFilePath(featurePath))
 				.Returns(new FeatureFile(gherkinDocument))
 				.Verifiable();
 
@@ -372,7 +377,7 @@ namespace UnitTests
 			featureInstance.InternalOutput = output.Object;
 
 			//act.
-			await _sut.ExecuteScenarioAsync(featureInstance, "test scenario");
+			await _sut.ExecuteScenarioAsync(featureInstance, "test scenario", featurePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -420,8 +425,9 @@ namespace UnitTests
             var featureInstance = new FeatureWithDataTableScenarioStep();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
+            var featureFilePath = $"{nameof(FeatureWithDataTableScenarioStep)}.feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithDataTableScenarioStep)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] 
                     {
@@ -451,7 +457,7 @@ namespace UnitTests
                 .Verifiable();
             
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -507,15 +513,16 @@ namespace UnitTests
 "---" + Environment.NewLine +
 "in it";
             var scenarioName = "scenario 1231121";
+            var featureFilePath = nameof(FeatureWithDocStringScenarioStep) + ".feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath(nameof(FeatureWithDocStringScenarioStep) + ".feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName,
                     new string[] { "Given " + FeatureWithDocStringScenarioStep.StepWithDocStringText },
                     new Gherkin.Ast.DocString(null, null, docStringContent))))
                 .Verifiable();
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -546,8 +553,9 @@ namespace UnitTests
             var featureInstance = new FeatureWithSharedStepMethod();
             var output = new Mock<ITestOutputHelper>();
             featureInstance.InternalOutput = output.Object;
+            var featureFilePath = nameof(FeatureWithSharedStepMethod) + ".feature";
 
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithSharedStepMethod)}.feature"))
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(CreateGherkinDocument(scenarioName, new string[]
                 {
                     "Given I chose 1 as first number",
@@ -560,7 +568,7 @@ namespace UnitTests
                 })));
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName);
+            await _sut.ExecuteScenarioAsync(featureInstance, scenarioName, featureFilePath);
 
             //assert.
             Assert.Equal(7, featureInstance.CallStack.Count);
@@ -611,8 +619,9 @@ namespace UnitTests
             var gherkinFeature = new GherkinFeatureBuilder()
                 .WithScenario("S", steps => steps.Star("I have some cukes", null))
                 .Build();
-
-            _featureFileRepository.Setup(r => r.GetByFilePath($"{nameof(FeatureWithStarNotation)}.feature"))
+            var featureFilePath = $"{nameof(FeatureWithStarNotation)}.feature";
+            
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
                 .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
                 .Verifiable();
 
@@ -621,7 +630,7 @@ namespace UnitTests
             featureInstance.InternalOutput = output.Object;
 
             //act.
-            await _sut.ExecuteScenarioAsync(featureInstance, "S");
+            await _sut.ExecuteScenarioAsync(featureInstance, "S", featureFilePath);
 
             //assert.
             _featureFileRepository.Verify();
@@ -645,12 +654,13 @@ namespace UnitTests
         public async Task ExecuteScenario_DoesNotAllow_AsyncVoid_Steps()
         {
             //arrange.
+            var featureFilePath = "/some/valid/path";
             var feature = new FeatureWithAsyncVoidStep();
             var output = new Mock<ITestOutputHelper>();
             feature.InternalOutput = output.Object;
 
             //act / assert.
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _sut.ExecuteScenarioAsync(feature, "S"));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _sut.ExecuteScenarioAsync(feature, "S", featureFilePath));
         }
 
         private sealed class FeatureWithAsyncVoidStep : Feature

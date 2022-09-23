@@ -1,5 +1,8 @@
 ﻿using Moq;
 using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -57,13 +60,55 @@ namespace UnitTests
                 .Verifiable();
 
             //act.
-            var feature = _sut.Discover(featureClassType);
+            var features = _sut.Discover(featureClassType);
+            var featureFile = features.First();
+
+            //assert.
+            _featureFileRepository.Verify();
+            
+            Assert.NotNull(featureFile.Feature);
+            Assert.Same( gherkinFeature , featureFile.Feature);
+        }
+
+        [Theory]
+        [InlineData(typeof(AddFeature), new string[] {"AddTwoNumbers.feature", "AddNumbersTo5.feature"})]
+        [InlineData(typeof(ComplexFeature), new string[] {"Features/ComplexGroupOfScenarios1.feature", "Features/ComplexGroupOfScenarios2.feature", "Features/ComplexGroupOfScenarios3.feature", "Features/Complex.feature"})]
+        public void Find_Scenarios_In_Many_Feature_Files_Sharing_Pattern(
+            Type featureClassType, string[] files)
+        {
+            //arrange.
+
+            _featureFileRepository.Setup(r => r.GetFeatureFilePaths() )
+                .Returns( new List<String>(files))
+                .Verifiable();
+
+            int i = 0;
+            files.ToList().ForEach( file => {
+                    var gherkinFeature = new GherkinFeatureBuilder().WithScenario($"First scenario from Feature File {i+1}", steps =>
+                        steps.Given("step 1", null))
+                        .Build();
+
+                    _featureFileRepository.Setup(r => r.GetByFilePath(file))
+                        .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
+                        .Verifiable();
+                    ++i;
+                }
+            );
+
+            //act.
+            var features = _sut.Discover(featureClassType);
 
             //assert.
             _featureFileRepository.Verify();
 
-            Assert.NotNull(feature);
-            Assert.Same(gherkinFeature, feature);
+            i = 0;
+            features.ToList().ForEach(feature => {
+                Assert.NotNull(feature.Feature);
+                Assert.Equal(files[i], feature.Path);
+                // let's check scenarios are correct
+                Assert.Equal($"First scenario from Feature File {i+1}", feature.Feature.Children.First().Name);
+                ++i;
+            });
         }
 
         private sealed class MyFeature : Feature
@@ -76,5 +121,18 @@ namespace UnitTests
         {
 
         }
+
+        [FeatureFile("Add*.feature")]
+        private sealed class AddFeature : Feature
+        {
+
+        }
+
+        [FeatureFile("Features/Complex*.feature")]
+        private sealed class ComplexFeature : Feature
+        {
+
+        }
+
     }
 }
