@@ -71,14 +71,14 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(AddFeature), new string[] {"AddTwoNumbers.feature", "AddNumbersTo5.feature"})]
-        [InlineData(typeof(ComplexFeature), new string[] {"Features/ComplexGroupOfScenarios1.feature", "Features/ComplexGroupOfScenarios2.feature", "Features/ComplexGroupOfScenarios3.feature", "Features/Complex.feature"})]
+        [InlineData(typeof(AddFeature), _addFeature_pattern, new string[] {"AddTwoNumbers.feature", "AddNumbersTo5.feature"})]
+        [InlineData(typeof(ComplexFeature), _complexFeature_pattern, new string[] {"Features/ComplexGroupOfScenarios1.feature", "Features/ComplexGroupOfScenarios2.feature", "Features/ComplexGroupOfScenarios3.feature", "Features/Complex.feature"})]
         public void Find_Scenarios_In_Many_Feature_Files_Sharing_Pattern(
-            Type featureClassType, string[] files)
+            Type featureClassType, string pattern, string[] files)
         {
             //arrange.
 
-            _featureFileRepository.Setup(r => r.GetFeatureFilePaths() )
+            _featureFileRepository.Setup(r => r.FindFilesByPattern(pattern) )
                 .Returns( new List<String>(files))
                 .Verifiable();
 
@@ -122,13 +122,15 @@ namespace UnitTests
 
         }
 
-        [FeatureFile("Add*.feature")]
+        private const string _addFeature_pattern = "Add*.feature";
+        [FeatureFile(_addFeature_pattern)]
         private sealed class AddFeature : Feature
         {
 
         }
 
-        [FeatureFile("Features/Complex*.feature")]
+        private const string _complexFeature_pattern = "Features/Complex*.feature";
+        [FeatureFile(_complexFeature_pattern)]
         private sealed class ComplexFeature : Feature
         {
 

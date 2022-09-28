@@ -6,5 +6,6 @@ namespace Xunit.Gherkin.Quick
     {
         FeatureFile GetByFilePath(string filePath);
         List<string> GetFeatureFilePaths();
+        List<string> FindFilesByPattern(string pattern);
     }
 }
