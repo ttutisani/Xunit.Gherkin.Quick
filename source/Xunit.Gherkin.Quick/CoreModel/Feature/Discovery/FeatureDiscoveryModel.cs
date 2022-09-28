@@ -34,9 +34,10 @@ namespace Xunit.Gherkin.Quick
                 
             if (fileClassInfo.IsPattern) {
                 _featureFileRepository
-                    .GetFeatureFilePaths()
-                    .FindAll(f => fileClassInfo.MatchesFilePathPattern(f))
-                    .ForEach( f=> featurePathsAndFiles.Add(f, _featureFileRepository.GetByFilePath(f)));
+                    .FindFilesByPattern(fileClassInfo.FeatureFilePath)
+                    .ForEach( f=> 
+                        featurePathsAndFiles.Add(f, _featureFileRepository.GetByFilePath(f))
+                    );
                 if (featurePathsAndFiles.Count == 0) {
                     throw new System.IO.FileNotFoundException($"No features found for pattern ${fileClassInfo.FeatureFilePath}");
                 }

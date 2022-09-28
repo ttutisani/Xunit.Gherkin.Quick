@@ -21,8 +21,6 @@ namespace Xunit.Gherkin.Quick
                 this._matcher = new Regex(regex,
                     RegexOptions.Compiled | RegexOptions.IgnoreCase);
             }
-
-
         }
 
         public static FeatureClassInfo FromFeatureClassType(Type featureClassType)

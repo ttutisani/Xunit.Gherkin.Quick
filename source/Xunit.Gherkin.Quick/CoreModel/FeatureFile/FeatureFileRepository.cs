@@ -10,6 +10,7 @@ namespace Xunit.Gherkin.Quick
     internal sealed class FeatureFileRepository : IFeatureFileRepository
     {
         private readonly string _featureFileSearchPattern;
+        private readonly char[] _common_path_separators = new char[]{'/', '\\'};
 
         public FeatureFileRepository(string featureFileSearchPattern)
         {
@@ -35,6 +36,16 @@ namespace Xunit.Gherkin.Quick
                     return gherkinDocument;
                 }
             }
+        }
+
+        public List<string> FindFilesByPattern(string pattern) {
+            var lastPathSeparatorIndex = pattern.LastIndexOfAny(_common_path_separators);          
+            string baseDirectory = Path.GetFullPath(lastPathSeparatorIndex > -1 ? pattern.Substring(0,lastPathSeparatorIndex) : "");
+            string filePattern = pattern.Substring(lastPathSeparatorIndex+1);
+            var found = Directory
+                .EnumerateFiles(baseDirectory, filePattern, SearchOption.AllDirectories)
+                .ToList();
+            return found;
         }
 
         public List<string> GetFeatureFilePaths()
