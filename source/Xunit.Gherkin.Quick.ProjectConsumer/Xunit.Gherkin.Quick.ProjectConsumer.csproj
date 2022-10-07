@@ -25,6 +25,12 @@
     <None Update="CucumberExpressions\PassParameters.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="FeatureFilePattern\BaseFolder.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="FeatureFilePattern\NestedFolder\NestedFolder.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ReuseStepsAcrossFeatures\Concatenation.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
