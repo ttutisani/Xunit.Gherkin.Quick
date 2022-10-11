@@ -44,7 +44,7 @@ namespace Xunit.Gherkin.Quick
             }
 
             if (featurePathsAndFiles.Count == 0) {
-                throw new FileNotFoundException($"No feature file found for class ${featureClassType}");
+                throw new FileNotFoundException($"No feature file found for class `${featureClassType.Name}`.");
             }
 
             return featurePathsAndFiles

@@ -20,7 +20,6 @@ namespace UnitTests
 
             //assert.
             Assert.NotNull(sut);
-            //Assert.Equal($"{nameof(FeatureWithoutFilePath)}.feature", sut.FeatureFilePath);
         }
 
         private sealed class FeatureWithoutFilePath : Feature
@@ -38,7 +37,6 @@ namespace UnitTests
 
             //assert.
             Assert.NotNull(sut);
-            //Assert.Equal(FeatureWithFilePath.PathFor_FeatureWithFilePath, sut.FeatureFilePath);
         }
 
         [FeatureFile(PathFor_FeatureWithFilePath)]

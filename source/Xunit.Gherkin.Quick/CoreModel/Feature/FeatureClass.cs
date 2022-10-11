@@ -8,16 +8,10 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureClass
     {
-        //public string FeatureFilePath { get; }
-
         private readonly ReadOnlyCollection<StepMethodInfo> _stepMethods;
 
         private FeatureClass(object featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
         {
-            //FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath) 
-            //    ? featureFilePath 
-            //    : throw new ArgumentNullException(nameof(featureFilePath));
-
             _stepMethods = stepMethods != null
                 ? stepMethods.ToList().AsReadOnly()
                 : throw new ArgumentNullException(nameof(stepMethods));
