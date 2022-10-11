@@ -6,23 +6,11 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureClassInfo
     {
-        public string FeatureFilePath { get; }
-        private Regex _matcher;
-        public bool IsPattern { get { return _matcher != null; } }
-
-        private FeatureClassInfo(string featureFilePath)
+        public FeatureFilePathInfo PathInfo { get; }
+        
+        private FeatureClassInfo(FeatureFilePathInfo pathInfo)
         {
-            FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath)
-                ? featureFilePath
-                : throw new ArgumentNullException(nameof(featureFilePath));
-
-            if (featureFilePath.Contains("*")) {
-                var regex = FeatureFilePath.Replace("*", @"(\w|\/\s)*");
-                this._matcher = new Regex(regex,
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            }
-
-
+            PathInfo = pathInfo ?? throw new ArgumentNullException(nameof(pathInfo));
         }
 
         public static FeatureClassInfo FromFeatureClassType(Type featureClassType)
@@ -30,15 +18,18 @@ namespace Xunit.Gherkin.Quick
             var featureFileAttribute = featureClassType
                 .GetTypeInfo()
                 .GetCustomAttribute<FeatureFileAttribute>();
+            
             var featureFilePath = featureFileAttribute?.Path ?? $"{featureClassType.Name}.feature";
+            var pathType = featureFileAttribute?.PathType ?? FeatureFilePathType.Simple;
 
-            return new FeatureClassInfo(featureFilePath);
+            var pathInfo = pathType == FeatureFilePathType.Simple
+                ? new SimpleFeatureFilePathInfo(featureFilePath) as FeatureFilePathInfo
+                : pathType == FeatureFilePathType.Regex
+                ? new RegexFeatureFilePathInfo(featureFilePath)
+                : throw new NotSupportedException($"Path type `{pathType}` is not supported.");
+
+            return new FeatureClassInfo(pathInfo);
         }
 
-        public bool MatchesFilePathPattern(string file) {
-            if (IsPattern) 
-                return _matcher.IsMatch(file);
-            return FeatureFilePath.Equals(file);
-        }
     }
 }

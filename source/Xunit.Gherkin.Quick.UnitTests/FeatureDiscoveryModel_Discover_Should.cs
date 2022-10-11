@@ -26,19 +26,18 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(MyFeature), "MyFeature.feature")]
-        [InlineData(typeof(MyFeatureWithAttribute), "/my/path/to/feature/file.feature")]
+        [InlineData(typeof(MyFeature))]
+        [InlineData(typeof(MyFeatureWithAttribute))]
         public void Throw_When_Feature_File_Not_Found(
-            Type featureClassType,
-            string fileName)
+            Type featureClassType)
         {
             //arrange.
-            _featureFileRepository.Setup(r => r.GetByFilePath(fileName))
-                .Returns<FeatureFile>(null)
+            _featureFileRepository.Setup(r => r.GetFeatureFilePaths())
+                .Returns(new List<string>())
                 .Verifiable();
 
             //act / assert.
-            Assert.Throws<System.IO.FileNotFoundException>(() => _sut.Discover(featureClassType));
+            Assert.Throws<FileNotFoundException>(() => _sut.Discover(featureClassType));
 
             //assert.
             _featureFileRepository.Verify();
@@ -55,6 +54,8 @@ namespace UnitTests
             var gherkinFeature = new GherkinFeatureBuilder().WithScenario("scenario1", steps =>
                 steps.Given("step 1", null))
                 .Build();
+            _featureFileRepository.Setup(r => r.GetFeatureFilePaths())
+                .Returns(new List<string> { fileName });
             _featureFileRepository.Setup(r => r.GetByFilePath(fileName))
                 .Returns(new FeatureFile(new Gherkin.Ast.GherkinDocument(gherkinFeature, null)))
                 .Verifiable();
@@ -78,7 +79,7 @@ namespace UnitTests
         {
             //arrange.
 
-            _featureFileRepository.Setup(r => r.GetFeatureFilePaths() )
+            _featureFileRepository.Setup(r => r.GetFeatureFilePaths())
                 .Returns( new List<String>(files))
                 .Verifiable();
 
@@ -122,13 +123,13 @@ namespace UnitTests
 
         }
 
-        [FeatureFile("Add*.feature")]
+        [FeatureFile(@"Add.*\.feature", FeatureFilePathType.Regex)]
         private sealed class AddFeature : Feature
         {
 
         }
 
-        [FeatureFile("Features/Complex*.feature")]
+        [FeatureFile(@"Features/Complex.*\.feature", FeatureFilePathType.Regex)]
         private sealed class ComplexFeature : Feature
         {
 
