@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureDiscoveryModel
@@ -30,23 +31,20 @@ namespace Xunit.Gherkin.Quick
 
             var fileClassInfo = FeatureClassInfo.FromFeatureClassType(featureClassType);
 
-            var featurePathsAndFiles = new Dictionary<string,Gherkin.Quick.FeatureFile>();
-                
-            if (fileClassInfo.IsPattern) {
-                _featureFileRepository
-                    .GetFeatureFilePaths()
-                    .FindAll(f => fileClassInfo.MatchesFilePathPattern(f))
-                    .ForEach( f=> featurePathsAndFiles.Add(f, _featureFileRepository.GetByFilePath(f)));
-                if (featurePathsAndFiles.Count == 0) {
-                    throw new System.IO.FileNotFoundException($"No features found for pattern ${fileClassInfo.FeatureFilePath}");
-                }
-            } else {
-                var fileName = fileClassInfo.FeatureFilePath;
-                var featureFile = _featureFileRepository.GetByFilePath(fileName);
-                if (featureFile == null)
-                    throw new System.IO.FileNotFoundException("Feature file not found.", fileName);
+            var featurePathsAndFiles = new Dictionary<string, Quick.FeatureFile>();
 
-                featurePathsAndFiles.Add(fileName, featureFile);
+            var allFeatureFilePaths = _featureFileRepository
+                .GetFeatureFilePaths().ToList();
+
+            foreach (var featureFilePath in allFeatureFilePaths)
+            {
+                if (!fileClassInfo.PathInfo.MatchesPath(featureFilePath)) continue;
+
+                featurePathsAndFiles.Add(featureFilePath, _featureFileRepository.GetByFilePath(featureFilePath));
+            }
+
+            if (featurePathsAndFiles.Count == 0) {
+                throw new FileNotFoundException($"No feature file found for class ${featureClassType}");
             }
 
             return featurePathsAndFiles

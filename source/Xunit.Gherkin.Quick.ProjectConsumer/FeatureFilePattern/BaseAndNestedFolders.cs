@@ -1,6 +1,6 @@
 ﻿namespace Xunit.Gherkin.Quick.ProjectConsumer.FeatureFilePattern
 {
-    [FeatureFile("*Pattern/(Nested*/)?*.feature")]
+    [FeatureFile(@".*Pattern/(Nested.*/)?.*\.feature", FeatureFilePathType.Regex)]
     public sealed class BaseAndNestedFolders : Feature
     {
         [Given("I have a base folder")]

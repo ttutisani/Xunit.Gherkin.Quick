@@ -23,7 +23,7 @@ namespace Xunit.Gherkin.Quick
             var fcis = _featureClassInfoRepository.GetFeatureClassesInfo();
 
             var newFiles = allFiles
-                .Where(f => ! fcis.Any(fci => fci.MatchesFilePathPattern(f)))
+                .Where(f => ! fcis.Any(fci => fci.PathInfo.MatchesPath(f)))
                 .ToList();
 
             var newFeatures = newFiles.Select(f => _featureFileRepository.GetByFilePath(f))

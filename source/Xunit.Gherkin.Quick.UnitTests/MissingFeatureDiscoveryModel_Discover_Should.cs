@@ -79,7 +79,7 @@ namespace UnitTests
             Assert.Same(expectedFeature, features[0]);
         }
 
-        [FeatureFile(path: "*1.feature")]
+        [FeatureFile(path: @".*1\.feature", FeatureFilePathType.Regex)]
         private sealed class FeatureWithPatternName : Feature { }
 
         [Fact]

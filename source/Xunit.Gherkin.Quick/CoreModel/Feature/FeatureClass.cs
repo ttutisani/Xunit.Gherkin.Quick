@@ -8,15 +8,15 @@ namespace Xunit.Gherkin.Quick
 {
     internal sealed class FeatureClass
     {
-        public string FeatureFilePath { get; }
+        //public string FeatureFilePath { get; }
 
         private readonly ReadOnlyCollection<StepMethodInfo> _stepMethods;
 
-        private FeatureClass(string featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
+        private FeatureClass(object featureFilePath, IEnumerable<StepMethodInfo> stepMethods)
         {
-            FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath) 
-                ? featureFilePath 
-                : throw new ArgumentNullException(nameof(featureFilePath));
+            //FeatureFilePath = !string.IsNullOrWhiteSpace(featureFilePath) 
+            //    ? featureFilePath 
+            //    : throw new ArgumentNullException(nameof(featureFilePath));
 
             _stepMethods = stepMethods != null
                 ? stepMethods.ToList().AsReadOnly()
@@ -29,14 +29,14 @@ namespace Xunit.Gherkin.Quick
                 throw new ArgumentNullException(nameof(featureInstance));
 
             Type featureType = featureInstance.GetType();
-            var featureFilePath = FeatureClassInfo.FromFeatureClassType(featureType).FeatureFilePath;
+            var pathInfo = FeatureClassInfo.FromFeatureClassType(featureType).PathInfo;
 
             var stepMethods = featureType.GetTypeInfo().GetMethods()
                 .Where(m => m.IsDefined(typeof(BaseStepDefinitionAttribute)))
                 .Select(m => StepMethodInfo.FromMethodInfo(m, featureInstance))
                 .ToList();
 
-            return new FeatureClass(featureFilePath, stepMethods);
+            return new FeatureClass(pathInfo, stepMethods);
         }
 
 		public Scenario ExtractScenario(global::Gherkin.Ast.Scenario scenario)
