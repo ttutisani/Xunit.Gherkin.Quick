@@ -1,0 +1,7 @@
+﻿Feature: TXT File
+	As a framework user
+	I want to handle a featue file writtein in any format, including .txt
+	So that I am not limited to .feature files.
+
+Scenario: Feature in TXT
+	Given I have a feature in TXT file

@@ -1,6 +1,6 @@
 ﻿namespace Xunit.Gherkin.Quick.ProjectConsumer
 {
-    [FeatureFileSearchPattern("*.feature")]
+    [FeatureFileSearchPattern("*.feature|*.txt")]
     public sealed class HandleNotImplemented : MissingFeature
     {
     }
