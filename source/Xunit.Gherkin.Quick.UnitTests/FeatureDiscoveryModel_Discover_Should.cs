@@ -26,14 +26,15 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(MyFeature))]
-        [InlineData(typeof(MyFeatureWithAttribute))]
+        [InlineData(typeof(MyFeature), "MyFeature.feature")]
+        [InlineData(typeof(MyFeatureWithAttribute), "/my/path/to/feature/file.feature")]
         public void Throw_When_Feature_File_Not_Found(
-            Type featureClassType)
+            Type featureClassType,
+            string featureFilePath)
         {
             //arrange.
-            _featureFileRepository.Setup(r => r.GetFeatureFilePaths())
-                .Returns(new List<string>())
+            _featureFileRepository.Setup(r => r.GetByFilePath(featureFilePath))
+                .Returns<FeatureFile>(null)
                 .Verifiable();
 
             //act / assert.
