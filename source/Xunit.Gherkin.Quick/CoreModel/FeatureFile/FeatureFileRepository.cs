@@ -39,7 +39,8 @@ namespace Xunit.Gherkin.Quick
 
         public List<string> GetFeatureFilePaths()
         {
-            var featureFilePaths = Directory.GetFiles("./", _featureFileSearchPattern, SearchOption.AllDirectories)
+            var allPatterns = _featureFileSearchPattern.Split('|');
+            var featureFilePaths = allPatterns.SelectMany(pattern => Directory.GetFiles("./", pattern, SearchOption.AllDirectories))
                 .Select(p => p.Replace('\\', '/'))
                 .ToList();
 
