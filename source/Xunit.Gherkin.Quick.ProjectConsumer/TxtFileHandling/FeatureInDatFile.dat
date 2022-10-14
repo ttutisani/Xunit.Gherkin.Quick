@@ -1,0 +1,7 @@
+﻿Feature: DAT File
+	As a framework user
+	I want to handle a featue file writtein in any format, including .dat
+	So that I am not limited to .feature files.
+
+Scenario: Feature in DAT
+	Given I have a feature in DAT file

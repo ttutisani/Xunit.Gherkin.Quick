@@ -6,7 +6,7 @@ namespace Xunit.Gherkin.Quick
     /// Specifies feature file name search pattern. 
     /// This pattern will be used to find feature files which don't have corresponding feature classes.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
     public sealed class FeatureFileSearchPatternAttribute : Attribute
     {
         /// <summary>
