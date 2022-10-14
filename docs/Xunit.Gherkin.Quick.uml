@@ -16,6 +16,7 @@
 <XPD:ATTR name="#OwnedDiagrams" type="integer">6</XPD:ATTR>
 <XPD:OBJ name="OwnedDiagrams[0]" type="UMLClassDiagram" guid="FIdjB3wNf0ilKWGpjgeCmQAA">
 <XPD:ATTR name="Name" type="string">Layers</XPD:ATTR>
+<XPD:ATTR name="DefaultDiagram" type="boolean">True</XPD:ATTR>
 <XPD:REF name="DiagramOwner">5+Nu3/yfTEaecd7x5DUPjwAA</XPD:REF>
 <XPD:OBJ name="DiagramView" type="UMLClassDiagramView" guid="mFlyaz+ddEOMMvRKiA0MDQAA">
 <XPD:REF name="Model">FIdjB3wNf0ilKWGpjgeCmQAA</XPD:REF>
