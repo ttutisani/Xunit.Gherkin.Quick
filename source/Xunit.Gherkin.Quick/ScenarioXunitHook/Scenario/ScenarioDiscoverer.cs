@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -19,7 +20,10 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod, 
             IAttributeInfo factAttribute)
         {
-            var featureFiles = new FeatureDiscoveryModel(new FeatureFileRepository("*.feature")).Discover(testMethod.TestClass.Class.ToRuntimeType());
+            var featureClassType = testMethod.TestClass.Class.ToRuntimeType();
+            TestAssemblyInfo testAssemblyInfo = TestAssemblyInfo.FromAssembly(featureClassType.GetTypeInfo().Assembly);
+
+            var featureFiles = new FeatureDiscoveryModel(new FeatureFileRepository(testAssemblyInfo.FeatureFileSearchPattern)).Discover(featureClassType);
 
             foreach (var featureFile in featureFiles)
             {

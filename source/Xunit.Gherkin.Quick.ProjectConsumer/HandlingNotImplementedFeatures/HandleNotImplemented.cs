@@ -1,4 +1,4 @@
-﻿[assembly:Xunit.Gherkin.Quick.FeatureFileSearchPattern("*.feature")]
+﻿[assembly:Xunit.Gherkin.Quick.FeatureFileSearchPattern("*.feature|*.txt|*.dat")]
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer
 {
