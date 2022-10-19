@@ -66,6 +66,8 @@ public sealed class BaseAndNestedFolders : Feature
 }
 ```
 
+Notice that the `FeatureFile` attribute now has two arguments specified, which allows distinguishing between the simple path and the pattern string.
+
 Explanation: if you follow the Regex rules, you will notice that the mapped feature files are located under a folder that ends with 'Pattern', or under its nested folder that starts with 'Nested'. The file must have a '.feature' extension. All files that match this pattern will be mappted back to the shown feature class.
 
 In this example, the class has two step methods, but not all of them need to be mapped to the found feature files. But the opposite direction works differently - all scenario steps found in all feature files must be mapped to at least one step method in the feature class.
