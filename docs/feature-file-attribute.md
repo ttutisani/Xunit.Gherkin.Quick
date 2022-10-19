@@ -1,6 +1,6 @@
 # FeatureFileAttribute
 
-Apply FeatureFileAttribute attribute to your feature class to link the Gherkin feature located inside the file with the class. You can specify either a single file path or a pattern. let's look at both options below.
+Apply `FeatureFileAttribute` attribute to your feature class to link the Gherkin feature located inside the file with the class. You can specify either a single file path or a pattern. let's look at both options below.
 
 ## Option 1 - Specify s Single Feature File Path
 
