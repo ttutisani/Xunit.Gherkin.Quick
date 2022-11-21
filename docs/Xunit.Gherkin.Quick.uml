@@ -4044,10 +4044,18 @@ example value placeholders replaced with actual values.
 <XPD:REF name="Views[0]">Y2MfDdnFHUehmFWpYRBNGgAA</XPD:REF>
 <XPD:ATTR name="#ClientDependencies" type="integer">1</XPD:ATTR>
 <XPD:REF name="ClientDependencies[0]">WrsDGG5LRUK7PJDJ9EBF/QAA</XPD:REF>
-<XPD:ATTR name="#OwnedElements" type="integer">3</XPD:ATTR>
+<XPD:ATTR name="#OwnedElements" type="integer">5</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLPackage" guid="p5LqNASNfkO+UrQHdPlq+gAA">
+<XPD:ATTR name="Name" type="string">MissingFeature</XPD:ATTR>
+<XPD:REF name="Namespace">xQ1nd0OOCEKvh/nzDABctQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[1]" type="UMLPackage" guid="AV4M91LtiUeqZ+sXPA5rIAAA">
+<XPD:ATTR name="Name" type="string">Scenario</XPD:ATTR>
+<XPD:REF name="Namespace">xQ1nd0OOCEKvh/nzDABctQAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">1</XPD:ATTR>
 <XPD:OBJ name="OwnedElements[0]" type="UMLClass" guid="ce3mRFPLZU6Q4/77CQmu7QAA">
 <XPD:ATTR name="Name" type="string">ScenarioDiscoverer</XPD:ATTR>
-<XPD:REF name="Namespace">xQ1nd0OOCEKvh/nzDABctQAA</XPD:REF>
+<XPD:REF name="Namespace">AV4M91LtiUeqZ+sXPA5rIAAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">sJ8gX2S+PEKk3WdtywOMmwAA</XPD:REF>
 <XPD:REF name="Views[1]">16HqjTvsR0KDAV5eEAcRyAAA</XPD:REF>
@@ -4057,9 +4065,14 @@ example value placeholders replaced with actual values.
 <XPD:REF name="ClientDependencies[0]">/s3fTzUjXEWeLd5YSVG5KAAA</XPD:REF>
 <XPD:REF name="ClientDependencies[1]">pXsXM7WWJUanFLsBaEnqHwAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="OwnedElements[1]" type="UMLClass" guid="JANcTrj6AUSWx3u9yMelcgAA">
-<XPD:ATTR name="Name" type="string">ScenarioOutlineDiscoverer</XPD:ATTR>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[2]" type="UMLPackage" guid="cxVamf4y3ESbtRx3VGnbSgAA">
+<XPD:ATTR name="Name" type="string">ScenarioOutine</XPD:ATTR>
 <XPD:REF name="Namespace">xQ1nd0OOCEKvh/nzDABctQAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLClass" guid="JANcTrj6AUSWx3u9yMelcgAA">
+<XPD:ATTR name="Name" type="string">ScenarioOutlineDiscoverer</XPD:ATTR>
+<XPD:REF name="Namespace">cxVamf4y3ESbtRx3VGnbSgAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">BDF6KXeB9U+KcrxbYsYZOgAA</XPD:REF>
 <XPD:REF name="Views[1]">8mq7x+RDo02C9S7IbCRpJwAA</XPD:REF>
@@ -4068,9 +4081,14 @@ example value placeholders replaced with actual values.
 <XPD:ATTR name="#ClientDependencies" type="integer">1</XPD:ATTR>
 <XPD:REF name="ClientDependencies[0]">TW/oJ9QP4EmeBmBRR4Rr8gAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="OwnedElements[2]" type="UMLClass" guid="5RHR6qBtY0aDCTeRD0rl8QAA">
-<XPD:ATTR name="Name" type="string">TestAssemblyInfo</XPD:ATTR>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[3]" type="UMLPackage" guid="TtBN/ojANE2zvOfeF5nsewAA">
+<XPD:ATTR name="Name" type="string">TestAssembly</XPD:ATTR>
 <XPD:REF name="Namespace">xQ1nd0OOCEKvh/nzDABctQAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLClass" guid="5RHR6qBtY0aDCTeRD0rl8QAA">
+<XPD:ATTR name="Name" type="string">TestAssemblyInfo</XPD:ATTR>
+<XPD:REF name="Namespace">TtBN/ojANE2zvOfeF5nsewAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">ZlLGg5rV/0uIOm3r8ksDcQAA</XPD:REF>
 <XPD:REF name="Views[1]">lluyyB3q8E+XBo2JVUm4ZwAA</XPD:REF>
@@ -4083,6 +4101,11 @@ example value placeholders replaced with actual values.
 <XPD:ATTR name="Name" type="string">FeatureFileSearchPattern</XPD:ATTR>
 <XPD:REF name="Owner">5RHR6qBtY0aDCTeRD0rl8QAA</XPD:REF>
 </XPD:OBJ>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[4]" type="UMLPackage" guid="cicnhk24RkOoMuriTB/uogAA">
+<XPD:ATTR name="Name" type="string">XunitRunners</XPD:ATTR>
+<XPD:REF name="Namespace">xQ1nd0OOCEKvh/nzDABctQAA</XPD:REF>
 </XPD:OBJ>
 </XPD:OBJ>
 <XPD:OBJ name="OwnedElements[35]" type="UMLDependency" guid="WrsDGG5LRUK7PJDJ9EBF/QAA">
