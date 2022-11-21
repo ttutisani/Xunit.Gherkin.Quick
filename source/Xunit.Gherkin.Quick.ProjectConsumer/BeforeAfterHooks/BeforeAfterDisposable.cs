@@ -4,11 +4,11 @@ using Xunit.Abstractions;
 namespace Xunit.Gherkin.Quick.ProjectConsumer.BeforeAfterHooks
 {
     [FeatureFile("./BeforeAfterHooks/BeforeAfter.feature")]
-    public sealed class BeforeAfter : Feature, IDisposable
+    public sealed class BeforeAfterDisposable : Feature, IDisposable
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public BeforeAfter(ITestOutputHelper testOutputHelper)
+        public BeforeAfterDisposable(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
 
