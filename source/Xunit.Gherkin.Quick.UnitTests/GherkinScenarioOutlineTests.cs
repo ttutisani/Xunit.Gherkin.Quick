@@ -247,5 +247,72 @@ namespace UnitTests
                 Assert.Equal(cells[1].Value, expectedColumn1Value);
             }
         }
+
+        [Fact]
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_DocString_In_Step()
+        {
+            //arrange.
+            var sut = new Gherkin.Ast.ScenarioOutline(
+                null,
+                null,
+                null,
+                "outline123",
+                null,
+                new Gherkin.Ast.Step[]
+                {
+                    new Gherkin.Ast.Step(null, "Given", "I pass a docstring with tokens", new DocString(
+                        new Location(0, 0), 
+                        "type", 
+                        "This DocString can contain values <a>, <b>, <c>, and <d> in different forms: \"<a>\", \"<b>\", \"<c>\", \"<d>\", also <a>+<b>+<c>+<d>+<a> or (<a>)(<b>)(<c>)(<d>)...")),
+                    new Gherkin.Ast.Step(null, "When", "I apply a sample row", null),
+                    new Gherkin.Ast.Step(null, "Then", "the correct docstring should be created", null),
+                },
+                new Gherkin.Ast.Examples[]
+                {
+                    new Gherkin.Ast.Examples(
+                        null,
+                        null,
+                        null,
+                        "existing example",
+                        null,
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, "a"),
+                            new Gherkin.Ast.TableCell(null, "b"),
+                            new Gherkin.Ast.TableCell(null, "c"),
+                            new Gherkin.Ast.TableCell(null, "d"),
+                        }),
+                        new Gherkin.Ast.TableRow[]
+                        {
+                            new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                            {
+                                new Gherkin.Ast.TableCell(null, "jUsTstring"),
+                                new Gherkin.Ast.TableCell(null, "123"),
+                                new Gherkin.Ast.TableCell(null, "\"quoted string with spaces\""),
+                                new Gherkin.Ast.TableCell(null, "some+math*for (/fun) ;=)"),
+                            })
+                        })
+                });
+
+            //act.
+            var scenario = sut.ApplyExampleRow("existing example", 0);
+
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.Equal(sut.Name, scenario.Name);
+            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
+            Assert.Equal(3, scenario.Steps.Count());
+
+            var scenarioSteps = scenario.Steps.ToList();
+
+            Assert.IsType<DocString>(scenarioSteps[0].Argument);
+            var docString = (DocString)scenarioSteps[0].Argument;
+            var content = docString.Content;
+
+            System.Console.WriteLine(content);
+
+            var expectedContent = "This DocString can contain values jUsTstring, 123, \"quoted string with spaces\", and some+math*for (/fun) ;=) in different forms: \"jUsTstring\", \"123\", \"\"quoted string with spaces\"\", \"some+math*for (/fun) ;=)\", also jUsTstring+123+\"quoted string with spaces\"+some+math*for (/fun) ;=)+jUsTstring or (jUsTstring)(123)(\"quoted string with spaces\")(some+math*for (/fun) ;=))...";
+            Assert.Equal(expectedContent, docString.Content);
+        }
     }
 }
