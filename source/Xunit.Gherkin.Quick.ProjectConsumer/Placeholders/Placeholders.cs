@@ -1,5 +1,4 @@
 ﻿using Gherkin.Ast;
-using System;
 using System.Linq;
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
