@@ -74,7 +74,7 @@ namespace Xunit.Gherkin.Quick
             return scenarioStep;
         }
 
-        private static global::Gherkin.Ast.StepArgument GetStepArgumentWithUpdatedText(global::Gherkin.Ast.Step outlineStep, MatchEvaluator textUpdater)
+        private static global::Gherkin.Ast.StepArgument GetStepArgumentWithUpdatedText(global::Gherkin.Ast.Step outlineStep, MatchEvaluator matchEvaluator)
         {
             var stepArgument = outlineStep.Argument;
 
@@ -93,7 +93,7 @@ namespace Xunit.Gherkin.Quick
                     }
                     else
                     {
-                        var digestedCells = row.Cells.Select(r => new TableCell(r.Location, _placeholderRegex.Replace(r.Value, textUpdater)));
+                        var digestedCells = row.Cells.Select(r => new TableCell(r.Location, _placeholderRegex.Replace(r.Value, matchEvaluator)));
                         digestedRows.Add(new TableRow(row.Location, digestedCells.ToArray()));
                     }
                 }
@@ -103,7 +103,7 @@ namespace Xunit.Gherkin.Quick
 
             if (stepArgument is DocString stepAsDocString)
             {
-                var updatedContent = _placeholderRegex.Replace(stepAsDocString.Content, textUpdater);
+                var updatedContent = _placeholderRegex.Replace(stepAsDocString.Content, matchEvaluator);
                 stepArgument = new DocString(stepAsDocString.Location, stepAsDocString.ContentType, updatedContent);
             }
 

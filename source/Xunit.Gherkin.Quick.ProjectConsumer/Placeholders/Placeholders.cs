@@ -10,18 +10,18 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
         private DocString _stringData;
 
         [Given("I have supplied a DataTable with")]
-        public void I_Have_Supplied_DataTable(DataTable data)
+        public void Given_I_Have_Supplied_DataTable(DataTable data)
         {
             _tableData = data;
         }
 
         [When("I execute a scenario outline")]
-        public void I_Execute_A_Scenario_Outline()
+        public void When_I_Execute_A_Scenario_Outline()
         {
         }
 
         [Then(@"the DataTables MealExtra column should contain (\w+)")]
-        public void The_DataTables_MealExtra_Column_Should_Contain(string fruit)
+        public void Then_the_DataTables_MealExtra_Column_Should_Contain(string fruit)
         {
             Assert.NotNull(_tableData);
             var dataRow = _tableData.Rows.Skip(1).FirstOrDefault();
@@ -30,13 +30,13 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
         }
 
         [Given("I have supplied a DocString with")]
-        public void I_have_supplied_a_docstring_with(DocString data)
+        public void Given_I_Have_Supplied_A_DocString_With(DocString data)
         {
             _stringData = data;
         }
 
         [Then(@"the DocString should contain a {} plan for {} for {} plus {} portions and {} extra, containing {}, an optional hot drink {} {} and a description for a smoothie of a {} and {} combo")]
-        public void The_docstring_should_contain(
+        public void Then_The_DocString_Should_Contain(
             string meal, string date, int myPortions, int otherPortions, int provision, string mainDish, string needHotDrink, string hotDrink, string fruit, string addition)
         {
             Assert.NotNull(_stringData);
@@ -50,7 +50,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
 The main dish for {date} is: {mainDish}!
 Additionally prepare a {fruit}-based smoothie with some {addition}.
 Optionally add a cup of hot {hotDrink}? {needHotDrink}.
-Total portions needed: {myPortions}+{otherPortions}+{provision}! ";
+Total portions needed: {myPortions}+{otherPortions}+{provision}!";
 
             Assert.Equal(expectedContent, dataContent);
         }
