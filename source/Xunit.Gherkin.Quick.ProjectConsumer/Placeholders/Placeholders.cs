@@ -1,4 +1,5 @@
 ﻿using Gherkin.Ast;
+using System;
 using System.Linq;
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
@@ -46,11 +47,7 @@ namespace Xunit.Gherkin.Quick.ProjectConsumer.Placeholders
             Assert.DoesNotContain('<', dataContent);
             Assert.DoesNotContain('>', dataContent);
 
-            var expectedContent = $@"{date} Delicious {meal} plan:
-The main dish for {date} is: {mainDish}!
-Additionally prepare a {fruit}-based smoothie with some {addition}.
-Optionally add a cup of hot {hotDrink}? {needHotDrink}.
-Total portions needed: {myPortions}+{otherPortions}+{provision}!";
+            var expectedContent = $@"{date} Delicious {meal} plan:{Environment.NewLine}The main dish for {date} is: {mainDish}!{Environment.NewLine}Additionally prepare a {fruit}-based smoothie with some {addition}.{Environment.NewLine}Optionally add a cup of hot {hotDrink}? {needHotDrink}.{Environment.NewLine}Total portions needed: {myPortions}+{otherPortions}+{provision}!";
 
             Assert.Equal(expectedContent, dataContent);
         }
