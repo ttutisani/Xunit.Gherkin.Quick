@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DataTable = Gherkin.Ast.DataTable;
+using DocString = Gherkin.Ast.DocString;
 using TableRow = Gherkin.Ast.TableRow;
 using TableCell = Gherkin.Ast.TableCell;
 
@@ -63,15 +64,27 @@ namespace Xunit.Gherkin.Quick
 
             var stepText = _placeholderRegex.Replace(outlineStep.Text, matchEvaluator);
 
+            var stepArgument = GetStepArgumentWithUpdatedText(outlineStep, matchEvaluator);            
+
+            var scenarioStep = new global::Gherkin.Ast.Step(
+                outlineStep.Location,
+                outlineStep.Keyword,
+                stepText,
+                stepArgument);
+            return scenarioStep;
+        }
+
+        private static global::Gherkin.Ast.StepArgument GetStepArgumentWithUpdatedText(global::Gherkin.Ast.Step outlineStep, MatchEvaluator matchEvaluator)
+        {
             var stepArgument = outlineStep.Argument;
 
-            if (stepArgument is DataTable)
+            if (stepArgument is DataTable table)
             {
                 var processedHeaderRow = false;
 
                 var digestedRows = new List<TableRow>();
                 
-                foreach(var row in ((DataTable)stepArgument).Rows)
+                foreach (var row in table.Rows)
                 {
                     if (!processedHeaderRow)
                     {
@@ -88,12 +101,13 @@ namespace Xunit.Gherkin.Quick
                 stepArgument = new DataTable(digestedRows.ToArray());
             }
 
-            var scenarioStep = new global::Gherkin.Ast.Step(
-                outlineStep.Location,
-                outlineStep.Keyword,
-                stepText,
-                stepArgument);
-            return scenarioStep;
+            if (stepArgument is DocString stepAsDocString)
+            {
+                var updatedContent = _placeholderRegex.Replace(stepAsDocString.Content, matchEvaluator);
+                stepArgument = new DocString(stepAsDocString.Location, stepAsDocString.ContentType, updatedContent);
+            }
+
+            return stepArgument;
         }
 
         private static Dictionary<string, string> GetExampleRowValues(global::Gherkin.Ast.Examples examples, List<global::Gherkin.Ast.TableCell> exampleRowCells)
