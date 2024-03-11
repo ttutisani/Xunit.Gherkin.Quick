@@ -31,6 +31,12 @@ In the example above, just to demonstrate what all you can do, we have split the
 
 When you define such scenario outline, it will turn into 6 different tests after compilation (2 example rows for each table).
 
+## DataTable and DocString in Scenario Outline
+
+Both DataTable and DocString will receive example values if they contain placeholders. In other words, the DataTable and DocString values your methods will receive during execution will be after substituting placeholders with example values.
+
+For clarity, example of a placeholder is `<a>`, where "a" is the placeholder name that will be substituted with the value from an example row that has the same name (example column name being "a"):
+
 ## Step Methods to Execute for Scenario Outline Steps
 
 Importantly (and hopefully this is a convenience, too), you don't have to define step methods in any new way compared to the regular scenario steps. You define step methods which match the scenario steps when the placeholders (i.e. `<a>`, `<b>` and `<sum>`) are replaced with values from examples. This is aligned with how the framework interprets scenario outlines - it turns outline into a regular scenario by replacing placeholders with example values; then it executes the scenario, just as always.
