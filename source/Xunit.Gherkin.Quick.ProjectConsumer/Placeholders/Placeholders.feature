@@ -19,6 +19,7 @@ Scenario Outline: Placeholders in DocStrings are replaced
     Additionally prepare a <Fruit>-based smoothie with some <Addition>.
     Optionally add a cup of hot <HotDrink>? <HotDrinkNeeded>.
     Total portions needed: <MyPortions>+<OtherPortions>+<Provision>!
+    <--- Hooray! <Meal> is done! --->
     """
   When I execute a scenario outline
   Then the DocString should contain a <Meal> plan for <Date> for <MyPortions> plus <OtherPortions> portions and <Provision> extra, containing <MainDish>, an optional hot drink <HotDrinkNeeded> <HotDrink> and a description for a smoothie of a <Fruit> and <Addition> combo
