@@ -261,7 +261,7 @@ namespace UnitTests
                 new Gherkin.Ast.Step[]
                 {
                     new Gherkin.Ast.Step(null, "Given", "I pass a docstring with tokens", new DocString(
-                        new Location(0, 0), 
+                        null, 
                         "type", 
                         "This DocString can contain values <a>, <b>, <c>, and <d> in different forms: \"<a>\", \"<b>\", \"<c>\", \"<d>\", also <a>+<b>+<c>+<d>+<a> or (<a>)(<b>)(<c>)(<d>)...")),
                     new Gherkin.Ast.Step(null, "When", "I apply a sample row", null),
@@ -307,7 +307,6 @@ namespace UnitTests
 
             Assert.IsType<DocString>(scenarioSteps[0].Argument);
             var docString = (DocString)scenarioSteps[0].Argument;
-            var content = docString.Content;
 
             var expectedContent = "This DocString can contain values jUsTstring, 123, \"quoted string with spaces\", and some+math*for (/fun) ;=) in different forms: \"jUsTstring\", \"123\", \"\"quoted string with spaces\"\", \"some+math*for (/fun) ;=)\", also jUsTstring+123+\"quoted string with spaces\"+some+math*for (/fun) ;=)+jUsTstring or (jUsTstring)(123)(\"quoted string with spaces\")(some+math*for (/fun) ;=))...";
             Assert.Equal(expectedContent, docString.Content);
@@ -607,10 +606,24 @@ namespace UnitTests
         [InlineData("a", "value is <a<a>", "value is <a1")]
         [InlineData("a", "value is <a>a>", "value is 1a>")]
         [InlineData("a|^|a", "value is <a|^|a>", "value is 1")]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_Starts_With_Valid_Character_Anything_Between(
+        [InlineData("a", "value is <a> <---> <a> <-> <a> < <a> > <a>", "value is 1 <---> 1 <-> 1 < 1 > 1")]
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_Correctly_Steps_DataTables_DocStrings(
             string example, string inputSentence, string expectedResultSentence)
         {
             //arrange.
+            var column0 = "Column1" + example;
+            var column1 = "Column2" + example;
+            var column2 = "Column3<" + example + ">";
+            var cell0 = "<" + example + ">";
+            var expectedResultCell0 = "1";
+            var cell1 = "data with <" + example + "> in the middle";
+            var expectedResultCell1 = "data with 1 in the middle";
+            var cell2 = "data with " + example + " in the middle";
+            var expectedResultCell2 = cell2;
+            
+            var docStringText = "DocString with " + inputSentence + " based on " + example;
+            var expectedDocStringContent = "DocString with " + expectedResultSentence + " based on " + example;
+
             var sut = new Gherkin.Ast.ScenarioOutline(
                 null,
                 null,
@@ -619,7 +632,13 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[] 
                 {
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, null)
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, null),
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DataTable(new []
+                    {
+                        new TableRow(null, new[] { new TableCell(null, column0), new TableCell(null, column1), new TableCell(null, column2) }),
+                        new TableRow(null, new[] { new TableCell(null, cell0), new TableCell(null, cell1), new TableCell(null, cell2) }),
+                    })),
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DocString(null, "type", docStringText)),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -648,21 +667,64 @@ namespace UnitTests
             //assert.
             Assert.NotNull(scenario);
             Assert.Equal(sut.Name, scenario.Name);
-            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
-            Assert.Single(scenario.Steps);
 
-            string resultSentence = scenario.Steps.First().Text;
-            Assert.NotEqual(resultSentence, sut.Steps.First().Text);
-            Assert.NotSame(resultSentence, sut.Steps.First().Text);
-            Assert.Equal(expectedResultSentence, resultSentence);
+            var scenarioSteps = scenario.Steps.ToList();
+            var sutSteps = sut.Steps.ToList();
+            
+            Assert.Equal(sutSteps.Count, scenarioSteps.Count);
+            Assert.Equal(3, scenarioSteps.Count);
+
+            // Check regular text
+            Assert.NotEqual(sutSteps[0].Text, scenarioSteps[0].Text);
+            Assert.Equal(scenarioSteps[0].Text, expectedResultSentence);
+
+            // Check DataTable
+            Assert.IsType<DataTable>(scenarioSteps[1].Argument);
+            var dataTable = (DataTable)scenarioSteps[1].Argument;
+            var rows = dataTable.Rows.ToList();
+            Assert.Equal(2, rows.Count());
+
+            var row0 = rows[0].Cells.ToArray();
+            Assert.Equal(3, row0.Count());
+            var row1 = rows[1].Cells.ToArray();
+            Assert.Equal(3, row1.Count());
+
+            Assert.Equal(row0[0].Value, column0);
+            Assert.Equal(row0[1].Value, column1);
+            Assert.Equal(row0[2].Value, column2);
+            Assert.Equal(row1[0].Value, expectedResultCell0);
+            Assert.Equal(row1[1].Value, expectedResultCell1);
+            Assert.Equal(row1[2].Value, expectedResultCell2);
+
+            // Check DocString
+            Assert.IsType<DocString>(scenarioSteps[2].Argument);
+            var docString = (DocString)scenarioSteps[2].Argument;
+
+            Assert.NotEqual(docStringText, docString.Content);
+            Assert.Equal(expectedDocStringContent, docString.Content);
         }
 
         [Theory]
-        [InlineData("a<a", "value is <a<a>")]
-        [InlineData("a>a", "value is <a>a>")]
-        public void DontApplyExampleRow_Cant_Substite_Wrong_Example_Template(string example, string inputSentence)
+        [InlineData("a<a", "value is <a<a>", true, false, false)]
+        [InlineData("a<a", "value is <a<a>", false, true, false)]
+        [InlineData("a<a", "value is <a<a>", false, false, true)]
+        [InlineData("a<a", "value is <a<a>", true, true, false)]
+        [InlineData("a<a", "value is <a<a>", false, true, true)]
+        [InlineData("a<a", "value is <a<a>", true, false, true)]
+        [InlineData("a<a", "value is <a<a>", true, true, true)]
+        [InlineData("a>a", "value is <a>a>", true, false, false)]
+        [InlineData("a>a", "value is <a>a>", false, true, false)]
+        [InlineData("a>a", "value is <a>a>", false, false, true)]
+        [InlineData("a>a", "value is <a>a>", true, true, false)]
+        [InlineData("a>a", "value is <a>a>", false, true, true)]
+        [InlineData("a>a", "value is <a>a>", true, false, true)]
+        [InlineData("a>a", "value is <a>a>", true, true, true)]
+        public void DontApplyExampleRow_And_Throw_Cant_Substite_Wrong_Example_Parameter(
+            string example, string inputSentence, bool parametrizeStep, bool parametrizeDataTable, bool parametrizeDocString)
         {
             //arrange.
+            string normalText = "normaltext";
+
             var sut = new Gherkin.Ast.ScenarioOutline(
                 null,
                 null,
@@ -671,7 +733,14 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[] 
                 {
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, null)
+                    new Gherkin.Ast.Step(null, "Given", parametrizeStep ? inputSentence : normalText, null),
+                    new Gherkin.Ast.Step(null, "Given", normalText, new DataTable(new []
+                    {
+                        new TableRow(null, new[] { new TableCell(null, "Column") }),
+                        new TableRow(null, new[] { new TableCell(null, parametrizeDataTable ? inputSentence : normalText)}),
+                    })),
+                    new Gherkin.Ast.Step(null, "Given", normalText, new DocString(
+                        null, "type", parametrizeDocString ? inputSentence : normalText)),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -725,6 +794,15 @@ namespace UnitTests
         public void DontApplyExampleRow_Starts_With_Invalid_Character(string example, string inputSentence)
         {
             //arrange.
+            var column0 = "Column1" + example;
+            var column1 = "Column2" + example;
+            var column2 = "Column3<" + example + ">";
+            var cell0 = "<" + example + ">";
+            var cell1 = "data with <" + example + "> in the middle";
+            var cell2 = "data with " + example + " in the middle";
+
+            var docStringText = "DocString with " + inputSentence + " based on " + example;
+
             var sut = new Gherkin.Ast.ScenarioOutline(
                 null,
                 null,
@@ -733,7 +811,13 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[] 
                 {
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, null)
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, null),
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DataTable(new []
+                    {
+                        new TableRow(null, new[] { new TableCell(null, column0), new TableCell(null, column1), new TableCell(null, column2) }),
+                        new TableRow(null, new[] { new TableCell(null, cell0), new TableCell(null, cell1), new TableCell(null, cell2) }),
+                    })),
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DocString(null, "type", docStringText)),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -762,10 +846,39 @@ namespace UnitTests
             //assert.
             Assert.NotNull(scenario);
             Assert.Equal(sut.Name, scenario.Name);
-            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
-            Assert.Single(scenario.Steps);
 
-            Assert.Same(scenario.Steps.First().Text, sut.Steps.First().Text); // No substitutions!
+            var scenarioSteps = scenario.Steps.ToList();
+            var sutSteps = sut.Steps.ToList();
+            
+            Assert.Equal(sutSteps.Count, scenarioSteps.Count);
+            Assert.Equal(3, scenarioSteps.Count);
+
+            // Check regular text: no substitutions!
+            Assert.Same(sutSteps[0].Text, scenarioSteps[0].Text);
+
+            // Check DataTable: no substitutions!
+            Assert.IsType<DataTable>(scenarioSteps[1].Argument);
+            var dataTable = (DataTable)scenarioSteps[1].Argument;
+            var rows = dataTable.Rows.ToList();
+            Assert.Equal(2, rows.Count());
+
+            var row0 = rows[0].Cells.ToArray();
+            Assert.Equal(3, row0.Count());
+            var row1 = rows[1].Cells.ToArray();
+            Assert.Equal(3, row1.Count());
+
+            Assert.Equal(row0[0].Value, column0);
+            Assert.Equal(row0[1].Value, column1);
+            Assert.Equal(row0[2].Value, column2);
+            Assert.Equal(row1[0].Value, cell0);
+            Assert.Equal(row1[1].Value, cell1);
+            Assert.Equal(row1[2].Value, cell2);
+
+            // Check DocString: no substitutions!
+            Assert.IsType<DocString>(scenarioSteps[2].Argument);
+            var docString = (DocString)scenarioSteps[2].Argument;
+
+            Assert.Equal(docStringText, docString.Content);
         }
     }
 }
