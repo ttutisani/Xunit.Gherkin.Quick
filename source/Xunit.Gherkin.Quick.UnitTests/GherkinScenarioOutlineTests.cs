@@ -313,7 +313,120 @@ namespace UnitTests
             Assert.Equal(expectedContent, docString.Content);
         }
 
-        public void Template_ScenarioOutline_With_Positive_And_Negative_Examples(
+        [Theory]
+        [InlineData(
+            "I declare: \"<a> > <b>\"",                       // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 > 6\"",                           // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 > -6\"",                         // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a>><b>\"",                         // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5>6\"",                             // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5>-6\"",                           // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> ><b>\"",                        // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 >6\"",                            // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 >-6\"",                          // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a>> <b>\"",                        // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5> 6\"",                            // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5> -6\"",                          // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> >= <b>\"",                      // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 >= 6\"",                          // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 >= -6\"",                        // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a>>=<b>\"",                        // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5>=6\"",                            // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5>=-6\"",                          // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> >=<b>\"",                       // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 >=6\"",                           // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 >=-6\"",                         // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a>>= <b>\"",                       // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5>= 6\"",                           // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5>= -6\"",                         // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> < <b>\"",                       // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 < 6\"",                           // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 < -6\"",                         // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a><<b>\"",                         // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5<6\"",                             // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5<-6\"",                           // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> <<b>\"",                        // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 <6\"",                            // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 <-6\"",                          // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a>< <b>\"",                        // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5< 6\"",                            // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5< -6\"",                          // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> <= <b>\"",                      // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 <= 6\"",                          // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 <= -6\"",                        // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a><=<b>\"",                        // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5<=6\"",                            // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5<=-6\"",                          // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a> <=<b>\"",                       // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5 <=6\"",                           // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5 <=-6\"",                         // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        [InlineData(
+            "I declare: \"<a><= <b>\"",                       // givenExpression
+            "the result for <a> and <b> should be <result>",  // thenExpression
+            "I declare: \"5<= 6\"",                           // givenResult1
+            "the result for 5 and 6 should be True",          // thenResult1
+            "I declare: \"-5<= -6\"",                         // givenResult2
+            "the result for -5 and -6 should be False")]      // thenResult2
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Operators_And_Spaces(
             string givenExpression,
             string thenExpression,
             string givenResult1,
@@ -416,214 +529,6 @@ namespace UnitTests
     }
 
         [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Greater_Operator_TwoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> > <b>\"",                      // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5 > 6\"",                          // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5 > -6\"",                        // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-        
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Greater_Operator_NoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a>><b>\"",                        // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5>6\"",                            // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5>-6\"",                          // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-        
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Greater_Operator_LeftSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> ><b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5 >6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5 >-6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Greater_Operator_RightSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a>> <b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5> 6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5> -6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_GreaterOrEqual_Operator_TwoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> >= <b>\"",                      // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5 >= 6\"",                          // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5 >= -6\"",                        // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_GreaterOrEqual_Operator_NoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a>>=<b>\"",                        // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5>=6\"",                            // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5>=-6\"",                          // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_GreaterOrEqual_Operator_LeftSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> >=<b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5 >=6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5 >=-6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_GreaterOrEqual_Operator_RightSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a>>= <b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5>= 6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5>= -6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Less_Operator_TwoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> < <b>\"",                      // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5 < 6\"",                          // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5 < -6\"",                        // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-        
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Less_Operator_NoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a><<b>\"",                        // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5<6\"",                            // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5<-6\"",                          // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-        
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Less_Operator_LeftSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> <<b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5 <6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5 <-6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Less_Operator_RightSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a>< <b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>", // thenExpression
-                "I declare: \"5< 6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",         // thenResult1
-                "I declare: \"-5< -6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");     // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_LessOrEqual_Operator_TwoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> <= <b>\"",                      // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5 <= 6\"",                          // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5 <= -6\"",                        // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_LessOrEqual_Operator_NoSpaces()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a><=<b>\"",                        // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5<=6\"",                            // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5<=-6\"",                          // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_LessOrEqual_Operator_LeftSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a> <=<b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5 <=6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5 <=-6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_LessOrEqual_Operator_RightSpace()
-        {
-            //arrange / act / assert.
-            Template_ScenarioOutline_With_Positive_And_Negative_Examples(
-                "I declare: \"<a><= <b>\"",                       // givenExpression
-                "the result for <a> and <b> should be <result>",  // thenExpression
-                "I declare: \"5<= 6\"",                           // givenResult1
-                "the result for 5 and 6 should be True",          // thenResult1
-                "I declare: \"-5<= -6\"",                         // givenResult2
-                "the result for -5 and -6 should be False");      // thenResult2
-        }
-
-        [Fact]
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Spaces_InTheMiddle_And_CaseSensitive_And_DoubleAngleBrackets_AndQuotes()
         {
             //arrange.
@@ -694,72 +599,173 @@ namespace UnitTests
             }
         }
 
-        [Fact]
-        public void DontApplyExampleRow_StartsWithInvalidCharacter()
+        [Theory]
+        [InlineData("space inbetween", "value is <space inbetween>", "value is 1")]
+        [InlineData("spaces in between", "<spaces in between>value is <spaces in between>", "1value is 1")]
+        [InlineData("special^cHaRaCtErS*BetWeeN^OR|and&plus+minus-mult*div/escape\\quote'end", "value is <special^cHaRaCtErS*BetWeeN^OR|and&plus+minus-mult*div/escape\\quote'end>", "value is 1")]
+        [InlineData("a^a", "value is <a^a>", "value is 1")]
+        [InlineData("a", "value is <a<a>", "value is <a1")]
+        [InlineData("a", "value is <a>a>", "value is 1a>")]
+        [InlineData("a|^|a", "value is <a|^|a>", "value is 1")]
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_Starts_With_Valid_Character_Anything_Between(
+            string example, string inputSentence, string expectedResultSentence)
         {
-            void RunTestCase(string sentence, string example)
-            {
-                //arrange.
-                var sut = new Gherkin.Ast.ScenarioOutline(
-                    null,
-                    null,
-                    null,
-                    "outline123",
-                    null,
-                    new Gherkin.Ast.Step[] 
-                    {
-                        new Gherkin.Ast.Step(null, "Given", sentence, null)
-                    },
-                    new Gherkin.Ast.Examples[]
-                    {
-                        new Gherkin.Ast.Examples(
-                            null,
-                            null,
-                            null,
-                            "existing example",
-                            null,
+            //arrange.
+            var sut = new Gherkin.Ast.ScenarioOutline(
+                null,
+                null,
+                null,
+                "outline123",
+                null,
+                new Gherkin.Ast.Step[] 
+                {
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, null)
+                },
+                new Gherkin.Ast.Examples[]
+                {
+                    new Gherkin.Ast.Examples(
+                        null,
+                        null,
+                        null,
+                        "existing example",
+                        null,
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, example)
+                        }),
+                        new Gherkin.Ast.TableRow[]
+                        {
                             new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
                             {
-                                new Gherkin.Ast.TableCell(null, example)
-                            }),
-                            new Gherkin.Ast.TableRow[]
-                            {
-                                new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
-                                {
-                                    new Gherkin.Ast.TableCell(null, "1")
-                                })
+                                new Gherkin.Ast.TableCell(null, "1")
                             })
-                    });
+                        })
+                });
 
-                //act.
-                var scenario = sut.ApplyExampleRow("existing example", 0);
+            //act.
+            var scenario = sut.ApplyExampleRow("existing example", 0);
 
-                //assert.
-                Assert.NotNull(scenario);
-                Assert.Equal(sut.Name, scenario.Name);
-                Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
-                Assert.Equal(1, scenario.Steps.Count());
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.Equal(sut.Name, scenario.Name);
+            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
+            Assert.Single(scenario.Steps);
 
-                Assert.Same(scenario.Steps.First().Text, sut.Steps.First().Text); // No substitutions!
-            }
+            string resultSentence = scenario.Steps.First().Text;
+            Assert.NotEqual(resultSentence, sut.Steps.First().Text);
+            Assert.NotSame(resultSentence, sut.Steps.First().Text);
+            Assert.Equal(expectedResultSentence, resultSentence);
+        }
 
-            RunTestCase("value is < initiallyspaced>", " initiallyspaced");
-            RunTestCase("value is <spacedinthened >", "spacedinthened ");
-            RunTestCase("value is <^initiallywrong>", "^initiallywrong");
-            RunTestCase("value is <>initiallywrong>", ">initiallywrong");
-            RunTestCase("value is <!initiallywrong>", "!initiallywrong");
-            RunTestCase("value is <wronginthened^>", "wronginthened^");
-            RunTestCase("value is <wronginthened<>", "wronginthened<");
-            RunTestCase("value is <wronginthened!>", "wronginthened!");
-            RunTestCase("value is <!wrong everywhere!>", "!wrong everywhere!");
-            RunTestCase("value is <>!wrong everywhere!<>", ">wrong everywhere<");
-            RunTestCase("value is <>", "");
-            RunTestCase("value is < >", " ");
-            RunTestCase("value is <  >", "  ");
-            RunTestCase("value is <   >", "   ");
-            RunTestCase("value is <<>", "<");
-            RunTestCase("value is <>>", ">");
-            RunTestCase("value is <^>", "^");
+        [Theory]
+        [InlineData("a<a", "value is <a<a>")]
+        [InlineData("a>a", "value is <a>a>")]
+        public void DontApplyExampleRow_Cant_Substite_Wrong_Example_Template(string example, string inputSentence)
+        {
+            //arrange.
+            var sut = new Gherkin.Ast.ScenarioOutline(
+                null,
+                null,
+                null,
+                "outline123",
+                null,
+                new Gherkin.Ast.Step[] 
+                {
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, null)
+                },
+                new Gherkin.Ast.Examples[]
+                {
+                    new Gherkin.Ast.Examples(
+                        null,
+                        null,
+                        null,
+                        "existing example",
+                        null,
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, example)
+                        }),
+                        new Gherkin.Ast.TableRow[]
+                        {
+                            new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                            {
+                                new Gherkin.Ast.TableCell(null, "1")
+                            })
+                        })
+                });
+
+            //act / assert.
+            var exception = Assert.Throws<InvalidOperationException>(() => sut.ApplyExampleRow("existing example", 0));
+            Assert.Contains("Examples table did not provide value for `a`", exception.Message);
+        }
+
+        [Theory]
+        [InlineData(" initiallyspaced", "value is < initiallyspaced>")]
+        [InlineData("spacedinthened ", "value is <spacedinthened >")]
+        [InlineData(" spaced everywhere ", "value is < spaced everywhere >")]
+        [InlineData("^initiallywrong", "value is <^initiallywrong>")]
+        [InlineData(">initiallywrong", "value is <>initiallywrong>")]
+        [InlineData("!initiallywrong", "value is <!initiallywrong>")]
+        [InlineData("wronginthened^", "value is <wronginthened^>")]
+        [InlineData("wronginthened<", "value is <wronginthened<>")]
+        [InlineData("wronginthened!", "value is <wronginthened!>")]
+        [InlineData("!wrong everywhere!", "value is <!wrong everywhere!>")]
+        [InlineData(">wrong everywhere<", "value is <>!wrong everywhere!<>")]
+        [InlineData("", "value is <>")]
+        [InlineData(" ", "value is < >")]
+        [InlineData("  ", "value is <  >")]
+        [InlineData("   ", "value is <   >")]
+        [InlineData("<", "value is <<>")]
+        [InlineData(">", "value is <>>")]
+        [InlineData("^", "value is <^>")]
+        [InlineData("a<", "value is <a<>")]
+        [InlineData("a^", "value is <a^>")]
+        [InlineData("a<>a", "value is <a<>a>")]
+        [InlineData("a<|^|>a", "value is <a<|^|>a>")]
+        public void DontApplyExampleRow_Starts_With_Invalid_Character(string example, string inputSentence)
+        {
+            //arrange.
+            var sut = new Gherkin.Ast.ScenarioOutline(
+                null,
+                null,
+                null,
+                "outline123",
+                null,
+                new Gherkin.Ast.Step[] 
+                {
+                    new Gherkin.Ast.Step(null, "Given", inputSentence, null)
+                },
+                new Gherkin.Ast.Examples[]
+                {
+                    new Gherkin.Ast.Examples(
+                        null,
+                        null,
+                        null,
+                        "existing example",
+                        null,
+                        new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                        {
+                            new Gherkin.Ast.TableCell(null, example)
+                        }),
+                        new Gherkin.Ast.TableRow[]
+                        {
+                            new Gherkin.Ast.TableRow(null, new Gherkin.Ast.TableCell[]
+                            {
+                                new Gherkin.Ast.TableCell(null, "1")
+                            })
+                        })
+                });
+
+            //act.
+            var scenario = sut.ApplyExampleRow("existing example", 0);
+
+            //assert.
+            Assert.NotNull(scenario);
+            Assert.Equal(sut.Name, scenario.Name);
+            Assert.Equal(sut.Steps.Count(), scenario.Steps.Count());
+            Assert.Single(scenario.Steps);
+
+            Assert.Same(scenario.Steps.First().Text, sut.Steps.First().Text); // No substitutions!
         }
     }
 }
