@@ -525,7 +525,7 @@ namespace UnitTests
                     "I press check",
                     thenResult2,
                 });
-    }
+        }
 
         [Fact]
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Spaces_InTheMiddle_And_CaseSensitive_And_DoubleAngleBrackets_AndQuotes()
