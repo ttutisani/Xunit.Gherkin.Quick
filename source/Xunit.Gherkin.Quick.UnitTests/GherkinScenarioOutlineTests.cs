@@ -528,7 +528,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Spaces_InTheMiddle_And_CaseSensitive_And_DoubleAngleBrackets_AndQuotes()
+        public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Special_Chars_In_The_Middle_Multiple_Steps()
         {
             //arrange.
             var sut = new Gherkin.Ast.ScenarioOutline(
