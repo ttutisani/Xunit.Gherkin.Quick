@@ -12,7 +12,7 @@ namespace Xunit.Gherkin.Quick
 {
     internal static class GherkinScenarioOutlineExtensions
     {
-        private static readonly Regex _placeholderRegex = new Regex(@"<([a-zA-Z0-9]([^<|^>]*[a-zA-Z0-9])?)>");
+        private static readonly Regex _placeholderRegex = new Regex(@"<([a-zA-Z0-9]([^<>]*[a-zA-Z0-9])?)>");
 
         public static global::Gherkin.Ast.Scenario ApplyExampleRow(
             this global::Gherkin.Ast.ScenarioOutline @this,

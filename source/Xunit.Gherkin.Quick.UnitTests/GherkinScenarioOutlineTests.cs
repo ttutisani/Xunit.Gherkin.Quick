@@ -637,7 +637,7 @@ namespace UnitTests
                 {
                     new Gherkin.Ast.Step(null, "Given", "<person's nAme> compares <a> with <b with spaces> via operator \"<\": \"<a> < <b with spaces>\"", null),
                     new Gherkin.Ast.Step(null, "When", "<a> is being compared (not using > operator!) to <b with spaces>>", null),
-                    new Gherkin.Ast.Step(null, "Then", "result is <A>, <person's nAme> is <quoted person\"s impression> and both <<a>> and <<b with spaces>> are correctly parsed", null),
+                    new Gherkin.Ast.Step(null, "Then", "result is <A>, <person's nAme> is <quoted |person\"s^ impression> and both <<a>> and <<b with spaces>> are correctly parsed", null),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -653,7 +653,7 @@ namespace UnitTests
                             new Gherkin.Ast.TableCell(null, "a"),
                             new Gherkin.Ast.TableCell(null, "b with spaces"),
                             new Gherkin.Ast.TableCell(null, "A"),
-                            new Gherkin.Ast.TableCell(null, "quoted person\"s impression"),
+                            new Gherkin.Ast.TableCell(null, "quoted |person\"s^ impression"),
                         }),
                         new Gherkin.Ast.TableRow[]
                         {
@@ -663,7 +663,7 @@ namespace UnitTests
                                 new Gherkin.Ast.TableCell(null, "84.444512"),
                                 new Gherkin.Ast.TableCell(null, "100 000 000"),
                                 new Gherkin.Ast.TableCell(null, "T R U E!"),
-                                new Gherkin.Ast.TableCell(null, "\"happy =)\""),
+                                new Gherkin.Ast.TableCell(null, "\"happy^| =)\""),
                             })
                         })
                 });
@@ -682,7 +682,7 @@ namespace UnitTests
 
             ValidateStep(scenarioSteps[0], "Given", "Johnny compares 84.444512 with 100 000 000 via operator \"<\": \"84.444512 < 100 000 000\"", sutSteps[0]);
             ValidateStep(scenarioSteps[1], "When", "84.444512 is being compared (not using > operator!) to 100 000 000>", sutSteps[1]);
-            ValidateStep(scenarioSteps[2], "Then", "result is T R U E!, Johnny is \"happy =)\" and both <84.444512> and <100 000 000> are correctly parsed", sutSteps[2]);
+            ValidateStep(scenarioSteps[2], "Then", "result is T R U E!, Johnny is \"happy^| =)\" and both <84.444512> and <100 000 000> are correctly parsed", sutSteps[2]);
 
             void ValidateStep(Gherkin.Ast.Step step, string keyword, string text, Gherkin.Ast.Step other)
             {
