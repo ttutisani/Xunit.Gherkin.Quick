@@ -97,17 +97,20 @@ namespace UnitTests
             var sutSteps = sut.Steps.ToList();
             var scenarioSteps = scenario.Steps.ToList();
 
-            ValidateStep(scenarioSteps[0], "Given", "I chose 1 as first number", sutSteps[0]);
-            ValidateStep(scenarioSteps[1], "And", "I chose 2 as second number", sutSteps[1]);
-            ValidateStep(scenarioSteps[2], "When", "I press add", sutSteps[2]);
-            ValidateStep(scenarioSteps[3], "Then", "the result should be 3 on the screen", sutSteps[3]);
+            ValidateStep(scenarioSteps[0], sutSteps[0], "Given", "I chose 1 as first number");
+            ValidateStep(scenarioSteps[1], sutSteps[1], "And", "I chose 2 as second number");
+            ValidateStep(scenarioSteps[2], sutSteps[2], "When", "I press add");
+            ValidateStep(scenarioSteps[3], sutSteps[3], "Then", "the result should be 3 on the screen");
 
-            void ValidateStep(Gherkin.Ast.Step step, string keyword, string text,
-                Gherkin.Ast.Step other)
+            void ValidateStep(
+                Gherkin.Ast.Step actualStepWithSubstitutions, 
+                Gherkin.Ast.Step initialStep,
+                string expectedKeyword,
+                string expectedText)
             {
-                Assert.NotSame(other, step);
-                Assert.Equal(keyword, step.Keyword);
-                Assert.Equal(text, step.Text);
+                Assert.NotSame(initialStep, actualStepWithSubstitutions);
+                Assert.Equal(expectedKeyword, actualStepWithSubstitutions.Keyword);
+                Assert.Equal(expectedText, actualStepWithSubstitutions.Text);
             }
         }
 
@@ -164,16 +167,19 @@ namespace UnitTests
             var sutSteps = sut.Steps.ToList();
             var scenarioSteps = scenario.Steps.ToList();
 
-            ValidateStep(scenarioSteps[0], "Given", "I chose 1 as first number and 2 as second number", sutSteps[0]);
-            ValidateStep(scenarioSteps[1], "When", "I press add", sutSteps[1]);
-            ValidateStep(scenarioSteps[2], "Then", "the result should be 3 on the screen", sutSteps[2]);
+            ValidateStep(scenarioSteps[0], sutSteps[0], "Given", "I chose 1 as first number and 2 as second number");
+            ValidateStep(scenarioSteps[1], sutSteps[1], "When", "I press add");
+            ValidateStep(scenarioSteps[2], sutSteps[2], "Then", "the result should be 3 on the screen");
 
-            void ValidateStep(Gherkin.Ast.Step step, string keyword, string text,
-                Gherkin.Ast.Step other)
+            void ValidateStep(
+                Gherkin.Ast.Step actualStepWithSubstitutions, 
+                Gherkin.Ast.Step initialStep,
+                string expectedKeyword,
+                string expectedText)
             {
-                Assert.NotSame(other, step);
-                Assert.Equal(keyword, step.Keyword);
-                Assert.Equal(text, step.Text);
+                Assert.NotSame(initialStep, actualStepWithSubstitutions);
+                Assert.Equal(expectedKeyword, actualStepWithSubstitutions.Keyword);
+                Assert.Equal(expectedText, actualStepWithSubstitutions.Text);
             }
         }
 
@@ -240,11 +246,11 @@ namespace UnitTests
             ValidateRow(rows[1], "1", "data with 2 in the middle");
             ValidateRow(rows[2], "2", "1");
 
-            void ValidateRow(TableRow row, string expectedColumn0Value, string expectedColumn1Value)
+            void ValidateRow(TableRow actualRow, string expectedColumn0Value, string expectedColumn1Value)
             {
-                var cells = row.Cells.ToArray();
-                Assert.Equal(cells[0].Value, expectedColumn0Value);
-                Assert.Equal(cells[1].Value, expectedColumn1Value);
+                var actualCells = actualRow.Cells.ToArray();
+                Assert.Equal(actualCells[0].Value, expectedColumn0Value);
+                Assert.Equal(actualCells[1].Value, expectedColumn1Value);
             }
         }
 
@@ -314,147 +320,155 @@ namespace UnitTests
 
         [Theory]
         [InlineData(
-            "I declare: \"<a> > <b>\"",                       // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 > 6\"",                           // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 > -6\"",                         // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> > <b>\"",                       // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 > 6\"",                           // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 > -6\"",                         // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a>><b>\"",                         // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5>6\"",                             // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5>-6\"",                           // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a>><b>\"",                         // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5>6\"",                             // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5>-6\"",                           // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> ><b>\"",                        // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 >6\"",                            // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 >-6\"",                          // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> ><b>\"",                        // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 >6\"",                            // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 >-6\"",                          // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a>> <b>\"",                        // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5> 6\"",                            // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5> -6\"",                          // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a>> <b>\"",                        // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5> 6\"",                            // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5> -6\"",                          // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> >= <b>\"",                      // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 >= 6\"",                          // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 >= -6\"",                        // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> >= <b>\"",                      // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 >= 6\"",                          // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 >= -6\"",                        // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a>>=<b>\"",                        // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5>=6\"",                            // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5>=-6\"",                          // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a>>=<b>\"",                        // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5>=6\"",                            // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5>=-6\"",                          // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> >=<b>\"",                       // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 >=6\"",                           // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 >=-6\"",                         // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> >=<b>\"",                       // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 >=6\"",                           // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 >=-6\"",                         // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a>>= <b>\"",                       // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5>= 6\"",                           // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5>= -6\"",                         // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a>>= <b>\"",                       // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5>= 6\"",                           // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5>= -6\"",                         // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> < <b>\"",                       // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 < 6\"",                           // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 < -6\"",                         // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> < <b>\"",                       // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 < 6\"",                           // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 < -6\"",                         // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a><<b>\"",                         // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5<6\"",                             // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5<-6\"",                           // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a><<b>\"",                         // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5<6\"",                             // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5<-6\"",                           // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> <<b>\"",                        // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 <6\"",                            // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 <-6\"",                          // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> <<b>\"",                        // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 <6\"",                            // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 <-6\"",                          // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a>< <b>\"",                        // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5< 6\"",                            // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5< -6\"",                          // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a>< <b>\"",                        // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5< 6\"",                            // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5< -6\"",                          // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> <= <b>\"",                      // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 <= 6\"",                          // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 <= -6\"",                        // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> <= <b>\"",                      // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 <= 6\"",                          // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 <= -6\"",                        // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a><=<b>\"",                        // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5<=6\"",                            // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5<=-6\"",                          // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a><=<b>\"",                        // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5<=6\"",                            // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5<=-6\"",                          // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a> <=<b>\"",                       // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5 <=6\"",                           // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5 <=-6\"",                         // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a> <=<b>\"",                       // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5 <=6\"",                           // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5 <=-6\"",                         // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         [InlineData(
-            "I declare: \"<a><= <b>\"",                       // givenExpression
-            "the result for <a> and <b> should be <result>",  // thenExpression
-            "I declare: \"5<= 6\"",                           // givenResult1
-            "the result for 5 and 6 should be True",          // thenResult1
-            "I declare: \"-5<= -6\"",                         // givenResult2
-            "the result for -5 and -6 should be False")]      // thenResult2
+            "I declare: \"<a><= <b>\"",                       // initialGivenExpression
+            "the result for <a> and <b> should be <result>",  // initialThenExpression
+            "I declare: \"5<= 6\"",                           // expectedGivenExpressionWithExampleRow0
+            "the result for 5 and 6 should be True",          // expectedThenExpressionWithExampleRow0
+            "I declare: \"-5<= -6\"",                         // expectedGivenExpressionWithExampleRow1
+            "the result for -5 and -6 should be False")]      // expectedThenExpressionWithExampleRow1
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_With_Operators_And_Spaces(
-            string givenExpression,
-            string thenExpression,
-            string givenResult1,
-            string thenResult1,
-            string givenResult2,
-            string thenResult2)
+            string initialGivenExpression,
+            string initialThenExpression,
+            string expectedGivenExpressionWithExampleRow0,
+            string expectedThenExpressionWithExampleRow0,
+            string expectedGivenExpressionWithExampleRow1,
+            string expectedThenExpressionWithExampleRow1)
         {
-            void ValidateStep(Gherkin.Ast.Step step, string keyword, string text, Gherkin.Ast.Step other, bool shouldSubstitute)
+            void ValidateStep(
+                Gherkin.Ast.Step actualStep, 
+                Gherkin.Ast.Step initialStep,
+                string expectedKeyword,
+                string expectedText,
+                bool shouldSubstituteByExamplesValues)
             {
-                Assert.NotSame(other, step);
-                Assert.Equal(shouldSubstitute, other.Text != step.Text);
+                Assert.NotSame(initialStep, actualStep);
+                Assert.Equal(shouldSubstituteByExamplesValues, initialStep.Text != actualStep.Text);
 
-                Assert.Equal(keyword, step.Keyword);
-                Assert.Equal(text, step.Text);
+                Assert.Equal(expectedKeyword, actualStep.Keyword);
+                Assert.Equal(expectedText, actualStep.Text);
             }
 
-            void ValidateScenario(Gherkin.Ast.Scenario scenario, Gherkin.Ast.ScenarioOutline outline, string[] stepTexts)
+            void ValidateScenario(
+                Gherkin.Ast.Scenario actualScenario, 
+                Gherkin.Ast.ScenarioOutline initialScenarioOutline, 
+                string[] expectedStepTexts)
             {
-                Assert.NotNull(scenario);
-                Assert.Equal(outline.Name, scenario.Name);
-                Assert.Equal(outline.Steps.Count(), scenario.Steps.Count());
-                Assert.Equal(3, scenario.Steps.Count());
+                Assert.NotNull(actualScenario);
+                Assert.Equal(initialScenarioOutline.Name, actualScenario.Name);
+                Assert.Equal(initialScenarioOutline.Steps.Count(), actualScenario.Steps.Count());
+                Assert.Equal(3, actualScenario.Steps.Count());
 
-                var sutSteps = outline.Steps.ToList();
-                var scenarioSteps = scenario.Steps.ToList();
+                var initialScenarioOutlineSteps = initialScenarioOutline.Steps.ToList();
+                var actualScenarioSteps = actualScenario.Steps.ToList();
 
-                ValidateStep(scenarioSteps[0], "Given", stepTexts[0], sutSteps[0], true);
-                ValidateStep(scenarioSteps[1], "When", stepTexts[1], sutSteps[1], false);
-                ValidateStep(scenarioSteps[2], "Then", stepTexts[2], sutSteps[2], true);
+                ValidateStep(actualScenarioSteps[0], initialScenarioOutlineSteps[0], "Given", expectedStepTexts[0], true);
+                ValidateStep(actualScenarioSteps[1], initialScenarioOutlineSteps[1], "When", expectedStepTexts[1], false);
+                ValidateStep(actualScenarioSteps[2], initialScenarioOutlineSteps[2], "Then", expectedStepTexts[2], true);
             }
 
             //arrange.
@@ -466,9 +480,9 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[]
                 {
-                    new Gherkin.Ast.Step(null, "Given", givenExpression, null),
+                    new Gherkin.Ast.Step(null, "Given", initialGivenExpression, null),
                     new Gherkin.Ast.Step(null, "When", "I press check", null),
-                    new Gherkin.Ast.Step(null, "Then", thenExpression, null),
+                    new Gherkin.Ast.Step(null, "Then", initialThenExpression, null),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -511,9 +525,9 @@ namespace UnitTests
                 sut,
                 new string[]
                 {
-                    givenResult1,
+                    expectedGivenExpressionWithExampleRow0,
                     "I press check",
-                    thenResult1,
+                    expectedThenExpressionWithExampleRow0,
                 });
 
             ValidateScenario(
@@ -521,9 +535,9 @@ namespace UnitTests
                 sut,
                 new string[]
                 {
-                    givenResult2,
+                    expectedGivenExpressionWithExampleRow1,
                     "I press check",
-                    thenResult2,
+                    expectedThenExpressionWithExampleRow1,
                 });
         }
 
@@ -584,17 +598,21 @@ namespace UnitTests
             var sutSteps = sut.Steps.ToList();
             var scenarioSteps = scenario.Steps.ToList();
 
-            ValidateStep(scenarioSteps[0], "Given", "Johnny compares 84.444512 with 100 000 000 via operator \"<\": \"84.444512 < 100 000 000\"", sutSteps[0]);
-            ValidateStep(scenarioSteps[1], "When", "84.444512 is being compared (not using > operator!) to 100 000 000>", sutSteps[1]);
-            ValidateStep(scenarioSteps[2], "Then", "result is T R U E!, Johnny is \"happy^| =)\" and both <84.444512> and <100 000 000> are correctly parsed", sutSteps[2]);
+            ValidateStep(scenarioSteps[0], sutSteps[0], "Given", "Johnny compares 84.444512 with 100 000 000 via operator \"<\": \"84.444512 < 100 000 000\"");
+            ValidateStep(scenarioSteps[1], sutSteps[1], "When", "84.444512 is being compared (not using > operator!) to 100 000 000>");
+            ValidateStep(scenarioSteps[2], sutSteps[2], "Then", "result is T R U E!, Johnny is \"happy^| =)\" and both <84.444512> and <100 000 000> are correctly parsed");
 
-            void ValidateStep(Gherkin.Ast.Step step, string keyword, string text, Gherkin.Ast.Step other)
+            void ValidateStep(                
+                Gherkin.Ast.Step actualStepWithSubstitutions, 
+                Gherkin.Ast.Step initialStep,
+                string expectedKeyword,
+                string expectedText)
             {
-                Assert.NotSame(other, step);
-                Assert.NotSame(other.Text, step.Text);
+                Assert.NotSame(initialStep, actualStepWithSubstitutions);
+                Assert.NotSame(initialStep.Text, actualStepWithSubstitutions.Text);
 
-                Assert.Equal(keyword, step.Keyword);
-                Assert.Equal(text, step.Text);
+                Assert.Equal(expectedKeyword, actualStepWithSubstitutions.Keyword);
+                Assert.Equal(expectedText, actualStepWithSubstitutions.Text);
             }
         }
 
@@ -608,21 +626,21 @@ namespace UnitTests
         [InlineData("a|^|a", "value is <a|^|a>", "value is 1")]
         [InlineData("a", "value is <a> <---> <a> <-> <a> < <a> > <a>", "value is 1 <---> 1 <-> 1 < 1 > 1")]
         public void ApplyExampleRow_Digests_Row_Values_Into_Scenario_Correctly_Steps_DataTables_DocStrings(
-            string example, string inputSentence, string expectedResultSentence)
+            string example, string initialSentence, string expectedResultSentence)
         {
             //arrange.
-            var column0 = "Column1" + example;
-            var column1 = "Column2" + example;
-            var column2 = "Column3<" + example + ">";
-            var cell0 = "<" + example + ">";
-            var expectedResultCell0 = "1";
-            var cell1 = "data with <" + example + "> in the middle";
-            var expectedResultCell1 = "data with 1 in the middle";
-            var cell2 = "data with " + example + " in the middle";
-            var expectedResultCell2 = cell2;
+            var initialColumnName0 = "Column1" + example;
+            var initialColumnName1 = "Column2" + example;
+            var initialColumnName2 = "Column3<" + example + ">";
+            var initialCellValue0 = "<" + example + ">";
+            var expectedResultCellValue0 = "1";
+            var initialCellValue1 = "data with <" + example + "> in the middle";
+            var expectedResultCellValue1 = "data with 1 in the middle";
+            var initialCellValue2 = "data with " + example + " in the middle";
+            var expectedResultCellValue2 = initialCellValue2;
             
-            var docStringText = "DocString with " + inputSentence + " based on " + example;
-            var expectedDocStringContent = "DocString with " + expectedResultSentence + " based on " + example;
+            var initialDocStringContent = "DocString with " + initialSentence + " based on " + example;
+            var expectedResultDocStringContent = "DocString with " + expectedResultSentence + " based on " + example;
 
             var sut = new Gherkin.Ast.ScenarioOutline(
                 null,
@@ -632,13 +650,13 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[] 
                 {
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, null),
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DataTable(new []
+                    new Gherkin.Ast.Step(null, "Given", initialSentence, null),
+                    new Gherkin.Ast.Step(null, "Given", initialSentence, new DataTable(new []
                     {
-                        new TableRow(null, new[] { new TableCell(null, column0), new TableCell(null, column1), new TableCell(null, column2) }),
-                        new TableRow(null, new[] { new TableCell(null, cell0), new TableCell(null, cell1), new TableCell(null, cell2) }),
+                        new TableRow(null, new[] { new TableCell(null, initialColumnName0), new TableCell(null, initialColumnName1), new TableCell(null, initialColumnName2) }),
+                        new TableRow(null, new[] { new TableCell(null, initialCellValue0), new TableCell(null, initialCellValue1), new TableCell(null, initialCellValue2) }),
                     })),
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DocString(null, "type", docStringText)),
+                    new Gherkin.Ast.Step(null, "Given", initialSentence, new DocString(null, "type", initialDocStringContent)),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -680,28 +698,28 @@ namespace UnitTests
 
             // Check DataTable
             Assert.IsType<DataTable>(scenarioSteps[1].Argument);
-            var dataTable = (DataTable)scenarioSteps[1].Argument;
-            var rows = dataTable.Rows.ToList();
-            Assert.Equal(2, rows.Count());
+            var actualDataTable = (DataTable)scenarioSteps[1].Argument;
+            var actualRows = actualDataTable.Rows.ToList();
+            Assert.Equal(2, actualRows.Count());
 
-            var row0 = rows[0].Cells.ToArray();
-            Assert.Equal(3, row0.Count());
-            var row1 = rows[1].Cells.ToArray();
-            Assert.Equal(3, row1.Count());
+            var actualRow0 = actualRows[0].Cells.ToArray();
+            Assert.Equal(3, actualRow0.Count());
+            var actualRow1 = actualRows[1].Cells.ToArray();
+            Assert.Equal(3, actualRow1.Count());
 
-            Assert.Equal(row0[0].Value, column0);
-            Assert.Equal(row0[1].Value, column1);
-            Assert.Equal(row0[2].Value, column2);
-            Assert.Equal(row1[0].Value, expectedResultCell0);
-            Assert.Equal(row1[1].Value, expectedResultCell1);
-            Assert.Equal(row1[2].Value, expectedResultCell2);
+            Assert.Equal(actualRow0[0].Value, initialColumnName0);
+            Assert.Equal(actualRow0[1].Value, initialColumnName1);
+            Assert.Equal(actualRow0[2].Value, initialColumnName2);
+            Assert.Equal(actualRow1[0].Value, expectedResultCellValue0);
+            Assert.Equal(actualRow1[1].Value, expectedResultCellValue1);
+            Assert.Equal(actualRow1[2].Value, expectedResultCellValue2);
 
             // Check DocString
             Assert.IsType<DocString>(scenarioSteps[2].Argument);
             var docString = (DocString)scenarioSteps[2].Argument;
 
-            Assert.NotEqual(docStringText, docString.Content);
-            Assert.Equal(expectedDocStringContent, docString.Content);
+            Assert.NotEqual(initialDocStringContent, docString.Content);
+            Assert.Equal(expectedResultDocStringContent, docString.Content);
         }
 
         [Theory]
@@ -720,7 +738,7 @@ namespace UnitTests
         [InlineData("a>a", "value is <a>a>", true, false, true)]
         [InlineData("a>a", "value is <a>a>", true, true, true)]
         public void DontApplyExampleRow_And_Throw_Cant_Substite_Wrong_Example_Parameter(
-            string example, string inputSentence, bool parametrizeStep, bool parametrizeDataTable, bool parametrizeDocString)
+            string example, string initialSentence, bool parametrizeStep, bool parametrizeDataTable, bool parametrizeDocString)
         {
             //arrange.
             string normalText = "normaltext";
@@ -733,14 +751,14 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[] 
                 {
-                    new Gherkin.Ast.Step(null, "Given", parametrizeStep ? inputSentence : normalText, null),
+                    new Gherkin.Ast.Step(null, "Given", parametrizeStep ? initialSentence : normalText, null),
                     new Gherkin.Ast.Step(null, "Given", normalText, new DataTable(new []
                     {
                         new TableRow(null, new[] { new TableCell(null, "Column") }),
-                        new TableRow(null, new[] { new TableCell(null, parametrizeDataTable ? inputSentence : normalText)}),
+                        new TableRow(null, new[] { new TableCell(null, parametrizeDataTable ? initialSentence : normalText)}),
                     })),
                     new Gherkin.Ast.Step(null, "Given", normalText, new DocString(
-                        null, "type", parametrizeDocString ? inputSentence : normalText)),
+                        null, "type", parametrizeDocString ? initialSentence : normalText)),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -764,8 +782,8 @@ namespace UnitTests
                 });
 
             //act / assert.
-            var exception = Assert.Throws<InvalidOperationException>(() => sut.ApplyExampleRow("existing example", 0));
-            Assert.Contains("Examples table did not provide value for `a`", exception.Message);
+            var actualException = Assert.Throws<InvalidOperationException>(() => sut.ApplyExampleRow("existing example", 0));
+            Assert.Contains("Examples table did not provide value for `a`", actualException.Message);
         }
 
         [Theory]
@@ -791,17 +809,17 @@ namespace UnitTests
         [InlineData("a^", "value is <a^>")]
         [InlineData("a<>a", "value is <a<>a>")]
         [InlineData("a<|^|>a", "value is <a<|^|>a>")]
-        public void DontApplyExampleRow_Starts_With_Invalid_Character(string example, string inputSentence)
+        public void DontApplyExampleRow_Starts_With_Invalid_Character(string example, string initialSentence)
         {
             //arrange.
-            var column0 = "Column1" + example;
-            var column1 = "Column2" + example;
-            var column2 = "Column3<" + example + ">";
-            var cell0 = "<" + example + ">";
-            var cell1 = "data with <" + example + "> in the middle";
-            var cell2 = "data with " + example + " in the middle";
+            var initialColumnName0 = "Column1" + example;
+            var initialColumnName1 = "Column2" + example;
+            var initialColumnName2 = "Column3<" + example + ">";
+            var initialCellValue0 = "<" + example + ">";
+            var initialCellValue1 = "data with <" + example + "> in the middle";
+            var initialCellValue2 = "data with " + example + " in the middle";
 
-            var docStringText = "DocString with " + inputSentence + " based on " + example;
+            var initialDocStringContent = "DocString with " + initialSentence + " based on " + example;
 
             var sut = new Gherkin.Ast.ScenarioOutline(
                 null,
@@ -811,13 +829,13 @@ namespace UnitTests
                 null,
                 new Gherkin.Ast.Step[] 
                 {
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, null),
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DataTable(new []
+                    new Gherkin.Ast.Step(null, "Given", initialSentence, null),
+                    new Gherkin.Ast.Step(null, "Given", initialSentence, new DataTable(new []
                     {
-                        new TableRow(null, new[] { new TableCell(null, column0), new TableCell(null, column1), new TableCell(null, column2) }),
-                        new TableRow(null, new[] { new TableCell(null, cell0), new TableCell(null, cell1), new TableCell(null, cell2) }),
+                        new TableRow(null, new[] { new TableCell(null, initialColumnName0), new TableCell(null, initialColumnName1), new TableCell(null, initialColumnName2) }),
+                        new TableRow(null, new[] { new TableCell(null, initialCellValue0), new TableCell(null, initialCellValue1), new TableCell(null, initialCellValue2) }),
                     })),
-                    new Gherkin.Ast.Step(null, "Given", inputSentence, new DocString(null, "type", docStringText)),
+                    new Gherkin.Ast.Step(null, "Given", initialSentence, new DocString(null, "type", initialDocStringContent)),
                 },
                 new Gherkin.Ast.Examples[]
                 {
@@ -858,27 +876,27 @@ namespace UnitTests
 
             // Check DataTable: no substitutions!
             Assert.IsType<DataTable>(scenarioSteps[1].Argument);
-            var dataTable = (DataTable)scenarioSteps[1].Argument;
-            var rows = dataTable.Rows.ToList();
-            Assert.Equal(2, rows.Count());
+            var actualDataTable = (DataTable)scenarioSteps[1].Argument;
+            var actualRows = actualDataTable.Rows.ToList();
+            Assert.Equal(2, actualRows.Count());
 
-            var row0 = rows[0].Cells.ToArray();
-            Assert.Equal(3, row0.Count());
-            var row1 = rows[1].Cells.ToArray();
-            Assert.Equal(3, row1.Count());
+            var actualRow0 = actualRows[0].Cells.ToArray();
+            Assert.Equal(3, actualRow0.Count());
+            var actualRow1 = actualRows[1].Cells.ToArray();
+            Assert.Equal(3, actualRow1.Count());
 
-            Assert.Equal(row0[0].Value, column0);
-            Assert.Equal(row0[1].Value, column1);
-            Assert.Equal(row0[2].Value, column2);
-            Assert.Equal(row1[0].Value, cell0);
-            Assert.Equal(row1[1].Value, cell1);
-            Assert.Equal(row1[2].Value, cell2);
+            Assert.Equal(actualRow0[0].Value, initialColumnName0);
+            Assert.Equal(actualRow0[1].Value, initialColumnName1);
+            Assert.Equal(actualRow0[2].Value, initialColumnName2);
+            Assert.Equal(actualRow1[0].Value, initialCellValue0);
+            Assert.Equal(actualRow1[1].Value, initialCellValue1);
+            Assert.Equal(actualRow1[2].Value, initialCellValue2);
 
             // Check DocString: no substitutions!
             Assert.IsType<DocString>(scenarioSteps[2].Argument);
-            var docString = (DocString)scenarioSteps[2].Argument;
+            var actualDocString = (DocString)scenarioSteps[2].Argument;
 
-            Assert.Equal(docStringText, docString.Content);
+            Assert.Equal(initialDocStringContent, actualDocString.Content);
         }
     }
 }
