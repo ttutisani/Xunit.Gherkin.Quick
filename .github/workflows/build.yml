@@ -22,10 +22,13 @@ jobs:
         dotnet-version: 10.0.x
 
     - name: Restore
+      working-directory: source
       run: dotnet restore
 
     - name: Build
+      working-directory: source
       run: dotnet build --no-restore
 
     - name: Test
+      working-directory: source
       run: dotnet test --no-build
