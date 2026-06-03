@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
     <PackageId>Xunit.Gherkin.Quick</PackageId>
     <Title>Xunit.Gherkin.Quick</Title>
     <Description>BDD in .NET Core - Xunit.Gherkin.Quick is a lightweight, cross platform BDD test framework (targets .NET Standard, can be used from both .NET and .NET Core test projects). It parses Gherkin language and executes Xunit tests corresponding to scenarios.</Description>
