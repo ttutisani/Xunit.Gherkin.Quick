@@ -21,6 +21,8 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
+            yield break;
+
             var featureClassType = testMethod.TestClass.Class.ToRuntimeType();
             TestAssemblyInfo testAssemblyInfo = TestAssemblyInfo.FromAssembly(featureClassType.GetTypeInfo().Assembly);
 

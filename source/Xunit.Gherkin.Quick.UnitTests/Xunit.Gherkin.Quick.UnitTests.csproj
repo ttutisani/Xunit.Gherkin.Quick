@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xunit.Gherkin.Quick\Xunit.Gherkin.Quick.csproj" />
+    <ProjectReference Include="../Xunit.Gherkin.Quick/Xunit.Gherkin.Quick.csproj" />
   </ItemGroup>
 
 </Project>

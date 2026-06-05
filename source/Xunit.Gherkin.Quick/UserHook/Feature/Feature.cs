@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -14,6 +13,11 @@ namespace Xunit.Gherkin.Quick
     /// </summary>
     public abstract class Feature : FeatureBase
     {
+        [vNext.XunitGherkinQuickFeature]
+        internal void FeatureTask(vNext.TestScenario testScenario)
+        {
+        }
+
         [Scenario]
         internal async Task Scenario(string scenarioName, string featureFilePath)
         {
@@ -23,8 +27,8 @@ namespace Xunit.Gherkin.Quick
 
         [ScenarioOutline]
         internal async Task ScenarioOutline(
-            string scenarioOutlineName, 
-            string exampleName, 
+            string scenarioOutlineName,
+            string exampleName,
             int exampleIndex,
             string featureFilePath)
         {

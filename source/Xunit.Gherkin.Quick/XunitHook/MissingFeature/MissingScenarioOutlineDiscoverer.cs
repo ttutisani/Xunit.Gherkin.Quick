@@ -21,6 +21,8 @@ namespace Xunit.Gherkin.Quick
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
+            yield break;
+
             var missingFeatureClass = testMethod.TestClass.Class.ToRuntimeType();
             var missingFeatureClassInfo = MissingFeatureClassInfo.FromMissingFeatureClassType(missingFeatureClass);
             var testAssembly = missingFeatureClass.GetTypeInfo().Assembly;

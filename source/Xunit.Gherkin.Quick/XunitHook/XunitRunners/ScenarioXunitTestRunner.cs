@@ -68,9 +68,6 @@ namespace Xunit.Gherkin.Quick
         }
 
         private static TestOutputHelper FindOutputHelperInArguments(object[] args)
-        {
-            return args.FirstOrDefault(argObject => argObject is TestOutputHelper)
-                as TestOutputHelper;
-        }
+            => args.OfType<TestOutputHelper>().FirstOrDefault();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Xunit.Abstractions;
@@ -16,14 +17,20 @@ namespace Xunit.Gherkin.Quick
         }
 
         public IEnumerable<IXunitTestCase> Discover(
-            ITestFrameworkDiscoveryOptions discoveryOptions, 
-            ITestMethod testMethod, 
+            ITestFrameworkDiscoveryOptions discoveryOptions,
+            ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
+            yield break;
+
+            var testAssembly = testMethod.TestClass.Class.ToRuntimeType().GetTypeInfo().Assembly;
+
             var featureClassType = testMethod.TestClass.Class.ToRuntimeType();
             TestAssemblyInfo testAssemblyInfo = TestAssemblyInfo.FromAssembly(featureClassType.GetTypeInfo().Assembly);
 
-            var featureFiles = new FeatureDiscoveryModel(new FeatureFileRepository(testAssemblyInfo.FeatureFileSearchPattern)).Discover(featureClassType);
+            var pocoloco = new FeatureFileRepository(testAssemblyInfo.FeatureFileSearchPattern);
+            IEnumerable<FeatureFilePathInfo.FeatureAndPath> featureFiles = Enumerable.Empty<FeatureFilePathInfo.FeatureAndPath>();
+            featureFiles = new FeatureDiscoveryModel(pocoloco).Discover(featureClassType);
 
             foreach (var featureFile in featureFiles)
             {
@@ -33,10 +40,10 @@ namespace Xunit.Gherkin.Quick
                     bool skip = featureFile.Feature.IsScenarioIgnored(scenario.Name);
 
                     yield return new ScenarioXunitTestCase(
-                        _messageSink, 
-                        testMethod, 
-                        featureFile.Feature.Name, 
-                        scenario.Name, 
+                        _messageSink,
+                        testMethod,
+                        featureFile.Feature.Name,
+                        scenario.Name,
                         tags,
                         skip,
                         new object[] { scenario.Name, featureFile.Path });

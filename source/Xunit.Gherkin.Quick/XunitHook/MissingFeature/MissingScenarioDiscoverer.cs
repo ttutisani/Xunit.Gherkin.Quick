@@ -16,10 +16,12 @@ namespace Xunit.Gherkin.Quick
         }
 
         public IEnumerable<IXunitTestCase> Discover(
-            ITestFrameworkDiscoveryOptions discoveryOptions, 
-            ITestMethod testMethod, 
+            ITestFrameworkDiscoveryOptions discoveryOptions,
+            ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
+            yield break;
+
             var missingFeatureClass = testMethod.TestClass.Class.ToRuntimeType();
             var missingFeatureClassInfo = MissingFeatureClassInfo.FromMissingFeatureClassType(missingFeatureClass);
             var testAssembly = missingFeatureClass.GetTypeInfo().Assembly;

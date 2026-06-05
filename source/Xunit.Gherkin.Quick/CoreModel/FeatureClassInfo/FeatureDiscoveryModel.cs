@@ -21,7 +21,6 @@ namespace Xunit.Gherkin.Quick
                 throw new ArgumentNullException(nameof(featureClassType));
 
             var featureClassInfo = FeatureClassInfo.FromFeatureClassType(featureClassType);
-
             var featurePathsAndFiles = featureClassInfo.PathInfo.GetMatchingFeatures(_featureFileRepository);
 
             if (featurePathsAndFiles.Count == 0) {
