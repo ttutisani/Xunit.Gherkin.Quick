@@ -134,7 +134,7 @@ namespace UnitTests
 
             //assert.
             Assert.True(clone.IsSameAs(sut));
-            Assert.NotSame(clone, sut);
+            Assert.Same(clone, sut);
         }
     }
 }
