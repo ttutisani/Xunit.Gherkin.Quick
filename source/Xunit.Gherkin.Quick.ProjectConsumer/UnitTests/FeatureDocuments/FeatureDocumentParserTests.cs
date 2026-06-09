@@ -1,6 +1,6 @@
 using Xunit.Gherkin.Quick.vNext.FeatureDocuments;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests;
+namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests.FeatureDocuments;
 
 public class FeatureDocumentParserTests
 {

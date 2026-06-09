@@ -1,4 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Gherkin.Ast;
+using Xunit.Abstractions;
+using Xunit.Gherkin.Quick.vNext.Evaluators;
+using Xunit.Gherkin.Quick.vNext.Hooks;
+using Xunit.Gherkin.Quick.vNext.TestScenarios;
+using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick
 {
@@ -13,9 +20,34 @@ namespace Xunit.Gherkin.Quick
     /// </summary>
     public abstract class Feature : FeatureBase
     {
-        [vNext.XunitGherkinQuickFeature]
-        internal void FeatureTask(vNext.TestScenario testScenario)
+        internal TestScenario TestScenario { get; private set; }
+        internal TestStep TestStep { get; private set; }
+
+        [TestScenario]
+        internal async Task TestScenarioAsync(ITestOutputHelper testOutputHelper, TestScenario testScenario)
         {
+            var featureEvaluator = new FeatureEvaluator(this);
+
+            TestScenario = testScenario;
+            using (var testStep = testScenario.Steps.GetEnumerator())
+                while (testStep.MoveNext())
+                    try
+                    {
+                        await featureEvaluator.EvaluateStepAsync(testStep.Current);
+                        testOutputHelper.WriteLine($"{testStep.Current.Text}: PASSED");
+                    }
+                    catch (Exception exception)
+                    {
+                        testOutputHelper.WriteLine($"{testStep.Current.Text}: FAILED");
+
+                        while (testStep.MoveNext())
+                            testOutputHelper.WriteLine($"{testStep.Current.Text}: SKIPPED");
+
+                        if (exception is XunitException)
+                            throw;
+                        else
+                            throw new TestScenarioException("An unhandled exception was thrown while evaluating scenario.", exception);
+                    }
         }
 
         [Scenario]

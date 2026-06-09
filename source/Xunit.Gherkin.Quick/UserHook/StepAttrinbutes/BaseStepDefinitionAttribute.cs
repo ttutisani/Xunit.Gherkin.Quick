@@ -17,7 +17,7 @@ namespace Xunit.Gherkin.Quick
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public abstract class BaseStepDefinitionAttribute : Attribute
     {
-        private string Keyword { get; }
+        internal string Keyword { get; }
 
         internal string Pattern { get; }
 

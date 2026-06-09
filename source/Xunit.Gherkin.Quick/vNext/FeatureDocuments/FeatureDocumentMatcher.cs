@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Xunit.Gherkin.Quick.vNext.FeatureDocuments;
 using Xunit.Gherkin.Quick.vNext.FeatureFiles;
 using Xunit.Gherkin.Quick.vNext.FilePatternMatchers;
 
-namespace Xunit.Gherkin.Quick.vNext
+namespace Xunit.Gherkin.Quick.vNext.FeatureDocuments
 {
     internal class FeatureDocumentMatcher
     {

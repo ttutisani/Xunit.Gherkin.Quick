@@ -1,7 +1,7 @@
 using System;
 using Xunit.Gherkin.Quick.vNext.FilePatternMatchers;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests;
+namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests.FilePatternMatchers;
 
 public class FilePatternMatcherTests
 {

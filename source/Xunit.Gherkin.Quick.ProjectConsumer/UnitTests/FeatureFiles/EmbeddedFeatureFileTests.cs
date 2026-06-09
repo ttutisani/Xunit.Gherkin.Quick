@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Xunit.Gherkin.Quick.vNext.FeatureFiles;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests;
+namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests.FeatureFiles;
 
 public class EmbeddedFeatureFileTests
 {

@@ -1,8 +1,7 @@
-using System.Linq;
 using Xunit.Gherkin.Quick.ProjectConsumer.Addition.Async;
-using Xunit.Gherkin.Quick.vNext;
+using Xunit.Gherkin.Quick.vNext.FeatureDocuments;
 
-namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests;
+namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests.FeatureDocuments;
 
 public class FeatureDocumentMatcherTests
 {
