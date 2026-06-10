@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xunit.Gherkin.Quick.vNext.Evaluators;
@@ -33,81 +32,81 @@ public sealed class FeatureEvaluatorTests
         foreach (var testStep in testScenario.Steps)
             await featureEvaluator.EvaluateStepAsync(testStep);
 
-        Assert.Equal(4, feature.ExecutedSteps.Count);
-
-        Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep1), feature.ExecutedSteps[0].Key);
-        Assert.NotNull(feature.ExecutedSteps[0].Value);
-        Assert.Single(feature.ExecutedSteps[0].Value);
-        Assert.Equal(12, feature.ExecutedSteps[0].Value[0]);
-
-        Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep2), feature.ExecutedSteps[1].Key);
-        Assert.NotNull(feature.ExecutedSteps[1].Value);
-        Assert.Single(feature.ExecutedSteps[1].Value);
-        Assert.Equal(15, feature.ExecutedSteps[1].Value[0]);
-
-        Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep3), feature.ExecutedSteps[2].Key);
-        Assert.Null(feature.ExecutedSteps[2].Value);
-
-        Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep4), feature.ExecutedSteps[3].Key);
-        Assert.NotNull(feature.ExecutedSteps[3].Value);
-        Assert.Single(feature.ExecutedSteps[3].Value);
-        Assert.Equal(27, feature.ExecutedSteps[3].Value[0]);
+        Assert.Collection(
+            feature.ExecutedSteps,
+            firstStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep1), firstStep.Name),
+                () => Assert.Equal([12], firstStep.Arguments)
+            ),
+            secondStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep2), secondStep.Name),
+                () => Assert.Equal([15], secondStep.Arguments)
+            ),
+            thirdStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep3), thirdStep.Name),
+                () => Assert.Empty(thirdStep.Arguments)
+            ),
+            fourthStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithScenarioSteps.ScenarioStep4), fourthStep.Name),
+                () => Assert.Equal([27], fourthStep.Arguments)
+            )
+        );
     }
 
     private sealed class FeatureWithScenarioSteps : Feature
     {
-        private readonly List<KeyValuePair<string, object[]>> _executedSteps = [];
+        private readonly List<(string Name, IReadOnlyList<object> Arguments)> _executedSteps = [];
 
-        public IReadOnlyList<KeyValuePair<string, object[]>> ExecutedSteps
+        public IReadOnlyList<(string Name, IReadOnlyList<object> Arguments)> ExecutedSteps
             => _executedSteps;
 
         [Given("Non matching given")]
         public void NonMatchingStep1_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep1_before), []));
 
         [Given(@"I chose (\d+) as first number")]
         public void ScenarioStep1(int firstNumber)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep1), [firstNumber]));
+            => _executedSteps.Add(new(nameof(ScenarioStep1), [firstNumber]));
 
         [Given("Non matching given")]
         public void NonMatchingStep1_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep1_after), []));
 
         [And("Non matching and")]
         public void NonMatchingStep2_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep2_before), []));
 
         [And(@"I chose (\d+) as second number")]
         public void ScenarioStep2(int secondNumber)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), [secondNumber]));
+            => _executedSteps.Add(new(nameof(ScenarioStep2), [secondNumber]));
 
         [And("Non matching and")]
         public void NonMatchingStep2_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep2_after), []));
 
         [When("Non matching when")]
         public void NonMatchingStep3_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep3_before), []));
 
         [When("I press add")]
         public void ScenarioStep3()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep3), null));
+            => _executedSteps.Add(new(nameof(ScenarioStep3), []));
 
         [When("Non matching when")]
         public void NonMatchingStep3_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep3_after), []));
 
         [Then("Non matching then")]
         public void NonMatchingStep4_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep4_before), []));
 
         [Then(@"the result should be (\d+) on the screen")]
         public void ScenarioStep4(int result)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep4), [result]));
+            => _executedSteps.Add(new(nameof(ScenarioStep4), [result]));
 
         [Then("Non matching then")]
         public void NonMatchingStep4_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep4_after), []));
     }
 
     [Fact]
@@ -134,79 +133,81 @@ public sealed class FeatureEvaluatorTests
                 await featureEvaluator.EvaluateStepAsync(testStep);
         });
 
-        Assert.IsType<InvalidOperationException>(exception.InnerException);
-        Assert.Equal(2, feature.ExecutedSteps.Count);
-
-        Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep1), feature.ExecutedSteps[0].Key);
-        Assert.NotNull(feature.ExecutedSteps[0].Value);
-        Assert.Single(feature.ExecutedSteps[0].Value);
-        Assert.Equal(12, feature.ExecutedSteps[0].Value[0]);
-
-        Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep2), feature.ExecutedSteps[1].Key);
-        Assert.NotNull(feature.ExecutedSteps[1].Value);
-        Assert.Single(feature.ExecutedSteps[1].Value);
-        Assert.Equal(15, feature.ExecutedSteps[1].Value[0]);
+        Assert.Multiple(
+            () => Assert.IsType<InvalidOperationException>(exception.InnerException),
+            () => Assert.Collection(
+                feature.ExecutedSteps,
+                firstStep => Assert.Multiple(
+                    () => Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep1), firstStep.Name),
+                    () => Assert.Equal([12], firstStep.Arguments)
+                ),
+                secondStep => Assert.Multiple(
+                    () => Assert.Equal(nameof(FeatureWithScenarioSteps_And_Throwing.ScenarioStep2), secondStep.Name),
+                    () => Assert.Equal([15], secondStep.Arguments)
+                )
+            )
+        );
     }
 
     private sealed class FeatureWithScenarioSteps_And_Throwing : Feature
     {
-        private readonly List<KeyValuePair<string, object[]>> _executedSteps = [];
+        private readonly List<(string Name, IReadOnlyList<object> Arguments)> _executedSteps = [];
 
-        public IReadOnlyList<KeyValuePair<string, object[]>> ExecutedSteps
+        public IReadOnlyList<(string Name, IReadOnlyList<object> Arguments)> ExecutedSteps
             => _executedSteps;
 
         [Given("Non matching given")]
         public void NonMatchingStep1_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep1_before), []));
 
 
         [Given(@"I chose (\d+) as first number")]
         public void ScenarioStep1(int firstNumber)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep1), [firstNumber]));
+            => _executedSteps.Add(new(nameof(ScenarioStep1), [firstNumber]));
 
         [Given("Non matching given")]
         public void NonMatchingStep1_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep1_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep1_after), []));
 
         [And("Non matching and")]
         public void NonMatchingStep2_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep2_before), []));
 
         [And(@"I chose (\d+) as second number")]
         public void ScenarioStep2(int secondNumber)
         {
-            _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep2), [secondNumber]));
+            _executedSteps.Add(new(nameof(ScenarioStep2), [secondNumber]));
 
             throw new InvalidOperationException("Some exception to stop execution of next steps.");
         }
 
         [And("Non matching and")]
         public void NonMatchingStep2_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep2_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep2_after), []));
 
         [When("Non matching when")]
         public void NonMatchingStep3_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep3_before), []));
 
         [When("I press add")]
         public void ScenarioStep3()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep3), null));
+            => _executedSteps.Add(new(nameof(ScenarioStep3), []));
 
         [When("Non matching when")]
         public void NonMatchingStep3_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep3_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep3_after), []));
 
         [Then("Non matching then")]
         public void NonMatchingStep4_before()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_before), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep4_before), []));
 
         [Then(@"the result should be (\d+) on the screen")]
         public void ScenarioStep4(int result)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(ScenarioStep4), [result]));
+            => _executedSteps.Add(new(nameof(ScenarioStep4), [result]));
 
         [Then("Non matching then")]
         public void NonMatchingStep4_after()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(NonMatchingStep4_after), null));
+            => _executedSteps.Add(new(nameof(NonMatchingStep4_after), []));
     }
 
     [Fact]
@@ -230,28 +231,49 @@ public sealed class FeatureEvaluatorTests
         foreach (var testStep in testScenario.Steps)
             await featureEvaluator.EvaluateStepAsync(testStep);
 
-        Assert.Equal("abcd", feature.OrderValidator);
+        Assert.Collection(
+            feature.ExecutedSteps,
+            firstStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithBackgroundSteps.GivenBackground), firstStep.Name),
+                () => Assert.Empty(firstStep.Arguments)
+            ),
+            secondStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithBackgroundSteps.WhenBackground), secondStep.Name),
+                () => Assert.Empty(secondStep.Arguments)
+            ),
+            thirdStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithBackgroundSteps.ThenBackground), thirdStep.Name),
+                () => Assert.Empty(thirdStep.Arguments)
+            ),
+            fourthStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithBackgroundSteps.ThenScenario), fourthStep.Name),
+                () => Assert.Empty(fourthStep.Arguments)
+            )
+        );
     }
 
     private sealed class FeatureWithBackgroundSteps : Feature
     {
-        public string OrderValidator = string.Empty;
+        private readonly List<(string Name, IReadOnlyList<object> Arguments)> _executedSteps = [];
+
+        public IReadOnlyList<(string Name, IReadOnlyList<object> Arguments)> ExecutedSteps
+            => _executedSteps;
 
         [Given("given background")]
         public void GivenBackground()
-            => OrderValidator += "a";
+            => _executedSteps.Add(new(nameof(GivenBackground), []));
 
         [When("when background")]
         public void WhenBackground()
-            => OrderValidator += "b";
+            => _executedSteps.Add(new(nameof(WhenBackground), []));
 
         [Then("then background")]
         public void ThenBackground()
-            => OrderValidator += "c";
+            => _executedSteps.Add(new(nameof(ThenBackground), []));
 
         [Then("step one")]
         public void ThenScenario()
-            => OrderValidator += "d";
+            => _executedSteps.Add(new(nameof(ThenScenario), []));
     }
 
     [Fact]
@@ -300,28 +322,27 @@ public sealed class FeatureEvaluatorTests
             await featureEvaluator.EvaluateStepAsync(testStep);
 
         Assert.NotNull(feature.ReceivedDataTable);
-        Assert.Equal(3, feature.ReceivedDataTable.Rows.Count());
-
-        AssertDataTableCell(0, 0, "First argument");
-        AssertDataTableCell(0, 1, "Second argument");
-        AssertDataTableCell(0, 2, "Result");
-
-        AssertDataTableCell(1, 0, "1");
-        AssertDataTableCell(1, 1, "2");
-        AssertDataTableCell(1, 2, "3");
-
-        AssertDataTableCell(2, 0, "a");
-        AssertDataTableCell(2, 1, "b");
-        AssertDataTableCell(2, 2, "c");
-
-        void AssertDataTableCell(int rowIndex, int cellIndex, string value)
-        {
-            Assert.True(feature.ReceivedDataTable.Rows.Count() > rowIndex);
-            Assert.NotNull(feature.ReceivedDataTable.Rows.ElementAt(rowIndex));
-            Assert.True(feature.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.Count() > cellIndex);
-            Assert.NotNull(feature.ReceivedDataTable.Rows.ElementAt(rowIndex).Cells.ElementAt(cellIndex));
-            Assert.Equal("First argument", feature.ReceivedDataTable.Rows.ElementAt(0).Cells.ElementAt(0).Value);
-        }
+        Assert.Collection(
+            feature.ReceivedDataTable.Rows,
+            firstRow => Assert.Collection(
+                firstRow.Cells,
+                firstCell => Assert.Equal("First argument", firstCell.Value),
+                secondCell => Assert.Equal("Second argument", secondCell.Value),
+                thirdCell => Assert.Equal("Result", thirdCell.Value)
+            ),
+            secondRow => Assert.Collection(
+                secondRow.Cells,
+                firstCell => Assert.Equal("1", firstCell.Value),
+                secondCell => Assert.Equal("2", secondCell.Value),
+                thirdCell => Assert.Equal("3", thirdCell.Value)
+            ),
+            thirdRow => Assert.Collection(
+                thirdRow.Cells,
+                firstCell => Assert.Equal("a", firstCell.Value),
+                secondCell => Assert.Equal("b", secondCell.Value),
+                thirdCell => Assert.Equal("c", thirdCell.Value)
+            )
+        );
     }
 
     private sealed class FeatureWithDataTableScenarioStep : Feature
@@ -357,8 +378,10 @@ public sealed class FeatureEvaluatorTests
             await featureEvaluator.EvaluateStepAsync(testStep);
 
         Assert.NotNull(feature.ReceivedDocString);
-        Assert.Equal(docStringContent, feature.ReceivedDocString.Content);
-        Assert.Equal("text", feature.ReceivedDocString.ContentType);
+        Assert.Multiple(
+            () => Assert.Equal("text", feature.ReceivedDocString.ContentType),
+            () => Assert.Equal(docStringContent, feature.ReceivedDocString.Content)
+        );
     }
 
     private sealed class FeatureWithDocStringScenarioStep : Feature
@@ -395,30 +418,44 @@ public sealed class FeatureEvaluatorTests
         foreach (var testStep in testScenario.Steps)
             await featureEvaluator.EvaluateStepAsync(testStep);
 
-        Assert.Equal(7, feature.ExecutedSteps.Count);
-
-        Assert_Callback(0, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 1);
-        Assert_Callback(1, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 2);
-        Assert_Callback(2, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 3);
-        Assert_Callback(3, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 4);
-        Assert_Callback(4, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 5);
-        Assert_Callback(5, nameof(FeatureWithSharedStepMethod.Selecting_numbers), 6);
-        Assert_Callback(6, nameof(FeatureWithSharedStepMethod.Result_should_be_x_on_the_screen), (1 + 2 + 3 + 4 + 5 + 6));
-
-        void Assert_Callback(int index, string methodName, int value)
-        {
-            Assert.Equal(methodName, feature.ExecutedSteps[index].Key);
-            Assert.NotNull(feature.ExecutedSteps[index].Value);
-            Assert.Single(feature.ExecutedSteps[index].Value);
-            Assert.Equal(value, feature.ExecutedSteps[index].Value[0]);
-        }
+        Assert.Collection(
+            feature.ExecutedSteps,
+            firstStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Selecting_numbers), firstStep.Name),
+                () => Assert.Equal([1], firstStep.Arguments)
+            ),
+            secondStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Selecting_numbers), secondStep.Name),
+                () => Assert.Equal([2], secondStep.Arguments)
+            ),
+            thirdStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Selecting_numbers), thirdStep.Name),
+                () => Assert.Equal([3], thirdStep.Arguments)
+            ),
+            fourthStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Selecting_numbers), fourthStep.Name),
+                () => Assert.Equal([4], fourthStep.Arguments)
+            ),
+            fifthStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Selecting_numbers), fifthStep.Name),
+                () => Assert.Equal([5], fifthStep.Arguments)
+            ),
+            sixthStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Selecting_numbers), sixthStep.Name),
+                () => Assert.Equal([6], sixthStep.Arguments)
+            ),
+            seventhStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithSharedStepMethod.Result_should_be_x_on_the_screen), seventhStep.Name),
+                () => Assert.Equal([1 + 2 + 3 + 4 + 5 + 6], seventhStep.Arguments)
+            )
+        );
     }
 
     private sealed class FeatureWithSharedStepMethod : Feature
     {
-        private readonly List<KeyValuePair<string, object[]>> _executedSteps = [];
+        private readonly List<(string Name, IReadOnlyList<object> Arguments)> _executedSteps = [];
 
-        public IReadOnlyList<KeyValuePair<string, object[]>> ExecutedSteps
+        public IReadOnlyList<(string Name, IReadOnlyList<object> Arguments)> ExecutedSteps
             => _executedSteps;
 
         [Given(@"I chose (\d+) as first number")]
@@ -428,11 +465,11 @@ public sealed class FeatureEvaluatorTests
         [And(@"I choose (\d+) as fifth number")]
         [And(@"I choose (\d+) as sixth number")]
         public void Selecting_numbers(int x)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(Selecting_numbers), [x]));
+            => _executedSteps.Add(new(nameof(Selecting_numbers), [x]));
 
         [Then(@"Result should be (\d+) on the screen")]
         public void Result_should_be_x_on_the_screen(int x)
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(Result_should_be_x_on_the_screen), [x]));
+            => _executedSteps.Add(new(nameof(Result_should_be_x_on_the_screen), [x]));
     }
 
     [Fact]
@@ -454,20 +491,25 @@ public sealed class FeatureEvaluatorTests
         foreach (var testStep in testScenario.Steps)
             await featureEvaluator.EvaluateStepAsync(testStep);
 
-        Assert.Single(feature.ExecutedSteps);
-        Assert.Equal(nameof(FeatureWithStarNotation.I_Have_Some_Cukes), feature.ExecutedSteps[0].Key);
+        Assert.Collection(
+            feature.ExecutedSteps,
+            onlyStep => Assert.Multiple(
+                () => Assert.Equal(nameof(FeatureWithStarNotation.I_Have_Some_Cukes), onlyStep.Name),
+                () => Assert.Empty(onlyStep.Arguments)
+            )
+        );
     }
 
     private sealed class FeatureWithStarNotation : Feature
     {
-        public List<KeyValuePair<string, object[]>> _executedSteps = [];
+        public List<(string Name, IReadOnlyList<object> Arguments)> _executedSteps = [];
 
-        public IReadOnlyList<KeyValuePair<string, object[]>> ExecutedSteps
+        public IReadOnlyList<(string Name, IReadOnlyList<object> Arguments)> ExecutedSteps
             => _executedSteps;
 
         [Given("I have some cukes")]
         public void I_Have_Some_Cukes()
-            => _executedSteps.Add(new KeyValuePair<string, object[]>(nameof(I_Have_Some_Cukes), null));
+            => _executedSteps.Add(new(nameof(I_Have_Some_Cukes), []));
     }
 
     [Fact]
@@ -490,6 +532,7 @@ public sealed class FeatureEvaluatorTests
             foreach (var testStep in testScenario.Steps)
                 await featureEvaluator.EvaluateStepAsync(testStep);
         });
+
         Assert.Equal("Method 'StepWithAsyncVoid' of 'FeatureWithAsyncVoidStep' class is async and void, which looks like a mistake. Use either async with Task or void without async.", exception.Message);
     }
 
@@ -497,8 +540,6 @@ public sealed class FeatureEvaluatorTests
     {
         [Given("Any step text")]
         public async void StepWithAsyncVoid()
-        {
-            await Task.CompletedTask;
-        }
+            => await Task.CompletedTask;
     }
 }
