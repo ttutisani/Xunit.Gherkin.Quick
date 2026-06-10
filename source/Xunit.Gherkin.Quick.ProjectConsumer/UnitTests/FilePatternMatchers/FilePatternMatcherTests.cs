@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Xunit.Gherkin.Quick.vNext.FilePatternMatchers;
 
 namespace Xunit.Gherkin.Quick.ProjectConsumer.UnitTests.FilePatternMatchers;
@@ -34,6 +35,29 @@ public class FilePatternMatcherTests
     public void EndsWithFilePatternMatcher_Matches(string filePattern, string filePath, StringComparison stringComparison, bool expectedMatch)
     {
         var matcher = new EndsWithFilePatternMatcher(filePattern, stringComparison);
+
+        var matches = matcher.Matches(filePath);
+
+        if (expectedMatch)
+            Assert.True(matches);
+        else
+            Assert.False(matches);
+    }
+
+    [Theory]
+    [InlineData(@"file\.txt", "./file.txt", RegexOptions.IgnoreCase, true)]
+    [InlineData(@".+", "./file.txt", RegexOptions.IgnoreCase, true)]
+    [InlineData(@".+\.txt", "./file.txt", RegexOptions.IgnoreCase, true)]
+    [InlineData(@".*\.txt", ".txt", RegexOptions.IgnoreCase, true)]
+    [InlineData(@".+\.txt", ".txt", RegexOptions.IgnoreCase, false)]
+    [InlineData(@"[a-z]+\.txt", "./file.txt", RegexOptions.IgnoreCase, true)]
+    [InlineData(@"[a-z]+\.txt", "./FILE.TXT", RegexOptions.IgnoreCase, true)]
+    [InlineData(@"[a-z]+\.txt", "./FILE.TXT", RegexOptions.None, false)]
+    [InlineData(@"[a-z]+\.feature", "./file.feature.txt", RegexOptions.IgnoreCase, true)]
+    [InlineData(@"[a-z]+\.feature$", "./file.feature.txt", RegexOptions.IgnoreCase, false)]
+    public void RegexFilePatternMatcher_Matches(string filePattern, string filePath, RegexOptions regexOptions, bool expectedMatch)
+    {
+        var matcher = new RegexFilePatternMatcher(filePattern, regexOptions);
 
         var matches = matcher.Matches(filePath);
 

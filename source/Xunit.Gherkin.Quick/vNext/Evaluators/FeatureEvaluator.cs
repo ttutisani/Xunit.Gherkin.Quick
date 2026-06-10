@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Gherkin.Ast;
@@ -13,6 +14,7 @@ namespace Xunit.Gherkin.Quick.vNext.Evaluators
 {
     internal class FeatureEvaluator
     {
+        private readonly IReadOnlyCollection<TestStepType> _concreteStepTypes = new[] { TestStepType.Given, TestStepType.When, TestStepType.Then, TestStepType.And, TestStepType.But };
         private static readonly IReadOnlyDictionary<string, string> _Expressions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             { "int", @"([+-]?\d+)" },
@@ -37,6 +39,9 @@ namespace Xunit.Gherkin.Quick.vNext.Evaluators
 
         public Task EvaluateStepAsync(TestStep testStep)
         {
+            if (testStep is null)
+                throw new ArgumentNullException(nameof(testStep));
+
             var matchedStepDefinitions = _GetMatchedStepDefinitions(testStep).ToList();
             switch (matchedStepDefinitions.Count)
             {
@@ -48,13 +53,18 @@ namespace Xunit.Gherkin.Quick.vNext.Evaluators
                     var result = matchedStepDefinition.Method.IsStatic
                         ? matchedStepDefinition.Method.Invoke(null, matchedStepDefinition.Arguments)
                         : matchedStepDefinition.Method.Invoke(_feature, matchedStepDefinition.Arguments);
-                    if (matchedStepDefinition.Method.ReturnType != typeof(void))
-                        if (result is Task taskResult)
-                            return taskResult;
+
+                    if (matchedStepDefinition.Method.ReturnType == typeof(void))
+                        if (matchedStepDefinition.Method.IsDefined(typeof(AsyncStateMachineAttribute)))
+                            throw new XunitException($"Method '{matchedStepDefinition.Method.Name}' of '{matchedStepDefinition.Method.DeclaringType.Name}' class is async and void, which looks like a mistake. Use either async with Task or void without async.");
                         else
-                            throw new XunitException($"Method return type '{matchedStepDefinition.Method.ReturnType.Name}' is not supported.");
+                            return Task.CompletedTask;
+
+                    else if (result is Task taskResult)
+                        return taskResult;
+
                     else
-                        return Task.CompletedTask;
+                        throw new XunitException($"Method return type '{matchedStepDefinition.Method.ReturnType.Name}' is not supported.");
 
                 default:
                     var matchedMethodNames = matchedStepDefinitions.Select(stepDefinition => stepDefinition.Method.Name);
@@ -64,34 +74,35 @@ namespace Xunit.Gherkin.Quick.vNext.Evaluators
 
         private IEnumerable<MatchedStepDefinition> _GetMatchedStepDefinitions(TestStep testStep)
         {
-            if (_stepDefinitionsByType.TryGetValue(testStep.Type, out var stepDefinitions))
-                foreach (var stepDefinition in stepDefinitions)
-                {
-                    var match = stepDefinition.Pattern.Match(testStep.Text);
-                    if (match.Success)
+            foreach (var concreteStepType in _concreteStepTypes)
+                if ((testStep.Type & concreteStepType) == concreteStepType && _stepDefinitionsByType.TryGetValue(concreteStepType, out var stepDefinitions))
+                    foreach (var stepDefinition in stepDefinitions)
                     {
-                        var methodParameters = stepDefinition.Method.GetParameters();
-                        var methodArguments = new object[methodParameters.Length];
-                        if (methodArguments.Length > 0)
+                        var match = stepDefinition.Pattern.Match(testStep.Text);
+                        if (match.Success)
                         {
-                            var methodArgumentIndex = 0;
-                            var rootGroupCaptures = _GetRootGroupCaptures(match);
-                            for (var methodParameterIndex = 0; methodParameterIndex < methodParameters.Length; methodParameterIndex++)
+                            var methodParameters = stepDefinition.Method.GetParameters();
+                            var methodArguments = new object[methodParameters.Length];
+                            if (methodArguments.Length > 0)
                             {
-                                var methodParameter = methodParameters[methodParameterIndex];
-                                if (_TryGetStepBodyArgument(testStep, methodParameter.ParameterType, out var stepBodyArgument))
-                                    methodArguments[methodArgumentIndex] = stepBodyArgument;
-                                else if (rootGroupCaptures.Count < methodArgumentIndex)
-                                    throw new XunitException($"Cannot extract value for parameter `{methodParameter.Name}` at index {methodParameterIndex}; only {rootGroupCaptures.Count} parameters were provided. Method `{methodParameter.Member.Name}`.");
-                                else
-                                    methodArguments[methodArgumentIndex] = Convert.ChangeType(rootGroupCaptures[methodArgumentIndex], methodParameter.ParameterType, CultureInfo.InvariantCulture);
-                                methodArgumentIndex++;
+                                var methodArgumentIndex = 0;
+                                var rootGroupCaptures = _GetRootGroupCaptures(match);
+                                for (var methodParameterIndex = 0; methodParameterIndex < methodParameters.Length; methodParameterIndex++)
+                                {
+                                    var methodParameter = methodParameters[methodParameterIndex];
+                                    if (_TryGetStepBodyArgument(testStep, methodParameter.ParameterType, out var stepBodyArgument))
+                                        methodArguments[methodArgumentIndex] = stepBodyArgument;
+                                    else if (rootGroupCaptures.Count < methodArgumentIndex)
+                                        throw new XunitException($"Cannot extract value for parameter `{methodParameter.Name}` at index {methodParameterIndex}; only {rootGroupCaptures.Count} parameters were provided. Method `{methodParameter.Member.Name}`.");
+                                    else
+                                        methodArguments[methodArgumentIndex] = Convert.ChangeType(rootGroupCaptures[methodArgumentIndex], methodParameter.ParameterType, CultureInfo.InvariantCulture);
+                                    methodArgumentIndex++;
+                                }
                             }
-                        }
 
-                        yield return new MatchedStepDefinition(stepDefinition, methodArguments);
+                            yield return new MatchedStepDefinition(stepDefinition, methodArguments);
+                        }
                     }
-                }
         }
 
         private static IReadOnlyList<string> _GetRootGroupCaptures(Match match)
@@ -107,18 +118,6 @@ namespace Xunit.Gherkin.Quick.vNext.Evaluators
                 }
 
             return rootGroupCaptures;
-        }
-
-        private static TestStepType _GetTestStepType(string keyword)
-        {
-            if (keyword.Equals("given", StringComparison.OrdinalIgnoreCase))
-                return TestStepType.Given;
-            else if (keyword.Equals("when", StringComparison.OrdinalIgnoreCase))
-                return TestStepType.When;
-            else if (keyword.Equals("then", StringComparison.OrdinalIgnoreCase))
-                return TestStepType.Then;
-            else
-                return TestStepType.And;
         }
 
         private static bool _TryGetStepBodyArgument(TestStep testStep, Type parameterType, out object stepBodyArgument)
@@ -200,17 +199,32 @@ namespace Xunit.Gherkin.Quick.vNext.Evaluators
             return type
                 .GetRuntimeMethods()
                 .Where(method => (method.IsPublic || method.IsAssembly) && !method.IsAbstract && !method.IsGenericMethodDefinition)
-                .SelectMany(
-                    method => method
-                        .GetCustomAttributes<BaseStepDefinitionAttribute>(inherit: true)
-                        .Select(
-                                stepAttribute => new StepDefinition(
-                                    _GetTestStepType(stepAttribute.Keyword),
-                                    _GetPattern(stepAttribute.Pattern),
-                                    method
-                                )
-                            )
+                .SelectMany(method => method
+                    .GetCustomAttributes<BaseStepDefinitionAttribute>(inherit: true)
+                    .Select(
+                        stepAttribute => new StepDefinition(
+                            _GetTestStepType(stepAttribute.Keyword),
+                            _GetPattern(stepAttribute.Pattern),
+                            method
+                        )
+                    )
                 );
+        }
+
+        private static TestStepType _GetTestStepType(string keyword)
+        {
+            if (keyword.Equals("given", StringComparison.OrdinalIgnoreCase))
+                return TestStepType.Given;
+            else if (keyword.Equals("when", StringComparison.OrdinalIgnoreCase))
+                return TestStepType.When;
+            else if (keyword.Equals("then", StringComparison.OrdinalIgnoreCase))
+                return TestStepType.Then;
+            else if (keyword.Equals("and", StringComparison.OrdinalIgnoreCase))
+                return TestStepType.And;
+            else if (keyword.Equals("but", StringComparison.OrdinalIgnoreCase))
+                return TestStepType.But;
+            else
+                return TestStepType.Unknown;
         }
     }
 }

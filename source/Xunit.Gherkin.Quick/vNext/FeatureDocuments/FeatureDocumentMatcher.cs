@@ -35,8 +35,10 @@ namespace Xunit.Gherkin.Quick.vNext.FeatureDocuments
             switch (featureFileAttributeInfo.PathType)
             {
                 case FeatureFilePathType.Simple:
-                case FeatureFilePathType.Regex:
                     return new StrictFilePatternMatcher(featureFileAttributeInfo.Path);
+
+                case FeatureFilePathType.Regex:
+                    return new RegexFilePatternMatcher(featureFileAttributeInfo.Path);
 
                 default:
                     throw new ArgumentException($"Not handled '{featureFileAttributeInfo.PathType}' path type.", nameof(featureFileAttributeInfo));

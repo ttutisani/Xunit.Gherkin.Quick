@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gherkin;
 using Xunit.Abstractions;
 using Xunit.Gherkin.Quick.vNext.FeatureDocuments;
 using Xunit.Gherkin.Quick.vNext.TestScenarios;
@@ -9,8 +10,6 @@ using Xunit.Sdk;
 namespace Xunit.Gherkin.Quick.vNext.Hooks
 {
     // TODO:
-    // * add tests to cover parser + gherkin document mapping to test scenario
-    // * add regex file pattern matcher
     // * add scenario outline support
     // * test test test, add feature tests where necessary
     // * cleanup/remove old code, remove global:: references where possible
@@ -20,6 +19,7 @@ namespace Xunit.Gherkin.Quick.vNext.Hooks
     //   limitation from file repository during execution stage) allows for improved reporting
     internal class TestCaseDiscoverer : IXunitTestCaseDiscoverer
     {
+        private readonly TestScenarioMapper _testScenarioMapper = new TestScenarioMapper(new GherkinDialectProvider());
         private readonly IReadOnlyCollection<string> _IgnoreTags = new List<string> { "ignore" };
         private readonly IMessageSink _messageSink;
         private readonly FeatureDocumentMatcher _featureDocumentMatcher = new FeatureDocumentMatcher();
@@ -73,7 +73,7 @@ namespace Xunit.Gherkin.Quick.vNext.Hooks
                     scenarioBackground = background;
                 else if (scenarioDefinition is global::Gherkin.Ast.Scenario scenario)
                 {
-                    var testScenario = TestScenario.From(feature, scenarioBackground is object ? scenario.ApplyBackground(scenarioBackground) : scenario);
+                    var testScenario = _testScenarioMapper.Map(feature, scenarioBackground is object ? scenario.ApplyBackground(scenarioBackground) : scenario);
                     var displayName = $"{testScenario.FeatureName} :: {testScenario.ScenarioName}";
                     if (_IgnoreTags.Any(ignoreTag => testScenario.Tags.Contains(ignoreTag, StringComparer.OrdinalIgnoreCase)))
                         yield return new UnavailableTestCase(
