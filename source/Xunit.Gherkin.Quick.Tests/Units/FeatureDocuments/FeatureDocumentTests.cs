@@ -1,4 +1,5 @@
 
+using Gherkin.Ast;
 using Xunit.Gherkin.Quick.FeatureDocuments;
 
 namespace Xunit.Gherkin.Quick.Tests.Units.FeatureDocuments;
@@ -43,7 +44,7 @@ Scenario: still a test
                 Assert.Null(featureDocument.Content.Feature.Description);
 
                 var scenarioDefinition = Assert.Single(featureDocument.Content.Feature.Children);
-                var scenario = Assert.IsType<global::Gherkin.Ast.Scenario>(scenarioDefinition);
+                var scenario = Assert.IsType<Scenario>(scenarioDefinition);
                 Assert.Equal("still a test", scenario.Name);
                 Assert.Null(scenario.Description);
                 Assert.Collection(

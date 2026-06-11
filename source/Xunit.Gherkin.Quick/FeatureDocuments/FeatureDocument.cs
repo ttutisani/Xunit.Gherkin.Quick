@@ -10,7 +10,7 @@ namespace Xunit.Gherkin.Quick.FeatureDocuments
         private bool _initialized = false;
         private readonly IFeatureFile _featureFile;
         private readonly Parser _gherkinParser;
-        private global::Gherkin.Ast.GherkinDocument _content = null;
+        private GherkinDocument _content = null;
         private Exception _error = null;
 
         public FeatureDocument(IFeatureFile featureFile, Parser gherkinParser)
@@ -25,7 +25,7 @@ namespace Xunit.Gherkin.Quick.FeatureDocuments
         public string FullName
             => _featureFile.FullName;
 
-        public global::Gherkin.Ast.GherkinDocument Content
+        public GherkinDocument Content
         {
             get
             {

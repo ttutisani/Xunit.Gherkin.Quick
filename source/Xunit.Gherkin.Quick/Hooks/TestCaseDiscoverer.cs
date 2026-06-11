@@ -58,20 +58,20 @@ namespace Xunit.Gherkin.Quick.Hooks
                     )
                 );
 
-        private IEnumerable<IXunitTestCase> _GetTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, global::Gherkin.Ast.GherkinDocument document, ITestMethod testMethod)
+        private IEnumerable<IXunitTestCase> _GetTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, GherkinDocument document, ITestMethod testMethod)
         {
-            global::Gherkin.Ast.Background scenarioBackground = null;
+            Background scenarioBackground = null;
             foreach (var scenarioDefinition in document.Feature.Children)
-                if (scenarioDefinition is global::Gherkin.Ast.Background background)
+                if (scenarioDefinition is Background background)
                     scenarioBackground = background;
-                else if (scenarioDefinition is global::Gherkin.Ast.Scenario scenario)
+                else if (scenarioDefinition is Scenario scenario)
                     yield return _GetScenarioTestCase(discoveryOptions, testMethod, document, scenarioBackground, scenario);
-                else if (scenarioDefinition is global::Gherkin.Ast.ScenarioOutline scenarioOutline)
+                else if (scenarioDefinition is ScenarioOutline scenarioOutline)
                     foreach (var testCase in _GetScenarioOutlineTestCases(discoveryOptions, testMethod, document, scenarioBackground, scenarioOutline))
                         yield return testCase;
         }
 
-        private IXunitTestCase _GetScenarioTestCase(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Background scenarioBackground, global::Gherkin.Ast.Scenario scenario)
+        private IXunitTestCase _GetScenarioTestCase(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, GherkinDocument document, Background scenarioBackground, Scenario scenario)
         {
             var displayName = _GetDisplayName(document.Feature, scenario);
             var testScenario = _testScenarioMapper.Map(document, _ApplyBackground(scenario, scenarioBackground));
@@ -94,7 +94,7 @@ namespace Xunit.Gherkin.Quick.Hooks
                 );
         }
 
-        private IEnumerable<IXunitTestCase> _GetScenarioOutlineTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Background scenarioBackground, global::Gherkin.Ast.ScenarioOutline scenarioOutline)
+        private IEnumerable<IXunitTestCase> _GetScenarioOutlineTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, GherkinDocument document, Background scenarioBackground, ScenarioOutline scenarioOutline)
         {
             if (scenarioOutline.Examples is null || !scenarioOutline.Examples.Any())
                 yield return new UnavailableTestCase(
@@ -137,18 +137,18 @@ namespace Xunit.Gherkin.Quick.Hooks
                 }
         }
 
-        private IEnumerable<IXunitTestCase> _GetScenarioOutlineExampleTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Background scenarioBackground, global::Gherkin.Ast.ScenarioOutline scenarioOutline, global::Gherkin.Ast.Examples example)
+        private IEnumerable<IXunitTestCase> _GetScenarioOutlineExampleTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, GherkinDocument document, Background scenarioBackground, ScenarioOutline scenarioOutline, Examples example)
         {
             var generatedScenario = _ApplyBackground(
-                new global::Gherkin.Ast.Scenario(
-                    (scenarioOutline.Tags ?? Enumerable.Empty<global::Gherkin.Ast.Tag>())
-                        .Concat(example.Tags ?? Enumerable.Empty<global::Gherkin.Ast.Tag>())
+                new Scenario(
+                    (scenarioOutline.Tags ?? Enumerable.Empty<Tag>())
+                        .Concat(example.Tags ?? Enumerable.Empty<Tag>())
                         .ToArray(),
                     scenarioOutline.Location,
                     scenarioOutline.Keyword,
                     scenarioOutline.Name,
                     scenarioOutline.Description,
-                    scenarioOutline.Steps as global::Gherkin.Ast.Step[] ?? scenarioOutline.Steps?.ToArray()
+                    scenarioOutline.Steps as Step[] ?? scenarioOutline.Steps?.ToArray()
                 ),
                 scenarioBackground
             );
@@ -196,11 +196,11 @@ namespace Xunit.Gherkin.Quick.Hooks
         private static string _GetDisplayName(params IHasDescription[] hasDescriptions)
             => string.Join(" :: ", hasDescriptions.Where(hasDescription => !string.IsNullOrWhiteSpace(hasDescription.Name)));
 
-        private static global::Gherkin.Ast.Scenario _ApplyBackground(global::Gherkin.Ast.Scenario scenario, global::Gherkin.Ast.Background background)
+        private static Scenario _ApplyBackground(Scenario scenario, Background background)
             => background is null || !background.Steps.Any()
             ? scenario
-            : new global::Gherkin.Ast.Scenario(
-                scenario.Tags as global::Gherkin.Ast.Tag[] ?? scenario.Tags.ToArray(),
+            : new Scenario(
+                scenario.Tags as Tag[] ?? scenario.Tags.ToArray(),
                 scenario.Location,
                 scenario.Keyword,
                 scenario.Name,

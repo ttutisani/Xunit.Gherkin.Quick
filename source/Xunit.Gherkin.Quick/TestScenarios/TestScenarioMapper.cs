@@ -16,7 +16,7 @@ namespace Xunit.Gherkin.Quick.TestScenarios
         internal TestScenarioMapper(global::Gherkin.IGherkinDialectProvider gherkinDialectProvider)
             => _gherkinDialectProvider = gherkinDialectProvider;
 
-        internal TestScenario Map(global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Scenario scenario, IReadOnlyDictionary<string, string> arguments = null)
+        internal TestScenario Map(GherkinDocument document, Scenario scenario, IReadOnlyDictionary<string, string> arguments = null)
         {
             arguments = arguments ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var parameterReplacePattern = new Regex($"<(?<parameterName>{string.Join("|", arguments.Keys.Select(Regex.Escape))})>", RegexOptions.IgnoreCase);
@@ -55,9 +55,9 @@ namespace Xunit.Gherkin.Quick.TestScenarios
                     testStepType = TestStepType.But;
 
                 TestStep testStep;
-                if (step.Argument is global::Gherkin.Ast.DocString docStringArgument)
+                if (step.Argument is DocString docStringArgument)
                     testStep = new TestStep(testStepType, _ReplaceParameters(step.Text), _GetDocStringArgument(docStringArgument, _ReplaceParameters));
-                else if (step.Argument is global::Gherkin.Ast.DataTable dataTableArgument)
+                else if (step.Argument is DataTable dataTableArgument)
                     testStep = new TestStep(testStepType, _ReplaceParameters(step.Text), _GetTableArgument(dataTableArgument, _ReplaceParameters));
                 else
                     testStep = new TestStep(testStepType, _ReplaceParameters(step.Text));
@@ -97,10 +97,10 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             return cultureInfo;
         }
 
-        private static TestStepDocStringArgument _GetDocStringArgument(global::Gherkin.Ast.DocString docStringArgument, Func<string, string> parameterReplacer)
+        private static TestStepDocStringArgument _GetDocStringArgument(DocString docStringArgument, Func<string, string> parameterReplacer)
             => new TestStepDocStringArgument(parameterReplacer(docStringArgument.Content), parameterReplacer(docStringArgument.ContentType), _GetLocation(docStringArgument.Location));
 
-        private static TestStepTableArgument _GetTableArgument(global::Gherkin.Ast.DataTable dataTableArgument, Func< string, string> parameterReplacer)
+        private static TestStepTableArgument _GetTableArgument(DataTable dataTableArgument, Func< string, string> parameterReplacer)
         {
             var rows = new TestStepTableRowArgument[dataTableArgument.Rows.Count()];
             var rowIndex = 0;
@@ -110,7 +110,7 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             return new TestStepTableArgument(rows);
         }
 
-        private static TestStepTableRowArgument _GetTableRow(global::Gherkin.Ast.TableRow row, Func<string, string> parameterReplacer)
+        private static TestStepTableRowArgument _GetTableRow(TableRow row, Func<string, string> parameterReplacer)
         {
             var cells = new TestStepTableCellArgument[row.Cells.Count()];
             var cellIndex = 0;
@@ -125,13 +125,13 @@ namespace Xunit.Gherkin.Quick.TestScenarios
 
         private static IEnumerable<string> _GetTags(params IHasTags[] hasTagsCollection)
             => hasTagsCollection
-                .SelectMany(hasTags => hasTags.Tags ?? Enumerable.Empty<global::Gherkin.Ast.Tag>())
+                .SelectMany(hasTags => hasTags.Tags ?? Enumerable.Empty<Tag>())
                 .Where(tag => !string.IsNullOrWhiteSpace(tag.Name))
                 .Select(tag => tag.Name.StartsWith("@") ? tag.Name.Substring(1) : tag.Name)
                 .GroupBy(tag => tag, (uniqueTag, tags) => uniqueTag, StringComparer.OrdinalIgnoreCase)
                 .AsEnumerable();
 
-        private static TestStepArgumentLocation _GetLocation(global::Gherkin.Ast.Location location)
+        private static TestStepArgumentLocation _GetLocation(Location location)
             => new TestStepArgumentLocation(location.Line, location.Column);
     }
 }

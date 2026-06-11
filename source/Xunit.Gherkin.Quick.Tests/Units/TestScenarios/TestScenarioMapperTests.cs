@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Gherkin;
+using Gherkin.Ast;
 using Xunit.Gherkin.Quick.FeatureDocuments;
 using Xunit.Gherkin.Quick.TestScenarios;
 
@@ -299,8 +300,8 @@ public class TestScenarioMapperTests
 
         Assert.Null(featureDocument.Error);
         Assert.NotNull(featureDocument.Content);
-        var scenarioDefinition = Assert.Single(featureDocument.Content.Feature.Children, scenarioDefinition => scenarioDefinition is global::Gherkin.Ast.Scenario);
-        var scenario = Assert.IsType<global::Gherkin.Ast.Scenario>(scenarioDefinition);
+        var scenarioDefinition = Assert.Single(featureDocument.Content.Feature.Children, scenarioDefinition => scenarioDefinition is Scenario);
+        var scenario = Assert.IsType<Scenario>(scenarioDefinition);
 
         return _testScenarioMapper.Map(featureDocument.Content, scenario, arguments);
     }

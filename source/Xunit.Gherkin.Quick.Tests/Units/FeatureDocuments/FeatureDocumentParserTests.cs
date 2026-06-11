@@ -1,3 +1,4 @@
+using Gherkin.Ast;
 using Xunit.Gherkin.Quick.FeatureDocuments;
 
 namespace Xunit.Gherkin.Quick.Tests.Units.FeatureDocuments;
@@ -53,7 +54,7 @@ Scenario: First scenario
                     () =>
                     {
                         var scenarioDefinition = Assert.Single(document.Content.Feature.Children);
-                        var scenario = Assert.IsType<global::Gherkin.Ast.Scenario>(scenarioDefinition);
+                        var scenario = Assert.IsType<Scenario>(scenarioDefinition);
 
                         Assert.Multiple(
                             () => Assert.Equal("Scenario", scenario.Keyword),

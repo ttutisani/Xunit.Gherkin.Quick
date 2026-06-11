@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
+using Gherkin.Ast;
 using Xunit.Gherkin.Quick.Evaluators;
 using Xunit.Gherkin.Quick.TestScenarios;
 using Xunit.Sdk;
@@ -346,10 +347,10 @@ public sealed class FeatureEvaluatorTests
 
     private sealed class FeatureWithDataTableScenarioStep : Feature
     {
-        public global::Gherkin.Ast.DataTable ReceivedDataTable { get; private set; }
+        public DataTable ReceivedDataTable { get; private set; }
 
         [When("Some step text")]
-        public void When_DataTable_Is_Expected(global::Gherkin.Ast.DataTable dataTable)
+        public void When_DataTable_Is_Expected(DataTable dataTable)
             => ReceivedDataTable = dataTable;
     }
 
@@ -385,10 +386,10 @@ public sealed class FeatureEvaluatorTests
 
     private sealed class FeatureWithDocStringScenarioStep : Feature
     {
-        public global::Gherkin.Ast.DocString ReceivedDocString { get; private set; }
+        public DocString ReceivedDocString { get; private set; }
 
         [Given("Step with docstirng")]
-        public void Step_With_DocString_Argument(global::Gherkin.Ast.DocString docString)
+        public void Step_With_DocString_Argument(DocString docString)
             => ReceivedDocString = docString;
     }
 
