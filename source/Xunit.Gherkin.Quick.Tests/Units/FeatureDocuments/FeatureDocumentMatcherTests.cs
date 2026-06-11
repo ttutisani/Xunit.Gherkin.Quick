@@ -1,0 +1,30 @@
+using Xunit.Gherkin.Quick.Tests.Features.Async;
+using Xunit.Gherkin.Quick.FeatureDocuments;
+
+namespace Xunit.Gherkin.Quick.Tests.Units.FeatureDocuments;
+
+public class FeatureDocumentMatcherTests
+{
+    private readonly FeatureDocumentMatcher _featureDocumentMatcher = new();
+
+    [Fact]
+    public void GetMatchingDocuments_WhenFeatureTypeIsAddTwoNumbersAsync_ReturnsMatchingFeatureDocument()
+    {
+        var matchingFeatureDocuments = _featureDocumentMatcher.GetMatchingDocuments(typeof(AddTwoNumbersAsync));
+
+        var matchingFeatureDocument = Assert.Single(matchingFeatureDocuments);
+        Assert.Multiple(
+            () => Assert.Equal("AddTwoNumbersAsync.feature", matchingFeatureDocument.Name),
+            () => Assert.Equal("./Features/Async/AddTwoNumbersAsync.feature", matchingFeatureDocument.FullName),
+            () =>
+            {
+                Assert.NotNull(matchingFeatureDocument.Content);
+                Assert.Equal("AddTwoNumbers Async", matchingFeatureDocument.Content.Feature.Name);
+
+                var scenarioDefinition = Assert.Single(matchingFeatureDocument.Content.Feature.Children);
+                Assert.Equal("Add two numbers", scenarioDefinition.Name);
+            },
+            () => Assert.Null(matchingFeatureDocument.Error)
+        );
+    }
+}
