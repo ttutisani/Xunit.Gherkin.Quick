@@ -8,7 +8,7 @@ namespace Xunit.Gherkin.Quick
     /// it's named as &lt;FeatureClass&gt;.feature, then you can
     /// omit this attribute.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class FeatureFileAttribute : Attribute
     {
         /// <summary>

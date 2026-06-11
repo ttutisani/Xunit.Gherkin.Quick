@@ -1,7 +1,7 @@
-﻿namespace Xunit.Gherkin.Quick.Tests.Features.Addition;
+﻿namespace Xunit.Gherkin.Quick.Tests.Features.Addition_ForMultipleUseCases;
 
 [FeatureFile(@"./Addition_ForMultipleUseCases/AddTwoNumbers.*\.feature$", FeatureFilePathType.Regex)]
-public sealed partial class AddTwoNumbers : Feature
+public partial class AddTwoNumbers : Feature
 {
     private readonly Calculator _calculator = new Calculator();
 

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Xunit.Gherkin.Quick.Tests.Features.DocStrings;
 
-[FeatureFile("./Features/DocString/TextBuilder.feature")]
+[FeatureFile("./Features/DocStrings/TextBuilder.feature")]
 public sealed class TextBuilder : Feature
 {
     private StringBuilder _textBuilder;

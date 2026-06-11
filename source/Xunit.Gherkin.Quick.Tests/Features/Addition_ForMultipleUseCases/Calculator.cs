@@ -1,4 +1,4 @@
-﻿namespace Xunit.Gherkin.Quick.Tests.Features.Addition;
+﻿namespace Xunit.Gherkin.Quick.Tests.Features.Addition_ForMultipleUseCases;
 
 public sealed class Calculator
 {

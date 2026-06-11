@@ -1,4 +1,4 @@
-﻿using Xunit.Gherkin.Quick.Tests.Features.Addition;
+﻿using Xunit.Gherkin.Quick.Tests.Features.Addition_ForMultipleUseCases;
 
 namespace Xunit.Gherkin.Quick.Tests.Features.ScenarioBackground;
 

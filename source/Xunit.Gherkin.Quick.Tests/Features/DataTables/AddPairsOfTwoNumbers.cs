@@ -1,9 +1,9 @@
 ﻿using Gherkin.Ast;
 using System.Linq;
 
-namespace Xunit.Gherkin.Quick.Tests.Features.Addition;
+namespace Xunit.Gherkin.Quick.Tests.Features.Addition_ForMultipleUseCases;
 
-public sealed partial class AddTwoNumbers
+public partial class AddTwoNumbers
 {
     [Given(@"following table of (\d+) inputs and outputs:")]
     public void Following_table_of_inputs_and_outputs(int inputCount, DataTable dataTable)
