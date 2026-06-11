@@ -14,6 +14,7 @@ namespace Xunit.Gherkin.Quick.Hooks
                 : throw new ArgumentNullException(nameof(featureFileSearchPattern));
         }
 
+        [Obsolete("File lookups include all file extensions, this class will be removed with a future major release.")]
         internal static TestAssemblyInfo FromAssembly(Assembly assembly)
         {
             var patternAttribute = assembly.GetCustomAttribute<FeatureFileSearchPatternAttribute>();
