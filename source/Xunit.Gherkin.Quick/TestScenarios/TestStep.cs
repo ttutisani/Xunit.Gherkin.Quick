@@ -1,17 +1,27 @@
 using System;
 using System.ComponentModel;
+using Gherkin.Ast;
 using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick.TestScenarios
 {
-    internal class TestStep : IXunitSerializable
+    /// <summary>
+    /// Represents a test step based on a <see cref="Step"/> normalized across translations.
+    /// </summary>
+    public class TestStep : IXunitSerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStep"/> class.
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         public TestStep()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStep"/> class.
+        /// </summary>
         internal TestStep(TestStepType section, string text)
         {
             Type = section;
@@ -21,6 +31,9 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             TableArgument = null;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStep"/> class.
+        /// </summary>
         internal TestStep(TestStepType section, string text, TestStepDocStringArgument docStringArgument)
         {
             Type = section;
@@ -30,6 +43,9 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             TableArgument = null;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStep"/> class.
+        /// </summary>
         internal TestStep(TestStepType section, string text, TestStepTableArgument tableArgument)
         {
             Type = section;
@@ -39,9 +55,24 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             TableArgument = tableArgument;
         }
 
+        /// <summary>
+        /// Gets the test step type corresponding to the keyword in the feature file.
+        /// </summary>
         public TestStepType Type { get; private set; }
+
+        /// <summary>
+        /// Gets the step text as specified in the feature file.
+        /// </summary>
         public string Text { get; private set; }
+
+        /// <summary>
+        /// Gets the doc string argument as specified in the feature file, if pressent; <c>null</c> otherwise.
+        /// </summary>
         public TestStepDocStringArgument DocStringArgument { get; private set; }
+
+        /// <summary>
+        /// Gets the data table argument as specified in the feature file, if pressent; <c>null</c> otherwise.
+        /// </summary>
         public TestStepTableArgument TableArgument { get; private set; }
 
         void IXunitSerializable.Serialize(IXunitSerializationInfo info)

@@ -1,9 +1,14 @@
 using System;
 using System.ComponentModel;
+using Gherkin.Ast;
 using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick.TestScenarios
 {
+    /// <summary>
+    /// Represents feature file location information, this is used for backwards compatibility to accurately
+    /// recreate <see cref="DocString"/>s and <see cref="DataTable"/>s for scenario step methods.
+    /// </summary>
     internal class TestStepArgumentLocation : IXunitSerializable
     {
         [EditorBrowsable(EditorBrowsableState.Never)]

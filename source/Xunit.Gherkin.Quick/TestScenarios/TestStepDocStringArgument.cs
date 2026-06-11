@@ -1,11 +1,18 @@
 using System;
 using System.ComponentModel;
+using Gherkin.Ast;
 using Xunit.Abstractions;
 
 namespace Xunit.Gherkin.Quick.TestScenarios
 {
-    internal class TestStepDocStringArgument : IXunitSerializable
+    /// <summary>
+    /// Represents a multi-line string step argument based on a <see cref="DocString"/>.
+    /// </summary>
+    public class TestStepDocStringArgument : IXunitSerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStepDocStringArgument"/> class.
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         public TestStepDocStringArgument()
@@ -19,8 +26,19 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             Location = location;
         }
 
+        /// <summary>
+        /// Gets the doc string content as specified in the feature file.
+        /// </summary>
         public string Content { get; private set; }
+
+        /// <summary>
+        /// Gets the content type as specified in the feature file.
+        /// </summary>
         public string ContentType { get; private set; }
+
+        /// <summary>
+        /// Used internally to accurately recreate <see cref="DocString"/>s for scenario step methods.
+        /// </summary>
         internal TestStepArgumentLocation Location { get; set; }
 
         void IXunitSerializable.Serialize(IXunitSerializationInfo info)

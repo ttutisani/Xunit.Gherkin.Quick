@@ -10,13 +10,6 @@ using Xunit.Sdk;
 
 namespace Xunit.Gherkin.Quick.Hooks
 {
-    // TODO:
-    // * cleanup/remove old code, remove global:: references where possible
-    // * include embedded feature file test
-    // * expose other relevant types + xml doc comment them
-    // * send to code review explaining the new approach, limitations of the previous one
-    //   and how matching + parsing files during discovery stage (compared to parsing &
-    //   limitation from file repository during execution stage) allows for improved reporting
     internal class TestCaseDiscoverer : IXunitTestCaseDiscoverer
     {
         private readonly TestScenarioMapper _testScenarioMapper = new TestScenarioMapper(new GherkinDialectProvider());

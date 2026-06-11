@@ -311,8 +311,7 @@ public sealed class FeatureEvaluatorTests
                             ],
                             new TestStepArgumentLocation(0, 0)
                         )
-                    ],
-                    new TestStepArgumentLocation(0, 0)))
+                    ]))
             ]
         );
         var feature = new FeatureWithDataTableScenarioStep();

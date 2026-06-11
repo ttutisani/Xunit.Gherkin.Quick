@@ -19,8 +19,15 @@ namespace Xunit.Gherkin.Quick
     /// </summary>
     public abstract class Feature
     {
-        internal TestScenario TestScenario { get; private set; }
-        internal TestStep TestStep { get; private set; }
+        /// <summary>
+        /// Gets the scenario currently being tested.
+        /// </summary>
+        public TestScenario TestScenario { get; private set; }
+
+        /// <summary>
+        /// Gets the step currently being evaluated.
+        /// </summary>
+        public TestStep TestStep { get; private set; }
 
         [TestScenario]
         internal async Task TestScenarioAsync(ITestOutputHelper testOutputHelper, TestScenario testScenario)
@@ -45,7 +52,7 @@ namespace Xunit.Gherkin.Quick
                         if (exception is XunitException)
                             throw;
                         else
-                            throw new TestScenarioException("An unhandled exception was thrown while evaluating scenario.", exception);
+                            throw new TestScenarioException("An unhandled exception was thrown while evaluating the scenario.", exception);
                     }
         }
     }

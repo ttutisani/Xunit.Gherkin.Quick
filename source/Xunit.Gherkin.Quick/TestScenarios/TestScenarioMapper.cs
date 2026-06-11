@@ -107,16 +107,16 @@ namespace Xunit.Gherkin.Quick.TestScenarios
             foreach (var row in dataTableArgument.Rows)
                 rows[rowIndex++] = _GetTableRow(row, parameterReplacer);
 
-            return new TestStepTableArgument(rows, _GetLocation(dataTableArgument.Location));
+            return new TestStepTableArgument(rows);
         }
 
         private static TestStepTableRowArgument _GetTableRow(global::Gherkin.Ast.TableRow row, Func<string, string> parameterReplacer)
         {
-            var cells = new TestStepTableRowCellArgument[row.Cells.Count()];
+            var cells = new TestStepTableCellArgument[row.Cells.Count()];
             var cellIndex = 0;
             foreach (var cell in row.Cells)
             {
-                cells[cellIndex] = new TestStepTableRowCellArgument(parameterReplacer(cell.Value), new TestStepArgumentLocation(cell.Location.Line, cell.Location.Column));
+                cells[cellIndex] = new TestStepTableCellArgument(parameterReplacer(cell.Value), new TestStepArgumentLocation(cell.Location.Line, cell.Location.Column));
                 cellIndex++;
             }
 
