@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Gherkin;
 using Xunit.Gherkin.Quick.vNext.FeatureDocuments;
 using Xunit.Gherkin.Quick.vNext.TestScenarios;
@@ -123,9 +125,9 @@ public class TestScenarioMapperTests
     public void Map_MapsDocString()
     {
         var testScenario = _ParseTestScenario(@"
-            Feature: this is doc string feature
+            Feature: this is a doc string feature
 
-            Scenario: this is doc string scenario
+            Scenario: this is a doc string scenario
               Given a step
               """"""plain-text
               doc string
@@ -133,8 +135,8 @@ public class TestScenarioMapperTests
 ");
 
         Assert.Multiple(
-            () => Assert.Equal("this is doc string feature", testScenario.FeatureName),
-            () => Assert.Equal("this is doc string scenario", testScenario.ScenarioName),
+            () => Assert.Equal("this is a doc string feature", testScenario.FeatureName),
+            () => Assert.Equal("this is a doc string scenario", testScenario.ScenarioName),
             () => Assert.Equal("en", testScenario.Locale.Name),
             () => Assert.Empty(testScenario.Tags),
             () => Assert.Collection(
@@ -158,9 +160,9 @@ public class TestScenarioMapperTests
     public void Map_MapsDataTable()
     {
         var testScenario = _ParseTestScenario(@"
-            Feature: this is data table feature
+            Feature: this is a data table feature
 
-            Scenario: this is data table scenario
+            Scenario: this is a data table scenario
               Given a step
               | row 1 - cell 1 | row 1 - cell 2 |
               | row 2 - cell 1 | row 2 - cell 2 |
@@ -168,8 +170,8 @@ public class TestScenarioMapperTests
 ");
 
         Assert.Multiple(
-            () => Assert.Equal("this is data table feature", testScenario.FeatureName),
-            () => Assert.Equal("this is data table scenario", testScenario.ScenarioName),
+            () => Assert.Equal("this is a data table feature", testScenario.FeatureName),
+            () => Assert.Equal("this is a data table scenario", testScenario.ScenarioName),
             () => Assert.Equal("en", testScenario.Locale.Name),
             () => Assert.Empty(testScenario.Tags),
             () => Assert.Collection(
@@ -205,17 +207,101 @@ public class TestScenarioMapperTests
         );
     }
 
-    private TestScenario _ParseTestScenario(string content)
+    [Fact]
+    public void Map_MapsArguments()
+    {
+        var testScenario = _ParseTestScenario(@"
+            Feature: this is a <test> feature
+
+            Scenario: this is a <other> scenario
+              Given a <test> step
+              And a doc <CONTENT> string step
+              """"""test <ContentType>
+              some <content>
+              """"""
+              And a data table step
+              | 1st cell | <another> |
+              When there is a <missing> argument
+              Then it does not get replaced
+",
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "test", "test value 1" },
+                { "other", "test value 2" },
+                { "ContentType", "test value 3" },
+                { "content", "test value 4" },
+                { "another", "test value 5" }
+            }
+        );
+
+        Assert.Multiple(
+            () => Assert.Equal("this is a test value 1 feature", testScenario.FeatureName),
+            () => Assert.Equal("this is a test value 2 scenario", testScenario.ScenarioName),
+            () => Assert.Equal("en", testScenario.Locale.Name),
+            () => Assert.Empty(testScenario.Tags),
+            () => Assert.Collection(
+                testScenario.Steps,
+                firstStep => Assert.Multiple(
+                    () => Assert.Equal(TestStepType.Given, firstStep.Type),
+                    () => Assert.Equal("a test value 1 step", firstStep.Text),
+                    () => Assert.Null(firstStep.DocStringArgument),
+                    () => Assert.Null(firstStep.TableArgument)
+                ),
+                secondStep => Assert.Multiple(
+                    () => Assert.Equal(TestStepType.And, secondStep.Type),
+                    () => Assert.Equal("a doc test value 4 string step", secondStep.Text),
+                    () =>
+                    {
+                        Assert.NotNull(secondStep.DocStringArgument);
+                        Assert.Equal("test test value 3", secondStep.DocStringArgument.ContentType);
+                        Assert.Equal("some test value 4", secondStep.DocStringArgument.Content);
+                    },
+                    () => Assert.Null(secondStep.TableArgument)
+                ),
+                thirdStep => Assert.Multiple(
+                    () => Assert.Equal(TestStepType.And, thirdStep.Type),
+                    () => Assert.Equal("a data table step", thirdStep.Text),
+                    () => Assert.Null(thirdStep.DocStringArgument),
+                    () =>
+                    {
+                        Assert.NotNull(thirdStep.TableArgument);
+                        Assert.Collection(
+                            thirdStep.TableArgument.Rows,
+                            firstRow => Assert.Collection(
+                                firstRow.Cells,
+                                firstCell => Assert.Equal("1st cell", firstCell.Value),
+                                secondCell => Assert.Equal("test value 5", secondCell.Value)
+                            )
+                        );
+                    }
+                ),
+                fourthStep => Assert.Multiple(
+                    () => Assert.Equal(TestStepType.When, fourthStep.Type),
+                    () => Assert.Equal("there is a <missing> argument", fourthStep.Text),
+                    () => Assert.Null(fourthStep.DocStringArgument),
+                    () => Assert.Null(fourthStep.TableArgument)
+                ),
+                fifthStep => Assert.Multiple(
+                    () => Assert.Equal(TestStepType.Then, fifthStep.Type),
+                    () => Assert.Equal("it does not get replaced", fifthStep.Text),
+                    () => Assert.Null(fifthStep.DocStringArgument),
+                    () => Assert.Null(fifthStep.TableArgument)
+                )
+            )
+        );
+    }
+
+    private TestScenario _ParseTestScenario(string content, IReadOnlyDictionary<string, string> arguments = null)
     {
         var parser = new FeatureDocumentParser();
         var featureFile = new InlineFeatureFile("test.feature", "./test.feature", content);
         var featureDocument = parser.Parse(featureFile);
 
         Assert.Null(featureDocument.Error);
-        Assert.NotNull(featureDocument.Feature);
-        var scenarioDefinition = Assert.Single(featureDocument.Feature.Children, scenarioDefinition => scenarioDefinition is global::Gherkin.Ast.Scenario);
+        Assert.NotNull(featureDocument.Content);
+        var scenarioDefinition = Assert.Single(featureDocument.Content.Feature.Children, scenarioDefinition => scenarioDefinition is global::Gherkin.Ast.Scenario);
         var scenario = Assert.IsType<global::Gherkin.Ast.Scenario>(scenarioDefinition);
 
-        return _testScenarioMapper.Map(featureDocument.Feature, scenario);
+        return _testScenarioMapper.Map(featureDocument.Content, scenario, arguments);
     }
 }

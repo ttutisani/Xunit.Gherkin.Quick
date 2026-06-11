@@ -16,7 +16,7 @@ public class FeatureDocumentParserTests
         Assert.Multiple(
             () => Assert.Equal("test.feature", document.Name),
             () => Assert.Equal("./directory/test.feature", document.FullName),
-            () => Assert.Null(document.Feature),
+            () => Assert.Null(document.Content),
             () =>
             {
                 Assert.NotNull(document.Error);
@@ -42,16 +42,17 @@ Scenario: First scenario
             () => Assert.Equal("./directory/test.feature", document.FullName),
             () =>
             {
-                Assert.NotNull(document.Feature);
+                Assert.NotNull(document.Content);
 
                 Assert.Multiple(
-                    () => Assert.Equal("Feature", document.Feature.Keyword),
-                    () => Assert.Equal("This is a test", document.Feature.Name),
-                    () => Assert.Empty(document.Feature.Tags),
-                    () => Assert.Null(document.Feature.Description),
+                    () => Assert.Equal("Feature", document.Content.Feature.Keyword),
+                    () => Assert.Equal("This is a test", document.Content.Feature.Name),
+                    () => Assert.Empty(document.Content.Feature.Tags),
+                    () => Assert.Empty(document.Content.Comments),
+                    () => Assert.Null(document.Content.Feature.Description),
                     () =>
                     {
-                        var scenarioDefinition = Assert.Single(document.Feature.Children);
+                        var scenarioDefinition = Assert.Single(document.Content.Feature.Children);
                         var scenario = Assert.IsType<global::Gherkin.Ast.Scenario>(scenarioDefinition);
 
                         Assert.Multiple(

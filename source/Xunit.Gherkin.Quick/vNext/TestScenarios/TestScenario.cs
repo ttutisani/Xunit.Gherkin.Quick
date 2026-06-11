@@ -15,7 +15,7 @@ namespace Xunit.Gherkin.Quick.vNext.TestScenarios
         {
         }
 
-        internal TestScenario(string featureName, string scenarioName, CultureInfo locale, IReadOnlyList<string> tags, IReadOnlyList<TestStep> steps)
+        internal TestScenario(string featureName, string scenarioName, CultureInfo locale, string[] tags, TestStep[] steps)
         {
             FeatureName = featureName;
             ScenarioName = scenarioName;

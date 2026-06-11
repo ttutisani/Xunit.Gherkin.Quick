@@ -10,8 +10,8 @@ namespace Xunit.Gherkin.Quick.vNext.FeatureDocuments
         private bool _initialized = false;
         private readonly IFeatureFile _featureFile;
         private readonly Parser _gherkinParser;
-        private  global::Gherkin.Ast.Feature _feature = null;
-        private  Exception _error = null;
+        private global::Gherkin.Ast.GherkinDocument _content = null;
+        private Exception _error = null;
 
         public FeatureDocument(IFeatureFile featureFile, Parser gherkinParser)
         {
@@ -22,15 +22,15 @@ namespace Xunit.Gherkin.Quick.vNext.FeatureDocuments
         public string Name
             => _featureFile.Name;
 
-        public string FullName 
+        public string FullName
             => _featureFile.FullName;
 
-        public global::Gherkin.Ast.Feature Feature
+        public global::Gherkin.Ast.GherkinDocument Content
         {
             get
             {
                 _EnsureInitialized();
-                return _feature;
+                return _content;
             }
         }
 
@@ -52,9 +52,10 @@ namespace Xunit.Gherkin.Quick.vNext.FeatureDocuments
                     using (var featureFileReader = _featureFile.OpenRead())
                         gherkinDocument = _gherkinParser.Parse(featureFileReader);
 
-                    _feature = gherkinDocument.Feature;
-                    if (_feature is null)
+                    if (gherkinDocument is null || gherkinDocument.Feature is null)
                         _error = new ArgumentException("Feature file does not contain a feature definition.");
+                    else
+                        _content = gherkinDocument;
                 }
                 catch (Exception exception)
                 {

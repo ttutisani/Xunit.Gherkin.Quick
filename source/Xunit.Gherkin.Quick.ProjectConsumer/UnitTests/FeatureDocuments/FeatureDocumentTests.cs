@@ -38,11 +38,11 @@ Scenario: still a test
             () => Assert.Equal("./tests/document.feature", featureDocument.FullName),
             () =>
             {
-                Assert.NotNull(featureDocument.Feature);
-                Assert.Equal("this is a test", featureDocument.Feature.Name);
-                Assert.Null(featureDocument.Feature.Description);
+                Assert.NotNull(featureDocument.Content);
+                Assert.Equal("this is a test", featureDocument.Content.Feature.Name);
+                Assert.Null(featureDocument.Content.Feature.Description);
 
-                var scenarioDefinition = Assert.Single(featureDocument.Feature.Children);
+                var scenarioDefinition = Assert.Single(featureDocument.Content.Feature.Children);
                 var scenario = Assert.IsType<global::Gherkin.Ast.Scenario>(scenarioDefinition);
                 Assert.Equal("still a test", scenario.Name);
                 Assert.Null(scenario.Description);
@@ -79,7 +79,7 @@ Scenario: still a test
         Assert.Multiple(
             () => Assert.Equal("document.feature", featureDocument.Name),
             () => Assert.Equal("./tests/document.feature", featureDocument.FullName),
-            () => Assert.Null(featureDocument.Feature),
+            () => Assert.Null(featureDocument.Content),
             () =>
             {
                 Assert.NotNull(featureDocument.Error);

@@ -18,10 +18,10 @@ public class FeatureDocumentMatcherTests
             () => Assert.Equal("./Async/AddTwoNumbersAsync.feature", matchingFeatureDocument.FullName),
             () =>
             {
-                Assert.NotNull(matchingFeatureDocument.Feature);
-                Assert.Equal("AddTwoNumbers Async", matchingFeatureDocument.Feature.Name);
+                Assert.NotNull(matchingFeatureDocument.Content);
+                Assert.Equal("AddTwoNumbers Async", matchingFeatureDocument.Content.Feature.Name);
 
-                var scenarioDefinition = Assert.Single(matchingFeatureDocument.Feature.Children);
+                var scenarioDefinition = Assert.Single(matchingFeatureDocument.Content.Feature.Children);
                 Assert.Equal("Add two numbers", scenarioDefinition.Name);
             },
             () => Assert.Null(matchingFeatureDocument.Error)

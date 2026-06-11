@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gherkin;
+using Gherkin.Ast;
 using Xunit.Abstractions;
 using Xunit.Gherkin.Quick.vNext.FeatureDocuments;
 using Xunit.Gherkin.Quick.vNext.TestScenarios;
@@ -38,19 +39,19 @@ namespace Xunit.Gherkin.Quick.vNext.Hooks
                                 _messageSink,
                                 discoveryOptions.MethodDisplayOrDefault(),
                                 testMethod,
-                                $"Invalid :: '{matchingFeatureDocument.Name}'",
+                                $"'{matchingFeatureDocument.Name}' :: Invalid Feature File",
                                 $"The '{matchingFeatureDocument.Name}' feature file is invalid, {matchingFeatureDocument.Error.Message}."
                             ),
                             1
                         );
                     else
-                        return _GetTestCases(discoveryOptions, matchingFeatureDocument.Feature, testMethod)
+                        return _GetTestCases(discoveryOptions, matchingFeatureDocument.Content, testMethod)
                             .DefaultIfEmpty(
                                 new UnavailableTestCase(
                                     _messageSink,
                                     discoveryOptions.MethodDisplayOrDefault(),
                                     testMethod,
-                                    $"No Scenarios :: '{matchingFeatureDocument.Name}'",
+                                    $"'{matchingFeatureDocument.Name}' :: No Scenarios Defined",
                                     $"Feature file '{matchingFeatureDocument.Name}' does not contain any scenarios."
                                 )
                             );
@@ -65,44 +66,141 @@ namespace Xunit.Gherkin.Quick.vNext.Hooks
                     )
                 );
 
-        private IEnumerable<IXunitTestCase> _GetTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, global::Gherkin.Ast.Feature feature, ITestMethod testMethod)
+        private IEnumerable<IXunitTestCase> _GetTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, global::Gherkin.Ast.GherkinDocument document, ITestMethod testMethod)
         {
             global::Gherkin.Ast.Background scenarioBackground = null;
-            foreach (var scenarioDefinition in feature.Children)
+            foreach (var scenarioDefinition in document.Feature.Children)
                 if (scenarioDefinition is global::Gherkin.Ast.Background background)
                     scenarioBackground = background;
                 else if (scenarioDefinition is global::Gherkin.Ast.Scenario scenario)
+                    yield return _GetScenarioTestCase(discoveryOptions, testMethod, document, scenarioBackground, scenario);
+                else if (scenarioDefinition is global::Gherkin.Ast.ScenarioOutline scenarioOutline)
+                    foreach (var testCase in _GetScenarioOutlineTestCases(discoveryOptions, testMethod, document, scenarioBackground, scenarioOutline))
+                        yield return testCase;
+        }
+
+        private IXunitTestCase _GetScenarioTestCase(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Background scenarioBackground, global::Gherkin.Ast.Scenario scenario)
+        {
+            var displayName = _GetDisplayName(document.Feature, scenario);
+            var testScenario = _testScenarioMapper.Map(document, scenarioBackground is object ? scenario.ApplyBackground(scenarioBackground) : scenario);
+
+            if (_IsIgnored(testScenario))
+                return new UnavailableTestCase(
+                    _messageSink,
+                    discoveryOptions.MethodDisplayOrDefault(),
+                    testMethod,
+                    displayName,
+                    "This scenario is skipped"
+                );
+            else
+                return new TestCase(
+                    _messageSink,
+                    discoveryOptions.MethodDisplayOrDefault(),
+                    testMethod,
+                    displayName,
+                    testScenario
+                );
+        }
+
+        private IEnumerable<IXunitTestCase> _GetScenarioOutlineTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Background scenarioBackground, global::Gherkin.Ast.ScenarioOutline scenarioOutline)
+        {
+            if (scenarioOutline.Examples is null || !scenarioOutline.Examples.Any())
+                yield return new UnavailableTestCase(
+                    _messageSink,
+                    discoveryOptions.MethodDisplayOrDefault(),
+                    testMethod,
+                    $"{_GetDisplayName(document.Feature, scenarioOutline)} :: No Examples Defined",
+                    $"Scenario outline '{scenarioOutline.Name}' does not contain any examples."
+                );
+            else
+                foreach (var example in scenarioOutline.Examples)
                 {
-                    var testScenario = _testScenarioMapper.Map(feature, scenarioBackground is object ? scenario.ApplyBackground(scenarioBackground) : scenario);
-                    var displayName = $"{testScenario.FeatureName} :: {testScenario.ScenarioName}";
-                    if (_IgnoreTags.Any(ignoreTag => testScenario.Tags.Contains(ignoreTag, StringComparer.OrdinalIgnoreCase)))
+                    var displayName = _GetDisplayName(document.Feature, scenarioOutline, example);
+
+                    if (example.TableHeader is null || example.TableBody is null || !example.TableBody.Any())
                         yield return new UnavailableTestCase(
                             _messageSink,
                             discoveryOptions.MethodDisplayOrDefault(),
                             testMethod,
-                            displayName,
-                            "This scenario is skipped"
+                            $"{displayName} :: No Cases Defined",
+                            $"Example '{example.Name}' for scenario outline '{scenarioOutline.Name}' does not contain any cases."
+                        );
+                    else if (
+                            example
+                                .TableHeader
+                                .Cells
+                                .GroupBy(headerCell => headerCell.Value, StringComparer.OrdinalIgnoreCase)
+                                .Any(group => group.Count() > 1)
+                        )
+                        yield return new UnavailableTestCase(
+                            _messageSink,
+                            discoveryOptions.MethodDisplayOrDefault(),
+                            testMethod,
+                            $"{displayName} :: Duplicate Parameters",
+                            $"Example '{example.Name}' for scenario outline '{scenarioOutline.Name}' contains multiple parameters with the same name (case-insensitive check)."
                         );
                     else
-                        yield return new TestCase(
-                            _messageSink,
-                            discoveryOptions.MethodDisplayOrDefault(),
-                            testMethod,
-                            displayName,
-                            testScenario
-                        );
-                }
-                else if (scenarioDefinition is global::Gherkin.Ast.ScenarioOutline scenarioOutline)
-                {
-                    var displayName = $"{feature.Name} :: {scenarioOutline.Name} :: Not yet implemented";
-                    yield return new UnavailableTestCase(
-                            _messageSink,
-                            discoveryOptions.MethodDisplayOrDefault(),
-                            testMethod,
-                            displayName,
-                            "Scenario outlines are not yet implemented"
-                        );
+                        foreach (var testCase in _GetScenarioOutlineExampleTestCases(discoveryOptions, testMethod, document, scenarioBackground, scenarioOutline, example))
+                            yield return testCase;
                 }
         }
+
+        private IEnumerable<IXunitTestCase> _GetScenarioOutlineExampleTestCases(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, global::Gherkin.Ast.GherkinDocument document, global::Gherkin.Ast.Background scenarioBackground, global::Gherkin.Ast.ScenarioOutline scenarioOutline, global::Gherkin.Ast.Examples example)
+        {
+            var generatedScenario = new global::Gherkin.Ast.Scenario(
+                (scenarioOutline.Tags ?? Enumerable.Empty<global::Gherkin.Ast.Tag>())
+                    .Concat(example.Tags ?? Enumerable.Empty<global::Gherkin.Ast.Tag>())
+                    .ToArray(),
+                scenarioOutline.Location,
+                scenarioOutline.Keyword,
+                scenarioOutline.Name,
+                scenarioOutline.Description,
+                scenarioOutline.Steps as global::Gherkin.Ast.Step[] ?? scenarioOutline.Steps?.ToArray()
+            );
+            if (scenarioBackground is object)
+                generatedScenario = generatedScenario.ApplyBackground(scenarioBackground);
+
+            foreach (var @case in example.TableBody)
+            {
+                var arguments = example
+                    .TableHeader
+                    .Cells
+                    .Zip(@case.Cells, (headerCell, caseCell) => new { Name = headerCell.Value, Value = caseCell.Value })
+                    .ToDictionary(argument => argument.Name, argument => argument.Value, StringComparer.OrdinalIgnoreCase);
+
+                var argumentsDisplay = string.Join(
+                    ", ",
+                    example
+                        .TableHeader
+                        .Cells
+                        .Zip(@case.Cells, (headerCell, caseCell) => $"{headerCell.Value} = {caseCell.Value}")
+                );
+
+                var displayName = $"{_GetDisplayName(document.Feature, scenarioOutline, example)} ({argumentsDisplay})";
+                var testScenario = _testScenarioMapper.Map(document, generatedScenario, arguments);
+                if (_IsIgnored(testScenario))
+                    yield return new UnavailableTestCase(
+                        _messageSink,
+                        discoveryOptions.MethodDisplayOrDefault(),
+                        testMethod,
+                        displayName,
+                        "This scenario is skipped"
+                    );
+                else
+                    yield return new TestCase(
+                        _messageSink,
+                        discoveryOptions.MethodDisplayOrDefault(),
+                        testMethod,
+                        displayName,
+                        testScenario
+                    );
+            }
+        }
+
+        private bool _IsIgnored(TestScenario testScenario)
+            => _IgnoreTags.Any(ignoreTag => testScenario.Tags.Contains(ignoreTag, StringComparer.OrdinalIgnoreCase));
+
+        private static string _GetDisplayName(params IHasDescription[] hasDescriptions)
+            => string.Join(" :: ", hasDescriptions.Where(hasDescription => !string.IsNullOrWhiteSpace(hasDescription.Name)));
     }
 }
