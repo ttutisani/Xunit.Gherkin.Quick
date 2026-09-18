@@ -32,16 +32,16 @@ namespace Xunit.Gherkin.Quick
             return new FeatureClass(stepMethods);
         }
 
-		public Scenario ExtractScenario(global::Gherkin.Ast.Scenario scenario)
+		public Scenario ExtractScenario(global::Gherkin.Ast.Scenario scenario, global::Gherkin.GherkinDialect gherkinDialect)
 		{
 			if (scenario == null)
 				throw new ArgumentNullException(nameof(scenario));
 
-            var steps = ExtractSteps(scenario);
+            var steps = ExtractSteps(scenario, gherkinDialect);
 			return new Scenario(steps);
 		}
 
-		private List<StepMethod> ExtractSteps(global::Gherkin.Ast.ScenarioDefinition gherkinScenario)
+		private List<StepMethod> ExtractSteps(global::Gherkin.Ast.ScenarioDefinition gherkinScenario, global::Gherkin.GherkinDialect gherkinDialect)
         {
             if (gherkinScenario == null)
                 throw new ArgumentNullException(nameof(gherkinScenario));
@@ -49,14 +49,36 @@ namespace Xunit.Gherkin.Quick
 			return gherkinScenario.Steps
 				.Select(gherkingScenarioStep =>
 				{
-					var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => stepMethodInfo.Matches(gherkingScenarioStep));
+					var translatedGherkingScenarioStep = _TranslateKeyword(gherkingScenarioStep, gherkinDialect);
+					var matchingStepMethodInfo = _stepMethods.FirstOrDefault(stepMethodInfo => stepMethodInfo.Matches(translatedGherkingScenarioStep));
 					if (matchingStepMethodInfo == null)
 						throw new InvalidOperationException($"Cannot match any method with step `{gherkingScenarioStep.Keyword.Trim()} {gherkingScenarioStep.Text.Trim()}`. Scenario `{gherkinScenario.Name}`.");
 
-					var stepMethod = StepMethod.FromStepMethodInfo(matchingStepMethodInfo, gherkingScenarioStep);
+					var stepMethod = StepMethod.FromStepMethodInfo(matchingStepMethodInfo, translatedGherkingScenarioStep);
 					return stepMethod;
 				})
 				.ToList();
+        }
+
+        private global::Gherkin.Ast.Step _TranslateKeyword(global::Gherkin.Ast.Step gherkingScenarioStep, global::Gherkin.GherkinDialect gherkinDialect)
+        {
+            string translatedKeyword = null;
+            if (gherkingScenarioStep.Keyword.Trim() != "*")
+                if (gherkinDialect.GivenStepKeywords.Contains(gherkingScenarioStep.Keyword))
+                    translatedKeyword = "Given ";
+                else if (gherkinDialect.WhenStepKeywords.Contains(gherkingScenarioStep.Keyword))
+                    translatedKeyword = "When ";
+                else if (gherkinDialect.ThenStepKeywords.Contains(gherkingScenarioStep.Keyword))
+                    translatedKeyword = "Then ";
+                else if (gherkinDialect.AndStepKeywords.Contains(gherkingScenarioStep.Keyword))
+                    translatedKeyword = "And ";
+                else if (gherkinDialect.ButStepKeywords.Contains(gherkingScenarioStep.Keyword))
+                    translatedKeyword = "But ";
+
+            if (translatedKeyword != null)
+                return new global::Gherkin.Ast.Step(gherkingScenarioStep.Location, translatedKeyword, gherkingScenarioStep.Text, gherkingScenarioStep.Argument);
+            else
+                return gherkingScenarioStep;
         }
     }
 }

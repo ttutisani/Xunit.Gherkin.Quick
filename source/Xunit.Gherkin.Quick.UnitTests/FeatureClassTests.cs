@@ -80,7 +80,7 @@ namespace UnitTests
                 }).Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(gherkinScenario);
+            var scenario = sut.ExtractScenario(gherkinScenario, new Gherkin.GherkinDialectProvider().DefaultDialect);
 
             //assert.
             Assert.NotNull(scenario);
@@ -263,7 +263,7 @@ namespace UnitTests
                     })).Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(gherknScenario);
+            var scenario = sut.ExtractScenario(gherknScenario, new Gherkin.GherkinDialectProvider().DefaultDialect);
 
             //assert.
             Assert.NotNull(scenario);
@@ -300,7 +300,7 @@ namespace UnitTests
                     .Feature.Children.First() as Gherkin.Ast.Scenario;
 
             //act.
-            var scenario = sut.ExtractScenario(gherkinScenario);
+            var scenario = sut.ExtractScenario(gherkinScenario, new Gherkin.GherkinDialectProvider().DefaultDialect);
 
             //assert.
             Assert.NotNull(scenario);
@@ -326,10 +326,13 @@ namespace UnitTests
             var sut = FeatureClass.FromFeatureInstance(new FeatureWithMultipleStepPatterns());
 
             //act.
-            var scenario = sut.ExtractScenario(CreateGherkinDocument("scenario 123", new string[]
-            {
-                "Given something else"
-            }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First());
+            var scenario = sut.ExtractScenario(
+                CreateGherkinDocument("scenario 123", new string[]
+                {
+                    "Given something else"
+                }).Feature.Children.OfType<Gherkin.Ast.Scenario>().First(),
+                new Gherkin.GherkinDialectProvider().DefaultDialect
+            );
 
             //assert.
             Assert.NotNull(scenario);
