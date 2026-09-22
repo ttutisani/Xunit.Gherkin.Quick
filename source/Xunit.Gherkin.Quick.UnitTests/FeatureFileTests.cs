@@ -48,7 +48,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void GetScenario_Applies_Translaation()
+        public void GetScenario_Applies_Translation()
         {
             //arrange.
             var sut = new FeatureFile(CreateGherkinDocumentWithSlovakScenario("existing"));
@@ -112,7 +112,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void GetScenarioOutline_Applies_Translaation()
+        public void GetScenarioOutline_Applies_Translation()
         {
             //arrange.
             var sut = new FeatureFile(CreateGherkinDocumentWithSlovakScenarioOutline("existing"));
@@ -164,7 +164,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void GetBackground_Applies_Translaation()
+        public void GetBackground_Applies_Translation()
         {
             //arrange.
             var sut = new FeatureFile(CreateGherkinDocumentWithSlovakBackground());
