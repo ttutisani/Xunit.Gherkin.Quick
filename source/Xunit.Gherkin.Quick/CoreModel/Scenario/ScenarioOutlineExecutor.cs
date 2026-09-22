@@ -40,7 +40,7 @@ namespace Xunit.Gherkin.Quick
             if(gherkinBackground != null)
                 gherkinScenario = gherkinScenario.ApplyBackground(gherkinBackground);
 
-			var scenario = featureClass.ExtractScenario(gherkinScenario, featureFile.GherkinDialect);
+			var scenario = featureClass.ExtractScenario(gherkinScenario);
             await scenario.ExecuteAsync(new ScenarioOutput(featureInstance.InternalOutput));
         }
     }
