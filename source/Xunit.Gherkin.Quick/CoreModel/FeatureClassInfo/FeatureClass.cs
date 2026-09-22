@@ -58,26 +58,5 @@ namespace Xunit.Gherkin.Quick
 				})
 				.ToList();
         }
-
-        private global::Gherkin.Ast.Step _TranslateKeyword(global::Gherkin.Ast.Step gherkingScenarioStep, global::Gherkin.GherkinDialect gherkinDialect)
-        {
-            string translatedKeyword = null;
-            if (gherkingScenarioStep.Keyword.Trim() != "*")
-                if (gherkinDialect.GivenStepKeywords.Contains(gherkingScenarioStep.Keyword))
-                    translatedKeyword = "Given ";
-                else if (gherkinDialect.WhenStepKeywords.Contains(gherkingScenarioStep.Keyword))
-                    translatedKeyword = "When ";
-                else if (gherkinDialect.ThenStepKeywords.Contains(gherkingScenarioStep.Keyword))
-                    translatedKeyword = "Then ";
-                else if (gherkinDialect.AndStepKeywords.Contains(gherkingScenarioStep.Keyword))
-                    translatedKeyword = "And ";
-                else if (gherkinDialect.ButStepKeywords.Contains(gherkingScenarioStep.Keyword))
-                    translatedKeyword = "But ";
-
-            if (translatedKeyword != null)
-                return new global::Gherkin.Ast.Step(gherkingScenarioStep.Location, translatedKeyword, gherkingScenarioStep.Text, gherkingScenarioStep.Argument);
-            else
-                return gherkingScenarioStep;
-        }
     }
 }
