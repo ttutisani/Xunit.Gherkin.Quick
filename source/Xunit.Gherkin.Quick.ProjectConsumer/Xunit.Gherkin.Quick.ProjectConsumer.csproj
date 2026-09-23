@@ -42,6 +42,12 @@
     <None Update="HandlingNotImplementedFeatures\MathWithInfinity.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="MultiLanguage\KeywordsInEnglish.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MultiLanguage\KeywordsInSlovak.feature">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Async\AddTwoNumbersAsync.feature">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
