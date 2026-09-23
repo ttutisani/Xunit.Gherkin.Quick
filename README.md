@@ -185,6 +185,7 @@ I want to send special Thank You to all the contributors, which you can see here
 - [Shared Step Method With Multiple Step Attributes](/docs/shared-step-method.md)
 - [Reusing step implementation across features](/docs/reuse-step-implementation-across-features.md)
 - [Before and After Scenario Execution Hooks](/docs/before-after-scenario-hooks.md)
+- [Language Support (Localizing Feature Files)](/docs/language-support.md)
 - [Syntax highlighting of Gherkin/Cucumber](/docs/gherkin-syntax-highlighting.md)
 - [Integrating Test Results With PicklesDoc](/docs/picklesdoc-test-results.md)
 - [Copying feature files](/docs/copying-feature-files.md)
