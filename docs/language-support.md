@@ -56,3 +56,7 @@ Scenár: Add two numbers with examples
 ```
 
 Keep in mind that the pattern matching on the step text itself remains the same across languages, if you want to describe them fully in a different language then you need to translate the text for each step as well. To support multiple languages at the same time, decorate the implementation method with multiple matching attributes, each for the supported language.
+
+## All Supported Languages
+
+For the list of all supported languages, please refer to the [Cucumber Localization documentation](https://cucumber.io/docs/gherkin/languages).
